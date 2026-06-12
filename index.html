@@ -563,6 +563,120 @@
     .notes-ta:focus { outline: none; border-color: var(--accent); }
     .notes-ta::placeholder { color: #555; }
 
+    /* ── PROGRAMS LIST ───────────────────────────── */
+    #bottom-nav button { font-size: 10px; }
+    #bottom-nav button svg { width: 20px; height: 20px; }
+
+    .prog-list { padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px; }
+
+    .pcard {
+      background: var(--card); border-radius: var(--r);
+      border: 1px solid var(--border); overflow: hidden; cursor: pointer;
+      transition: transform 0.12s;
+    }
+    .pcard:active { transform: scale(0.98); }
+    .pcard-band { height: 5px; }
+    .pcard-body { padding: 14px 16px 16px; }
+    .pcard-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .pcard-icon { font-size: 26px; }
+    .pcard-name { font-size: 17px; font-weight: 800; flex: 1; }
+    .pcard-level {
+      font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 50px;
+      letter-spacing: 0.3px; flex-shrink: 0;
+    }
+    .pcard-tagline { font-size: 13px; color: var(--muted); line-height: 1.45; margin-bottom: 12px; }
+    .pcard-stats { display: flex; gap: 18px; }
+    .pcard-stat b   { display: block; font-size: 14px; font-weight: 800; }
+    .pcard-stat span { font-size: 11px; color: var(--muted); font-weight: 600; }
+
+    /* active-program badge */
+    .active-prog-banner {
+      margin: 0 16px 12px; padding: 12px 14px;
+      background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.25);
+      border-radius: 10px; display: flex; align-items: center; gap: 10px;
+      cursor: pointer;
+    }
+    .active-prog-text { flex: 1; }
+    .active-prog-name { font-size: 14px; font-weight: 700; color: var(--accent); }
+    .active-prog-sub  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .active-prog-chevron { font-size: 18px; color: var(--muted); }
+
+    /* ── PROGRAM DETAIL ───────────────────────────── */
+    .pdetail-hero {
+      padding: 22px 20px 18px; flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .pdetail-icon    { font-size: 38px; margin-bottom: 8px; }
+    .pdetail-name    { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+    .pdetail-tagline { font-size: 13px; color: var(--muted); }
+    .pdetail-stats {
+      display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;
+    }
+    .pdetail-stat {
+      padding: 7px 12px; border-radius: 8px;
+      background: var(--card2); border: 1px solid var(--border);
+      text-align: center;
+    }
+    .pdetail-stat-val { font-size: 14px; font-weight: 800; }
+    .pdetail-stat-lbl { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: 0.3px; margin-top: 2px; }
+
+    /* detail sections */
+    .ds { padding: 16px 16px 0; }
+    .ds-title {
+      font-size: 11px; font-weight: 800; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;
+    }
+    .ds-text { font-size: 14px; line-height: 1.7; color: var(--text); }
+
+    .ex-row {
+      background: var(--card2); border-radius: 10px;
+      padding: 11px 14px; margin-bottom: 8px;
+    }
+    .ex-row-name { font-size: 14px; font-weight: 600; }
+    .ex-row-meta { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+    .day-block {
+      background: var(--card2); border-radius: 12px; padding: 14px;
+      margin-bottom: 10px; border: 1px solid var(--border);
+    }
+    .day-block-title {
+      font-size: 12px; font-weight: 800; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px;
+    }
+
+    .phase-block {
+      border-radius: 12px; padding: 14px 16px;
+      margin-bottom: 10px; border: 1px solid var(--border);
+      background: var(--card2);
+    }
+    .phase-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .phase-lbl {
+      font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 50px;
+      background: rgba(255,255,255,0.07); color: var(--muted);
+      letter-spacing: 0.4px; flex-shrink: 0;
+    }
+    .phase-title { font-size: 15px; font-weight: 700; }
+    .phase-days  { font-size: 12px; color: var(--muted); margin-left: auto; flex-shrink: 0; }
+    .phase-sets  { font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+    .phase-focus { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .phase-note  { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 6px; }
+
+    .info-box {
+      border-radius: 10px; padding: 12px 14px; font-size: 13px;
+      line-height: 1.55; margin-bottom: 10px;
+    }
+    .info-box.gold { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); color: var(--gold); }
+    .info-box.blue { background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.25); color: #93c5fd; }
+
+    .follow-btn {
+      margin: 16px 16px 32px; padding: 16px;
+      border-radius: var(--r); border: none; cursor: pointer;
+      font-size: 16px; font-weight: 800; width: calc(100% - 32px);
+      transition: opacity 0.15s;
+    }
+    .follow-btn.on  { background: var(--accent); color: #000; }
+    .follow-btn.off { background: var(--card2); color: var(--muted); border: 1.5px solid var(--border); }
+
     /* ── STEPS ───────────────────────────────────── */
     .steps-ring-wrap {
       position: relative; width: 140px; height: 140px;
@@ -740,6 +854,7 @@
       </button>
     </div>
     <div class="scroll">
+      <div id="active-prog-home" style="display:none"></div>
       <div class="welcome-section">
         <div class="welcome-greeting" id="welcome-greeting">Welcome back</div>
         <div class="welcome-name" id="welcome-name">Loading…</div>
@@ -819,6 +934,33 @@
     </div>
   </div>
 
+  <!-- ══ PROGRAMS ═════════════════════════════════ -->
+  <div id="view-programs" class="view">
+    <div class="header"><h1>📋 Programs</h1></div>
+    <div class="scroll">
+      <div id="active-prog-banner"></div>
+      <div id="prog-list" class="prog-list"></div>
+    </div>
+  </div>
+
+  <!-- ══ PROGRAM DETAIL ════════════════════════════ -->
+  <div id="view-program-detail" class="view">
+    <div class="header">
+      <button class="back-btn" onclick="nav('programs')" aria-label="Back">&#8592;</button>
+      <h1 id="pdetail-title">Program</h1>
+    </div>
+    <div class="scroll">
+      <div class="pdetail-hero">
+        <div class="pdetail-icon" id="pdetail-icon"></div>
+        <div class="pdetail-name"    id="pdetail-name"></div>
+        <div class="pdetail-tagline" id="pdetail-tagline"></div>
+        <div class="pdetail-stats"   id="pdetail-stats"></div>
+      </div>
+      <div id="pdetail-content"></div>
+      <button id="follow-btn" class="follow-btn" onclick="toggleFollowProgram()"></button>
+    </div>
+  </div>
+
   <!-- ══ DAILY LOG ════════════════════════════════ -->
   <div id="view-log" class="view">
     <div class="header"><h1>📋 Daily Log</h1></div>
@@ -892,6 +1034,12 @@
   <button id="nav-home" class="active" onclick="nav('home')">
     <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
     Home
+  </button>
+  <button id="nav-programs" onclick="nav('programs')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/>
+    </svg>
+    Programs
   </button>
   <button id="nav-log" onclick="nav('log')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1094,6 +1242,7 @@ async function loadFromFirestore() {
         customExercises: d.customExercises || [],
         dailyLogs:       d.dailyLogs       || {},
         macroTargets:    d.macroTargets    || null,
+        activeProgram:   d.activeProgram   || null,
       };
     } else {
       // Migrate any existing localStorage data on first login
@@ -1146,6 +1295,151 @@ function saveWIP(dayId, s) {
 }
 
 function today() { return new Date().toISOString().slice(0, 10); }
+
+// ═══════════════════════════════════════════════════
+// CURATED WORKOUT PLANS
+// ═══════════════════════════════════════════════════
+const WORKOUT_PLANS = [
+  {
+    id: 'kickstart',
+    name: 'Kick Start',
+    tagline: 'Get back into a routine',
+    icon: '🌱',
+    color: '#4ade80',
+    level: 'Beginner',
+    levelBg: 'rgba(74,222,128,0.15)',
+    weeks: 6,
+    freq: '3–4×/wk',
+    time: '30 min',
+    goal: 'Build consistency through short workouts that aren\'t too intimidating. Perfect for getting back on track after a break — you\'ll leave every session feeling accomplished, not destroyed.',
+    exercises: [
+      { name: 'Barbell Bench Press', meta: '3 sets · 8–10 reps' },
+      { name: 'Deadlift',            meta: '3 sets · 5–8 reps' },
+      { name: 'Front Squats',        meta: '3 sets · 8–10 reps' },
+      { name: 'Push-Ups',            meta: 'Start at 10/day · add 2 reps each day for 6 weeks' },
+      { name: 'Daily Walk',          meta: 'Start at 10 min/day · add 2 min each day for 6 weeks' },
+    ],
+    phases: [
+      { label:'Weeks 1–2', title:'Foundation',    freq:'3×/wk', sets:'2 sets × 8–10 reps', focus:'Learn the movements with light weights and perfect form. Finish every session feeling like you had more in the tank.',  note:'Push-ups: Days 1–14 go from 10 → 36 reps. Walk: 10 → 36 min.' },
+      { label:'Weeks 3–4', title:'Build',         freq:'3×/wk', sets:'3 sets × 8–10 reps', focus:'Small weight increases each session. The volume bump is the main challenge — same movements, one more set.', note:'Push-ups: Days 15–28 go from 38 → 64. Walk: 38 → 64 min (split into two if needed).' },
+      { label:'Weeks 5–6', title:'Lock It In',   freq:'4×/wk', sets:'3 sets × 6–8 reps',  focus:'Add a fourth session. Fewer reps means you can go a touch heavier. You\'re building a real routine now.', note:'Push-ups: Days 29–42 go from 66 → 92. Walk: 66 → 92 min (split freely).' },
+    ],
+  },
+  {
+    id: 'fullbody',
+    name: 'Full Body Short',
+    tagline: 'Every muscle group in 45 minutes',
+    icon: '⚡',
+    color: '#60a5fa',
+    level: 'Intermediate',
+    levelBg: 'rgba(96,165,250,0.15)',
+    weeks: 6,
+    freq: '3×/wk',
+    time: '45 min',
+    goal: 'Hit every major muscle group without wasting time. This workout alternates two different days so nothing gets skipped — and it\'s always done in 45 minutes or less.',
+    note: 'Alternate Day A and Day B each week (A · B · A one week, B · A · B the next). Rest at least one day between sessions.',
+    schedule: [
+      {
+        day: 'Day A — Lower + Biceps + Rear Delts',
+        exercises: [
+          { name:'Back Squat or Front Squat',        meta:'3 sets · 8–10 reps' },
+          { name:'Single Leg Press',                 meta:'3 sets · 10 reps/leg · Alt: Lunges' },
+          { name:'Face Pulls',                       meta:'3 sets · 12–15 reps' },
+          { name:'Bicep Curls',                      meta:'3 sets · 10–12 reps' },
+        ],
+      },
+      {
+        day: 'Day B — Hinge + Push + Shoulders + Triceps',
+        exercises: [
+          { name:'Deadlift',                         meta:'3 sets · 6–8 reps' },
+          { name:'DB Incline Chest Press',           meta:'3 sets · 10–12 reps' },
+          { name:'DB Shoulder Press',                meta:'3 sets · 10–12 reps' },
+          { name:'Lat Pulldowns',                    meta:'3 sets · 10–12 reps' },
+          { name:'Lateral Raises',                   meta:'3 sets · 12–15 reps' },
+          { name:'Skull Crushers',                   meta:'3 sets · 10–12 reps' },
+        ],
+      },
+    ],
+    phases: [
+      { label:'Weeks 1–2', title:'Establish',    freq:'3×/wk', sets:'3 sets · moderate weight', focus:'Learn the A/B split. Keep weights comfortable — the goal is executing both days cleanly.' },
+      { label:'Weeks 3–4', title:'Load',         freq:'3×/wk', sets:'3 sets · increase 5–10 lbs', focus:'Add weight wherever the previous week felt manageable. Track every lift.' },
+      { label:'Weeks 5–6', title:'Peak',         freq:'3×/wk', sets:'3–4 sets · push the weight', focus:'Optional 4th set on main lifts. This is where you set new personal records.' },
+    ],
+  },
+  {
+    id: 'oly',
+    name: 'Olympic Lifting',
+    tagline: 'Progressive barbell sport training',
+    icon: '🏋️',
+    color: '#f59e0b',
+    level: 'Advanced',
+    levelBg: 'rgba(245,158,11,0.15)',
+    weeks: 6,
+    freq: '3×/wk',
+    time: '60–75 min',
+    goal: 'Build strength and technique in the Olympic lifts — snatch and clean & jerk. The same exercises repeat every week with progressive weight increases. Technique always takes priority over load.',
+    progression: 'Add 2.5–5 lbs to each lift each week. If technique breaks down, hold the weight and focus on quality before adding more.',
+    schedule: [
+      {
+        day: 'Day 1 — Snatch Focus',
+        exercises: [
+          { name:'Snatch Squat',   meta:'1 set · 3 reps — light, perfect depth' },
+          { name:'Back Squat',     meta:'1 set · 5 reps — working weight' },
+          { name:'Good Morning',   meta:'3 sets · 8 reps — posterior chain strength' },
+        ],
+      },
+      {
+        day: 'Day 2 — Clean & Jerk Focus',
+        exercises: [
+          { name:'Clean & Jerk',        meta:'1 set · 3 reps — technical focus' },
+          { name:'Barbell Bench Press', meta:'1 set · 5 reps' },
+          { name:'Barbell Strict Press',meta:'1 set · 3 reps — shoulder strength for jerk' },
+        ],
+      },
+      {
+        day: 'Day 3 — Power + Deadlift',
+        exercises: [
+          { name:'Hang Power Snatch', meta:'1 set · 5 reps — speed and pull mechanics' },
+          { name:'Barbell Deadlift',  meta:'1 set · 5 reps' },
+          { name:'Front Squat',       meta:'1 set · 3 reps — clean receiving position' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'latebloomer',
+    name: 'Late Bloomer',
+    tagline: 'Strength After 60 — beginner friendly',
+    icon: '🌸',
+    color: '#f472b6',
+    level: 'Beginner 60+',
+    levelBg: 'rgba(244,114,182,0.15)',
+    weeks: 10,
+    freq: '2–3×/wk',
+    time: '35–45 min',
+    goal: 'Build muscle, protect bone density, and improve balance for women over 60 who are new to the gym. Machines and dumbbells only. The one rule that matters: finish every set feeling like you could have done 2–3 more reps.',
+    doctorNote: 'Talk to your doctor first if you have osteoporosis, joint replacements, blood pressure concerns, or any condition that affects exercise.',
+    warmup: '5 min easy treadmill or bike · 10 bodyweight sit-to-stands from a chair · 10 arm circles forward, 10 backward',
+    balance: 'Single-leg stand: 20–30 sec per leg (fingertips on a rail for safety) · Heel-to-toe walk: 10 steps forward, 10 back',
+    exercises: [
+      { name:'Leg Press (machine)',      meta:'Foundation for stairs, standing, and getting off the floor' },
+      { name:'Seated Row (machine)',     meta:'Upper back strength — improves posture and rounded shoulders' },
+      { name:'Chest Press (machine)',    meta:'Pushing strength for doors, carts, getting up from the ground' },
+      { name:'Goblet Squat to Bench',   meta:'Sit to a bench and stand holding a light dumbbell — most functional exercise for daily life' },
+      { name:'Farmer\'s Carry',         meta:'Walk with a dumbbell in each hand — grip, core, and full-body stability' },
+      { name:'Step-Up (low box)',        meta:'Step up and down with control — builds single-leg strength and balance' },
+    ],
+    phases: [
+      { label:'Weeks 1–2', title:'Learn',             freq:'2×/wk', sets:'2 sets × 10 reps', focus:'Use the lightest weight available. Leave every session feeling like you barely worked. You\'re learning the machines, the settings, and the gym itself.', note:'Skip Farmer\'s Carry weight if needed — just practice the walk.' },
+      { label:'Weeks 3–4', title:'Build the Habit',   freq:'2×/wk', sets:'2 sets × 12 reps', focus:'Add a small amount of weight to each machine. Start writing down your weights — this becomes your scoreboard.', note:'One plate on the stack, or 2–5 lbs on dumbbells.' },
+      { label:'Weeks 5–6', title:'Add a Day',         freq:'3×/wk', sets:'3 sets × 10 reps', focus:'Three sessions per week. Keep Week 4 weights for the first three-day week, then nudge up.', note:'Increase balance holds to 30–40 seconds per leg.' },
+      { label:'Weeks 7–8', title:'Get Stronger',      freq:'3×/wk', sets:'3 sets × 8 reps',  focus:'Fewer reps means you can handle a little more weight. Add one plate or 2.5–5 lbs where last week felt comfortable.', note:'Farmer\'s carry: walk 40–50 steps per set.' },
+      { label:'Weeks 9–10', title:'Prove It',         freq:'3×/wk', sets:'3 sets × 10 reps', focus:'Back to 10 reps with your Phase 4 weights. If Week 8\'s weight now works for 10 reps, you are measurably stronger than Day 1.', note:'Try the single-leg stand with fingertips hovering — not touching.' },
+    ],
+  },
+];
+
+let currentPlanId = null; // which detail view is open
 
 // ═══════════════════════════════════════════════════
 // WORKOUT PROGRAM
@@ -1355,11 +1649,13 @@ function nav(view, dayId) {
 
   activeView = view;
 
-  if (view === 'home')     { document.getElementById('nav-home').classList.add('active');     renderHome(); }
-  if (view === 'log')      { document.getElementById('nav-log').classList.add('active');      if (!logDate) logDate = today(); renderLog(); }
-  if (view === 'progress') { document.getElementById('nav-progress').classList.add('active'); renderProgress(); }
-  if (view === 'day')      { activeDayId = dayId; renderDay(dayId); }
-  if (view === 'build')    { renderBuild(); }
+  if (view === 'home')           { document.getElementById('nav-home').classList.add('active');     renderHome(); }
+  if (view === 'programs')       { document.getElementById('nav-programs').classList.add('active'); renderPrograms(); }
+  if (view === 'program-detail') { document.getElementById('nav-programs').classList.add('active'); renderProgramDetail(); }
+  if (view === 'log')            { document.getElementById('nav-log').classList.add('active');      if (!logDate) logDate = today(); renderLog(); }
+  if (view === 'progress')       { document.getElementById('nav-progress').classList.add('active'); renderProgress(); }
+  if (view === 'day')            { activeDayId = dayId; renderDay(dayId); }
+  if (view === 'build')          { renderBuild(); }
 }
 
 // ═══════════════════════════════════════════════════
@@ -1383,6 +1679,29 @@ function renderHome() {
   const todayDow = new Date().getDay();
   const t        = today();
   const ws       = weekStart();
+
+  // Active program banner (above welcome stats)
+  const ap = appData.activeProgram;
+  const apBanner = document.getElementById('active-prog-home');
+  if (ap && apBanner) {
+    const plan = WORKOUT_PLANS.find(p => p.id === ap.id);
+    if (plan) {
+      const startD  = new Date(ap.startDate + 'T12:00:00');
+      const diffMs  = new Date() - startD;
+      const weekNum = Math.min(plan.weeks, Math.floor(diffMs / (7*24*60*60*1000)) + 1);
+      apBanner.innerHTML = `<div class="active-prog-banner" onclick="openPlan('${plan.id}')">
+        <span style="font-size:22px">${plan.icon}</span>
+        <div class="active-prog-text">
+          <div class="active-prog-name">${plan.name}</div>
+          <div class="active-prog-sub">Week ${weekNum} of ${plan.weeks} · ${plan.tagline}</div>
+        </div>
+        <span class="active-prog-chevron">›</span>
+      </div>`;
+      apBanner.style.display = 'block';
+    }
+  } else if (apBanner) {
+    apBanner.style.display = 'none';
+  }
 
   // Welcome section
   const firstName = currentUser?.displayName?.split(' ')[0] || 'there';
@@ -2086,6 +2405,175 @@ function toast(msg) {
   el.classList.add('show');
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+// ═══════════════════════════════════════════════════
+// PROGRAMS
+// ═══════════════════════════════════════════════════
+function renderPrograms() {
+  // Active program banner
+  const ap = appData.activeProgram;
+  const bannerEl = document.getElementById('active-prog-banner');
+  if (ap) {
+    const plan = WORKOUT_PLANS.find(p => p.id === ap.id);
+    if (plan) {
+      const startD  = new Date(ap.startDate + 'T12:00:00');
+      const weekNum = Math.min(plan.weeks, Math.floor((new Date() - startD) / (7*24*60*60*1000)) + 1);
+      bannerEl.innerHTML = `<div class="active-prog-banner" onclick="openPlan('${plan.id}')">
+        <span style="font-size:22px">${plan.icon}</span>
+        <div class="active-prog-text">
+          <div class="active-prog-name">Following: ${plan.name}</div>
+          <div class="active-prog-sub">Week ${weekNum} of ${plan.weeks} · Tap to view</div>
+        </div>
+        <span class="active-prog-chevron">›</span>
+      </div>`;
+    }
+  } else {
+    bannerEl.innerHTML = '';
+  }
+
+  // Program cards
+  document.getElementById('prog-list').innerHTML = WORKOUT_PLANS.map(plan => {
+    const isActive = ap?.id === plan.id;
+    return `<div class="pcard" onclick="openPlan('${plan.id}')">
+      <div class="pcard-band" style="background:${plan.color}"></div>
+      <div class="pcard-body">
+        <div class="pcard-top">
+          <div class="pcard-icon">${plan.icon}</div>
+          <div class="pcard-name">${plan.name}</div>
+          <div class="pcard-level" style="background:${plan.levelBg};color:${plan.color}">${plan.level}</div>
+        </div>
+        <div class="pcard-tagline">${plan.tagline}${isActive ? ' <span style="color:var(--accent);font-weight:700">· Active ✓</span>' : ''}</div>
+        <div class="pcard-stats">
+          <div class="pcard-stat"><b>${plan.weeks}wk</b><span>Duration</span></div>
+          <div class="pcard-stat"><b>${plan.freq}</b><span>Frequency</span></div>
+          <div class="pcard-stat"><b>${plan.time}</b><span>Per session</span></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openPlan(id) {
+  currentPlanId = id;
+  nav('program-detail');
+}
+
+function renderProgramDetail() {
+  const plan = WORKOUT_PLANS.find(p => p.id === currentPlanId);
+  if (!plan) return;
+
+  document.getElementById('pdetail-title').textContent   = plan.name;
+  document.getElementById('pdetail-icon').textContent    = plan.icon;
+  document.getElementById('pdetail-name').textContent    = plan.name;
+  document.getElementById('pdetail-tagline').textContent = plan.tagline;
+  document.getElementById('pdetail-stats').innerHTML = `
+    <div class="pdetail-stat"><div class="pdetail-stat-val">${plan.weeks} wk</div><div class="pdetail-stat-lbl">Duration</div></div>
+    <div class="pdetail-stat"><div class="pdetail-stat-val">${plan.freq}</div><div class="pdetail-stat-lbl">Frequency</div></div>
+    <div class="pdetail-stat"><div class="pdetail-stat-val">${plan.time}</div><div class="pdetail-stat-lbl">Per session</div></div>
+    <div class="pdetail-stat"><div class="pdetail-stat-val">${plan.level}</div><div class="pdetail-stat-lbl">Level</div></div>
+  `;
+
+  let html = '';
+
+  // Goal
+  html += `<div class="ds"><div class="ds-title">Goal</div><div class="ds-text">${plan.goal}</div></div>`;
+
+  // Doctor note (Late Bloomer)
+  if (plan.doctorNote) {
+    html += `<div class="ds"><div class="info-box gold">⚕️ ${plan.doctorNote}</div></div>`;
+  }
+
+  // Progression note (Oly)
+  if (plan.progression) {
+    html += `<div class="ds"><div class="info-box blue">📈 ${plan.progression}</div></div>`;
+  }
+
+  // Program note (Full Body)
+  if (plan.note) {
+    html += `<div class="ds"><div class="info-box blue">💡 ${plan.note}</div></div>`;
+  }
+
+  // Day schedule (Oly + Full Body)
+  if (plan.schedule) {
+    html += `<div class="ds"><div class="ds-title">Schedule</div>`;
+    plan.schedule.forEach(day => {
+      html += `<div class="day-block">
+        <div class="day-block-title">${day.day}</div>
+        ${day.exercises.map(e => `
+          <div class="ex-row">
+            <div class="ex-row-name">${e.name}</div>
+            <div class="ex-row-meta">${e.meta}</div>
+          </div>`).join('')}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Exercise list (Kick Start + Late Bloomer)
+  if (plan.exercises) {
+    html += `<div class="ds"><div class="ds-title">Exercises</div>`;
+    plan.exercises.forEach(e => {
+      html += `<div class="ex-row">
+        <div class="ex-row-name">${e.name}</div>
+        <div class="ex-row-meta">${e.meta}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Warmup / Balance (Late Bloomer)
+  if (plan.warmup) {
+    html += `<div class="ds"><div class="ds-title">Every Session</div>
+      <div class="info-box blue" style="margin-bottom:8px">🔥 Warm-up: ${plan.warmup}</div>
+      <div class="info-box blue">⚖️ Balance Finisher: ${plan.balance}</div>
+    </div>`;
+  }
+
+  // Phases
+  if (plan.phases) {
+    html += `<div class="ds"><div class="ds-title">Week-by-Week Progression</div>`;
+    plan.phases.forEach(ph => {
+      html += `<div class="phase-block">
+        <div class="phase-row">
+          <div class="phase-lbl">${ph.label}</div>
+          <div class="phase-title">${ph.title}</div>
+          <div class="phase-days">${ph.freq}</div>
+        </div>
+        <div class="phase-sets">${ph.sets}</div>
+        <div class="phase-focus">${ph.focus}</div>
+        ${ph.note ? `<div class="phase-note">${ph.note}</div>` : ''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  html += `<div style="height:8px"></div>`; // breathing room before button
+  document.getElementById('pdetail-content').innerHTML = html;
+
+  // Follow button
+  const isFollowing = appData.activeProgram?.id === plan.id;
+  const btn = document.getElementById('follow-btn');
+  btn.textContent = isFollowing ? '✓ Currently Following' : `Follow ${plan.name}`;
+  btn.className   = `follow-btn ${isFollowing ? 'off' : 'on'}`;
+  btn.style.background = isFollowing ? '' : plan.color;
+  btn.style.color      = isFollowing ? '' : (plan.color === '#f472b6' || plan.color === '#f59e0b' ? '#000' : '#000');
+}
+
+function toggleFollowProgram() {
+  const plan = WORKOUT_PLANS.find(p => p.id === currentPlanId);
+  if (!plan) return;
+  const d = loadData();
+  if (d.activeProgram?.id === plan.id) {
+    if (!confirm(`Stop following "${plan.name}"?`)) return;
+    d.activeProgram = null;
+    toast('Program unfollowed');
+  } else {
+    d.activeProgram = { id: plan.id, startDate: today() };
+    toast(`Now following ${plan.name}! 💪`);
+  }
+  saveData(d);
+  renderProgramDetail();
 }
 
 // ═══════════════════════════════════════════════════
