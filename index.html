@@ -286,6 +286,46 @@
     }
     .rest-trigger:active { background: var(--border); }
 
+    /* live volume bar */
+    .volume-bar {
+      margin: 8px 16px 4px; padding: 12px 16px;
+      background: var(--card); border-radius: var(--r);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .volume-stat { text-align: center; flex: 1; }
+    .volume-stat-num { font-size: 20px; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+    .volume-stat-lbl { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+    .volume-divider { width: 1px; height: 36px; background: var(--border); flex-shrink: 0; }
+
+    /* completion sheet */
+    .completion-sheet {
+      background: var(--card); border-radius: 24px 24px 0 0;
+      padding: 28px 24px calc(32px + var(--safe-b));
+      width: 100%; text-align: center;
+    }
+    .completion-emoji { font-size: 52px; margin-bottom: 10px; }
+    .completion-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .completion-sub   { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+    .completion-stats { display: flex; gap: 10px; margin-bottom: 28px; }
+    .completion-stat {
+      flex: 1; background: var(--card2); border-radius: 12px;
+      padding: 16px 8px; border: 1px solid var(--border);
+    }
+    .completion-stat-num { font-size: 26px; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1; }
+    .completion-stat-lbl { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 5px; letter-spacing: 0.3px; }
+    .completion-save-btn {
+      width: 100%; padding: 16px; border-radius: var(--r); border: none;
+      background: var(--accent); color: #000;
+      font-size: 17px; font-weight: 800; cursor: pointer; margin-bottom: 10px;
+      font-family: inherit;
+    }
+    .completion-keep-btn {
+      width: 100%; padding: 13px; border-radius: var(--r); border: none;
+      background: var(--card2); color: var(--muted);
+      font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit;
+    }
+
     /* complete button */
     .finish-btn {
       margin: 4px 16px 8px; padding: 16px;
@@ -877,6 +917,22 @@
     </div>
     <div class="scroll">
       <div id="ex-list" class="ex-list"></div>
+      <div id="volume-bar" class="volume-bar" style="display:none">
+        <div class="volume-stat">
+          <div class="volume-stat-num" id="vol-total">0</div>
+          <div class="volume-stat-lbl">lbs lifted</div>
+        </div>
+        <div class="volume-divider"></div>
+        <div class="volume-stat">
+          <div class="volume-stat-num" id="vol-sets">0</div>
+          <div class="volume-stat-lbl">sets done</div>
+        </div>
+        <div class="volume-divider"></div>
+        <div class="volume-stat">
+          <div class="volume-stat-num" id="vol-exs">0</div>
+          <div class="volume-stat-lbl">exercises</div>
+        </div>
+      </div>
       <div class="notes-wrap">
         <div class="notes-lbl">Session Notes</div>
         <textarea id="session-notes" class="notes-ta" placeholder="How did it go? Energy level, form, anything to remember…" oninput="saveNote(this.value)"></textarea>
@@ -1111,6 +1167,31 @@
     </select>
     <button class="sheet-save-btn" onclick="saveCustomEx()">Add to Library</button>
     <button class="sheet-cancel-btn" onclick="closeCustomExSheet()">Cancel</button>
+  </div>
+</div>
+
+<!-- ══ WORKOUT COMPLETION OVERLAY ════════════════ -->
+<div id="completion-overlay" class="overlay hidden">
+  <div class="completion-sheet">
+    <div class="completion-emoji">💪</div>
+    <div class="completion-title">Workout Complete!</div>
+    <div class="completion-sub" id="completion-sub">Great session</div>
+    <div class="completion-stats">
+      <div class="completion-stat">
+        <div class="completion-stat-num" id="c-vol">—</div>
+        <div class="completion-stat-lbl">lbs lifted</div>
+      </div>
+      <div class="completion-stat">
+        <div class="completion-stat-num" id="c-sets">—</div>
+        <div class="completion-stat-lbl">sets</div>
+      </div>
+      <div class="completion-stat">
+        <div class="completion-stat-num" id="c-exs">—</div>
+        <div class="completion-stat-lbl">exercises</div>
+      </div>
+    </div>
+    <button class="completion-save-btn" onclick="confirmFinishWorkout()">Save Workout ✓</button>
+    <button class="completion-keep-btn" onclick="document.getElementById('completion-overlay').classList.add('hidden')">Keep Going</button>
   </div>
 </div>
 
@@ -2006,11 +2087,39 @@ function setSwap(exId, useSwap) {
   renderDay(activeDayId);
 }
 
+function calcVolume() {
+  let volume = 0, doneSets = 0, totalSets = 0;
+  const exsDone = new Set();
+  Object.entries(wip.exercises).forEach(([key, sets]) => {
+    sets.forEach(set => {
+      totalSets++;
+      if (set.done) {
+        doneSets++;
+        exsDone.add(key);
+        if (set.weight > 0 && set.reps > 0) volume += set.weight * set.reps;
+      }
+    });
+  });
+  return { volume: Math.round(volume), doneSets, totalSets, exCount: exsDone.size };
+}
+
 function refreshFinishBtn() {
   const anyDone = Object.values(wip.exercises).some(sets => sets.some(s => s.done));
   document.getElementById('finish-btn').disabled = !anyDone;
   const ta = document.getElementById('session-notes');
   if (ta) ta.value = wip.note || '';
+
+  // Live volume bar
+  const bar = document.getElementById('volume-bar');
+  if (anyDone) {
+    const { volume, doneSets, exCount } = calcVolume();
+    document.getElementById('vol-total').textContent = volume.toLocaleString();
+    document.getElementById('vol-sets').textContent  = doneSets;
+    document.getElementById('vol-exs').textContent   = exCount;
+    bar.style.display = 'flex';
+  } else {
+    bar.style.display = 'none';
+  }
 }
 
 function saveNote(val) {
@@ -2021,11 +2130,30 @@ function saveNote(val) {
 function finishWorkout() {
   if (!wip) return;
   wip.note = (document.getElementById('session-notes')?.value || '').trim();
+  const { volume, doneSets, totalSets, exCount } = calcVolume();
+
+  // Populate and show completion sheet
+  document.getElementById('c-vol').textContent  = volume.toLocaleString();
+  document.getElementById('c-sets').textContent = doneSets;
+  document.getElementById('c-exs').textContent  = exCount;
+  const allDone = doneSets === totalSets;
+  document.getElementById('completion-sub').textContent =
+    allDone ? 'You finished every set — great work!' : `${doneSets} of ${totalSets} sets completed`;
+  document.getElementById('completion-overlay').classList.remove('hidden');
+}
+
+function confirmFinishWorkout() {
+  if (!wip) return;
+  const { volume, doneSets, exCount } = calcVolume();
+  wip.totalVolume = volume;
+  wip.doneSets    = doneSets;
+  wip.exCount     = exCount;
   const d = loadData();
   d.sessions.push({ ...wip, completedAt: new Date().toISOString() });
   saveData(d);
   saveWIP(activeDayId, null);
   wip = null;
+  document.getElementById('completion-overlay').classList.add('hidden');
   toast('Workout saved! 💪');
   nav('home');
 }
