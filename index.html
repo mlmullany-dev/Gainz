@@ -88,7 +88,7 @@
     .day-card:active { transform: scale(0.975); background: var(--card2); }
     .day-card.today { border-color: var(--accent); background: rgba(74,222,128,0.05); }
 
-    .day-badge { font-size: 12px; font-weight: 800; color: var(--muted); width: 34px; text-align: center; letter-spacing: 0.5px; }
+    .day-badge { font-size: 10px; font-weight: 800; color: var(--muted); width: 38px; text-align: center; letter-spacing: 0.3px; line-height: 1.3; }
     .day-card.today .day-badge { color: var(--accent); }
 
     .day-info { flex: 1; min-width: 0; }
@@ -653,7 +653,7 @@
 // ═══════════════════════════════════════════════════
 const PROGRAM = [
   {
-    id: 'monday', label: 'MON', dayIndex: 1, name: 'Lower — Quad Focus',
+    id: 'monday', label: 'DAY 1', dayIndex: 1, name: 'Lower — Quad Focus',
     exercises: [
       { id: 'mon_squat',   sets: 4,
         primary: { key:'p', name:'Back Squat',         reps:'6–8'       },
@@ -670,7 +670,7 @@ const PROGRAM = [
     ]
   },
   {
-    id: 'tuesday', label: 'TUE', dayIndex: 2, name: 'Push + Triceps',
+    id: 'tuesday', label: 'DAY 2', dayIndex: 2, name: 'Push + Triceps',
     exercises: [
       { id: 'tue_bench',  sets: 4, primary: { key:'p', name:'DB Bench Press',           reps:'6–8'   } },
       { id: 'tue_shldpr', sets: 3, primary: { key:'p', name:'Seated DB Shoulder Press', reps:'8–10'  } },
@@ -680,7 +680,7 @@ const PROGRAM = [
     ]
   },
   {
-    id: 'wednesday', label: 'WED', dayIndex: 3, name: 'Pull + Biceps',
+    id: 'wednesday', label: 'DAY 3', dayIndex: 3, name: 'Pull + Biceps',
     exercises: [
       { id: 'wed_pull',   sets: 4,
         primary: { key:'p', name:'Lat Pulldown',     reps:'8–10' },
@@ -694,7 +694,7 @@ const PROGRAM = [
     ]
   },
   {
-    id: 'thursday', label: 'THU', dayIndex: 4, name: 'Lower — Quad + Glute',
+    id: 'thursday', label: 'DAY 4', dayIndex: 4, name: 'Lower — Quad + Glute',
     exercises: [
       { id: 'thu_squat',  sets: 4,
         primary: { key:'p', name:'Front Squat',                reps:'8'          },
@@ -708,7 +708,7 @@ const PROGRAM = [
     ]
   },
   {
-    id: 'friday', label: 'FRI', dayIndex: 5, name: 'Arms + Shoulders',
+    id: 'friday', label: 'DAY 5', dayIndex: 5, name: 'Arms + Shoulders',
     exercises: [
       { id: 'fri_cgb',    sets: 4,
         primary: { key:'p', name:'Close-Grip Bench', reps:'8–10' },
@@ -1502,7 +1502,7 @@ function renderProgress() {
   const daySel = document.getElementById('day-sel');
   daySel.innerHTML = '<option value="">— Select a day —</option>';
   PROGRAM.forEach(d => {
-    daySel.innerHTML += `<option value="${d.id}">${d.label} — ${d.name}</option>`;
+    daySel.innerHTML += `<option value="${d.id}">${d.label}: ${d.name}</option>`;
   });
 
   const customDays = data.customDays || [];
