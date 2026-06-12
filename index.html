@@ -20,12 +20,12 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     :root {
-      --bg:          #111111;
-      --card:        #1c1c1c;
-      --card2:       #252525;
-      --border:      #333333;
-      --text:        #f2f2f2;
-      --muted:       #888888;
+      --bg:          #0b1929;
+      --card:        #112240;
+      --card2:       #172d50;
+      --border:      #1e3d5c;
+      --text:        #e8f0fe;
+      --muted:       #6b8eaa;
       --accent:      #4ade80;
       --accent-dark: #166534;
       --gold:        #fbbf24;
@@ -116,7 +116,7 @@
       position: fixed; bottom: 0; left: 0; right: 0;
       height: calc(var(--nav-h) + var(--safe-b));
       padding-bottom: var(--safe-b);
-      background: #1a1a1a; border-top: 1px solid var(--border);
+      background: #0a1622; border-top: 1px solid var(--border);
       display: flex; z-index: 100;
     }
     #bottom-nav button {
@@ -130,6 +130,28 @@
 
     /* ── SECTION LABEL ───────────────────────────── */
     .section-label { padding: 18px 20px 8px; font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+
+    /* ── WELCOME ─────────────────────────────────── */
+    .welcome-section {
+      padding: 24px 20px 8px;
+    }
+    .welcome-greeting {
+      font-size: 13px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;
+    }
+    .welcome-name {
+      font-size: 28px; font-weight: 800; line-height: 1.1; margin-bottom: 20px;
+      background: linear-gradient(120deg, #e8f0fe 0%, #93c5fd 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .welcome-stats { display: flex; gap: 10px; }
+    .welcome-stat {
+      flex: 1; background: var(--card); border-radius: 12px;
+      padding: 14px 10px; border: 1px solid var(--border); text-align: center;
+    }
+    .welcome-stat-num { font-size: 24px; font-weight: 800; color: var(--accent); line-height: 1; }
+    .welcome-stat-lbl { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 5px; letter-spacing: 0.3px; }
 
     /* ── HOME ────────────────────────────────────── */
     .week-grid { padding: 0 16px 8px; display: flex; flex-direction: column; gap: 10px; }
@@ -578,6 +600,11 @@
       </button>
     </div>
     <div class="scroll">
+      <div class="welcome-section">
+        <div class="welcome-greeting" id="welcome-greeting">Welcome back</div>
+        <div class="welcome-name" id="welcome-name">Loading…</div>
+        <div class="welcome-stats" id="welcome-stats"></div>
+      </div>
       <div class="section-label">This Week</div>
       <div id="week-grid" class="week-grid"></div>
       <div id="custom-days-section">
@@ -1063,11 +1090,39 @@ function weekStart() {
   return mon.toISOString().slice(0, 10);
 }
 
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
 function renderHome() {
   const grid     = document.getElementById('week-grid');
   const todayDow = new Date().getDay();
   const t        = today();
   const ws       = weekStart();
+
+  // Welcome section
+  const firstName = currentUser?.displayName?.split(' ')[0] || 'there';
+  document.getElementById('welcome-greeting').textContent = `${getGreeting()} 👋`;
+  document.getElementById('welcome-name').textContent = firstName + '!';
+  const weekCount  = appData.sessions.filter(s => s.date >= ws && s.date <= t).length;
+  const totalCount = appData.sessions.length;
+  document.getElementById('welcome-stats').innerHTML = `
+    <div class="welcome-stat">
+      <div class="welcome-stat-num">${weekCount}</div>
+      <div class="welcome-stat-lbl">This Week</div>
+    </div>
+    <div class="welcome-stat">
+      <div class="welcome-stat-num">${totalCount}</div>
+      <div class="welcome-stat-lbl">All Time</div>
+    </div>
+    <div class="welcome-stat">
+      <div class="welcome-stat-num">${PROGRAM.length}</div>
+      <div class="welcome-stat-lbl">Day Program</div>
+    </div>
+  `;
 
   let html = '';
   PROGRAM.forEach(day => {
