@@ -97,6 +97,27 @@
 
     .day-icon { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
 
+    /* new workout card */
+    .new-workout-card {
+      background: rgba(74,222,128,0.05); border-radius: var(--r); padding: 16px 18px;
+      border: 1.5px dashed var(--accent); cursor: pointer;
+      display: flex; align-items: center; gap: 14px; min-height: 64px;
+      transition: background 0.12s;
+    }
+    .new-workout-card:active { background: rgba(74,222,128,0.1); }
+    .new-workout-icon { font-size: 22px; width: 34px; text-align: center; flex-shrink: 0; }
+    .new-workout-label { flex: 1; font-size: 15px; font-weight: 600; color: var(--accent); }
+
+    /* custom workout card */
+    .custom-day-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .icon-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: none; background: var(--card2); color: var(--muted);
+      font-size: 14px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .icon-btn:active { background: var(--border); }
+
     /* ── DAY / EXERCISE LIST ─────────────────────── */
     .ex-list { padding: 12px 16px; display: flex; flex-direction: column; gap: 14px; }
 
@@ -188,7 +209,80 @@
     }
     .finish-btn:disabled { opacity: 0.35; pointer-events: none; }
 
-    /* ── REST TIMER MODAL ────────────────────────── */
+    /* ── BUILD WORKOUT ───────────────────────────── */
+    .build-name-input {
+      flex: 1; background: transparent; border: none;
+      color: var(--text); font-size: 18px; font-weight: 700;
+      font-family: inherit; min-width: 0;
+    }
+    .build-name-input:focus { outline: none; }
+    .build-name-input::placeholder { color: var(--muted); }
+
+    .header-save-btn {
+      padding: 8px 16px; border-radius: 8px; border: none;
+      background: var(--accent); color: #000;
+      font-size: 14px; font-weight: 700; cursor: pointer; flex-shrink: 0;
+    }
+
+    .build-list { padding: 12px 16px; display: flex; flex-direction: column; gap: 12px; }
+
+    .build-ex-card {
+      background: var(--card); border-radius: var(--r);
+      border: 1.5px solid var(--border); padding: 14px 16px;
+    }
+    .build-ex-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .build-ex-info { flex: 1; min-width: 0; }
+    .build-ex-nm { font-size: 15px; font-weight: 700; }
+    .muscle-chip {
+      display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 9px;
+      border-radius: 50px; background: rgba(74,222,128,0.1);
+      color: var(--accent); margin-top: 4px;
+    }
+
+    .build-ex-cfg { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .cfg-group {}
+    .cfg-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+
+    .sets-stepper { display: flex; align-items: center; }
+    .step-btn {
+      width: 38px; height: 42px; border: 1.5px solid var(--border);
+      background: var(--card2); color: var(--text); font-size: 20px; cursor: pointer;
+      line-height: 1; display: flex; align-items: center; justify-content: center;
+    }
+    .step-btn:first-child { border-radius: 8px 0 0 8px; }
+    .step-btn:last-child  { border-radius: 0 8px 8px 0; }
+    .step-val {
+      flex: 1; background: var(--card2);
+      border-top: 1.5px solid var(--border); border-bottom: 1.5px solid var(--border);
+      border-left: none; border-right: none;
+      color: var(--text); font-size: 18px; font-weight: 700;
+      text-align: center; padding: 10px 4px; line-height: 1;
+    }
+
+    .cfg-input {
+      width: 100%; background: var(--card2); border: 1.5px solid var(--border);
+      border-radius: 8px; color: var(--text); font-size: 16px; font-weight: 700;
+      text-align: center; padding: 10px 8px; font-family: inherit;
+    }
+    .cfg-input:focus { outline: none; border-color: var(--accent); }
+    .cfg-input::placeholder { color: #444; font-size: 13px; font-weight: 500; }
+
+    .add-ex-btn {
+      margin: 4px 16px 16px; padding: 15px;
+      border-radius: var(--r); border: 1.5px dashed var(--accent);
+      background: rgba(74,222,128,0.05); color: var(--accent);
+      font-size: 15px; font-weight: 700; cursor: pointer; width: calc(100% - 32px);
+      display: block;
+    }
+    .add-ex-btn:active { background: rgba(74,222,128,0.1); }
+
+    .build-empty {
+      text-align: center; color: var(--muted); font-size: 14px;
+      padding: 48px 32px 0; line-height: 1.6;
+    }
+    .build-empty-icon { font-size: 40px; margin-bottom: 12px; }
+
+    /* ── PICKER OVERLAY ──────────────────────────── */
     .overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.75);
       backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
@@ -196,6 +290,103 @@
     }
     .overlay.hidden { display: none; }
 
+    .picker-sheet {
+      background: var(--card); border-radius: 24px 24px 0 0;
+      width: 100%; max-height: 88vh; display: flex; flex-direction: column;
+    }
+    .picker-drag { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 12px auto 0; flex-shrink: 0; }
+    .picker-header {
+      padding: 14px 20px 0; display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+    }
+    .picker-header h2 { flex: 1; font-size: 18px; font-weight: 700; }
+    .picker-close {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: none; background: var(--card2); color: var(--muted);
+      font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+
+    .picker-search {
+      margin: 12px 16px 0;
+      background: var(--card2); border: 1.5px solid var(--border);
+      border-radius: 10px; color: var(--text); font-size: 15px;
+      padding: 10px 14px; width: calc(100% - 32px); flex-shrink: 0;
+      font-family: inherit;
+    }
+    .picker-search:focus { outline: none; border-color: var(--accent); }
+    .picker-search::placeholder { color: #555; }
+
+    .chips-row {
+      display: flex; gap: 8px; padding: 10px 16px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch; flex-shrink: 0;
+    }
+    .chips-row::-webkit-scrollbar { display: none; }
+    .chip {
+      flex-shrink: 0; padding: 6px 14px; border-radius: 50px;
+      border: 1.5px solid var(--border); background: var(--card2);
+      color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer;
+      white-space: nowrap;
+    }
+    .chip.active { border-color: var(--accent); color: var(--accent); background: rgba(74,222,128,0.08); }
+
+    .picker-list { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px calc(16px + var(--safe-b)); }
+
+    .picker-ex-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 0; border-bottom: 1px solid var(--border);
+      cursor: pointer; transition: opacity 0.15s;
+    }
+    .picker-ex-row:last-child { border-bottom: none; }
+    .picker-ex-row:active { opacity: 0.6; }
+    .picker-ex-name { flex: 1; font-size: 15px; font-weight: 500; }
+    .picker-add-icon {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 2px solid var(--accent); color: var(--accent);
+      font-size: 20px; line-height: 1; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; background: none; pointer-events: none;
+    }
+
+    .add-custom-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 0; cursor: pointer; color: var(--muted);
+      font-size: 14px; font-weight: 600; border-top: 1px solid var(--border);
+      transition: color 0.15s;
+    }
+    .add-custom-row:active { color: var(--text); }
+    .add-custom-row-icon {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 2px dashed var(--border); color: var(--muted);
+      font-size: 20px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── ADD CUSTOM EXERCISE SHEET ───────────────── */
+    .sheet-small {
+      background: var(--card); border-radius: 24px 24px 0 0;
+      padding: 20px 20px calc(24px + var(--safe-b));
+      width: 100%;
+    }
+    .sheet-drag { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+    .sheet-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+    .sheet-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 8px; }
+    .sheet-input {
+      width: 100%; background: var(--card2); border: 1.5px solid var(--border);
+      border-radius: 9px; color: var(--text); font-size: 16px;
+      padding: 13px 14px; margin-bottom: 16px; font-family: inherit;
+    }
+    .sheet-input:focus { outline: none; border-color: var(--accent); }
+    .sheet-input::placeholder { color: #555; }
+    .sheet-save-btn {
+      width: 100%; padding: 15px; border-radius: var(--r); border: none;
+      background: var(--accent); color: #000;
+      font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 8px;
+    }
+    .sheet-cancel-btn {
+      width: 100%; padding: 13px; border-radius: var(--r);
+      border: none; background: var(--card2); color: var(--muted);
+      font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px;
+    }
+
+    /* ── REST TIMER MODAL ────────────────────────── */
     .timer-sheet {
       background: var(--card); border-radius: 24px 24px 0 0;
       padding: 28px 24px calc(28px + var(--safe-b));
@@ -296,6 +487,10 @@
     <div class="scroll">
       <div class="section-label">This Week</div>
       <div id="week-grid" class="week-grid"></div>
+      <div id="custom-days-section">
+        <div class="section-label">My Workouts</div>
+        <div id="custom-days-grid" class="week-grid"></div>
+      </div>
     </div>
   </div>
 
@@ -312,6 +507,19 @@
         <textarea id="session-notes" class="notes-ta" placeholder="How did it go? Energy level, form, anything to remember…" oninput="saveNote(this.value)"></textarea>
       </div>
       <button id="finish-btn" class="finish-btn" onclick="finishWorkout()" disabled>Complete Workout ✓</button>
+    </div>
+  </div>
+
+  <!-- ══ BUILD WORKOUT ══════════════════════════ -->
+  <div id="view-build" class="view">
+    <div class="header">
+      <button class="back-btn" onclick="cancelBuild()" aria-label="Back">&#8592;</button>
+      <input id="build-name" class="build-name-input" placeholder="Workout name…" maxlength="40"/>
+      <button class="header-save-btn" onclick="saveBuildWorkout()">Save</button>
+    </div>
+    <div class="scroll">
+      <div id="build-list" class="build-list"></div>
+      <button class="add-ex-btn" onclick="openPickerOverlay()">+ Add Exercise</button>
     </div>
   </div>
 
@@ -383,6 +591,46 @@
       <button class="preset-btn" onclick="setTimer(120)">2 min</button>
     </div>
     <button class="skip-btn" onclick="closeTimer()">Skip Rest</button>
+  </div>
+</div>
+
+<!-- ══ EXERCISE PICKER OVERLAY ══════════════════════ -->
+<div id="picker-overlay" class="overlay hidden">
+  <div class="picker-sheet">
+    <div class="picker-drag"></div>
+    <div class="picker-header">
+      <h2>Add Exercise</h2>
+      <button class="picker-close" onclick="closePicker()">✕</button>
+    </div>
+    <input type="search" id="picker-search" class="picker-search" placeholder="Search exercises…" oninput="renderPicker()"/>
+    <div class="chips-row" id="picker-chips"></div>
+    <div id="picker-list" class="picker-list"></div>
+  </div>
+</div>
+
+<!-- ══ ADD CUSTOM EXERCISE OVERLAY ══════════════════ -->
+<div id="custom-ex-overlay" class="overlay hidden">
+  <div class="sheet-small">
+    <div class="sheet-drag"></div>
+    <div class="sheet-title">Add Custom Exercise</div>
+    <div class="sheet-label">Exercise Name</div>
+    <input id="custom-ex-name" class="sheet-input" type="text" placeholder="e.g. Cable Lateral Raise" maxlength="50"/>
+    <div class="sheet-label">Muscle Group</div>
+    <select id="custom-ex-muscle" class="sel" style="margin-bottom:0">
+      <option value="Chest">Chest</option>
+      <option value="Back">Back</option>
+      <option value="Shoulders">Shoulders</option>
+      <option value="Biceps">Biceps</option>
+      <option value="Triceps">Triceps</option>
+      <option value="Quads">Quads</option>
+      <option value="Hamstrings">Hamstrings</option>
+      <option value="Glutes">Glutes</option>
+      <option value="Calves">Calves</option>
+      <option value="Core">Core</option>
+      <option value="Other">Other</option>
+    </select>
+    <button class="sheet-save-btn" onclick="saveCustomEx()">Add to Library</button>
+    <button class="sheet-cancel-btn" onclick="closeCustomExSheet()">Cancel</button>
   </div>
 </div>
 
@@ -464,6 +712,82 @@ const PROGRAM = [
 ];
 
 // ═══════════════════════════════════════════════════
+// EXERCISE LIBRARY
+// ═══════════════════════════════════════════════════
+const EXERCISE_LIB = [
+  { id:'lib_bench_bb',    name:'Barbell Bench Press',          muscle:'Chest'       },
+  { id:'lib_bench_db',    name:'DB Bench Press',               muscle:'Chest'       },
+  { id:'lib_incline_bb',  name:'Incline Barbell Press',        muscle:'Chest'       },
+  { id:'lib_incline_db',  name:'Incline DB Press',             muscle:'Chest'       },
+  { id:'lib_decline_db',  name:'Decline DB Press',             muscle:'Chest'       },
+  { id:'lib_fly_db',      name:'DB Flyes',                     muscle:'Chest'       },
+  { id:'lib_cable_fly',   name:'Cable Flyes',                  muscle:'Chest'       },
+  { id:'lib_pushup',      name:'Push-Ups',                     muscle:'Chest'       },
+  { id:'lib_dip_chest',   name:'Dips',                         muscle:'Chest'       },
+  { id:'lib_pullup',      name:'Pull-Ups',                     muscle:'Back'        },
+  { id:'lib_chinup',      name:'Chin-Ups',                     muscle:'Back'        },
+  { id:'lib_lat_pd',      name:'Lat Pulldown',                 muscle:'Back'        },
+  { id:'lib_row_bb',      name:'Barbell Row',                  muscle:'Back'        },
+  { id:'lib_row_db',      name:'Single-Arm DB Row',            muscle:'Back'        },
+  { id:'lib_row_cable',   name:'Cable Row',                    muscle:'Back'        },
+  { id:'lib_deadlift',    name:'Deadlift',                     muscle:'Back'        },
+  { id:'lib_facepull',    name:'Face Pulls',                   muscle:'Back'        },
+  { id:'lib_shrug',       name:'Shrugs',                       muscle:'Back'        },
+  { id:'lib_ohp_bb',      name:'Barbell Overhead Press',       muscle:'Shoulders'   },
+  { id:'lib_ohp_db',      name:'DB Shoulder Press',            muscle:'Shoulders'   },
+  { id:'lib_lateral',     name:'Lateral Raises',               muscle:'Shoulders'   },
+  { id:'lib_front_raise', name:'Front Raises',                 muscle:'Shoulders'   },
+  { id:'lib_rear_delt',   name:'Rear Delt Flyes',              muscle:'Shoulders'   },
+  { id:'lib_arnold',      name:'Arnold Press',                 muscle:'Shoulders'   },
+  { id:'lib_upright_row', name:'Upright Row',                  muscle:'Shoulders'   },
+  { id:'lib_curl_bb',     name:'Barbell Curls',                muscle:'Biceps'      },
+  { id:'lib_curl_db',     name:'DB Curls',                     muscle:'Biceps'      },
+  { id:'lib_hammer',      name:'Hammer Curls',                 muscle:'Biceps'      },
+  { id:'lib_incline_curl',name:'Incline DB Curls',             muscle:'Biceps'      },
+  { id:'lib_preacher',    name:'Preacher Curls',               muscle:'Biceps'      },
+  { id:'lib_cable_curl',  name:'Cable Curls',                  muscle:'Biceps'      },
+  { id:'lib_conc_curl',   name:'Concentration Curls',          muscle:'Biceps'      },
+  { id:'lib_cgbench',     name:'Close-Grip Bench',             muscle:'Triceps'     },
+  { id:'lib_skull',       name:'Skull Crushers',               muscle:'Triceps'     },
+  { id:'lib_pushdown',    name:'Triceps Pushdowns',            muscle:'Triceps'     },
+  { id:'lib_ohext',       name:'Overhead Triceps Extension',   muscle:'Triceps'     },
+  { id:'lib_kickback',    name:'Triceps Kickbacks',            muscle:'Triceps'     },
+  { id:'lib_squat',       name:'Back Squat',                   muscle:'Quads'       },
+  { id:'lib_front_sq',    name:'Front Squat',                  muscle:'Quads'       },
+  { id:'lib_goblet',      name:'Goblet Squat',                 muscle:'Quads'       },
+  { id:'lib_legpress',    name:'Leg Press',                    muscle:'Quads'       },
+  { id:'lib_legext',      name:'Leg Extensions',               muscle:'Quads'       },
+  { id:'lib_lunge',       name:'Reverse Lunges',               muscle:'Quads'       },
+  { id:'lib_walk_lunge',  name:'Walking Lunges',               muscle:'Quads'       },
+  { id:'lib_stepup',      name:'DB Step-Ups',                  muscle:'Quads'       },
+  { id:'lib_split_sq',    name:'Bulgarian Split Squat',        muscle:'Quads'       },
+  { id:'lib_rdl',         name:'Romanian Deadlift',            muscle:'Hamstrings'  },
+  { id:'lib_leg_curl',    name:'Leg Curls',                    muscle:'Hamstrings'  },
+  { id:'lib_sdl',         name:'Stiff-Leg Deadlift',           muscle:'Hamstrings'  },
+  { id:'lib_nordic',      name:'Nordic Curls',                 muscle:'Hamstrings'  },
+  { id:'lib_hip_thrust',  name:'Hip Thrusts',                  muscle:'Glutes'      },
+  { id:'lib_glute_bridge',name:'Glute Bridge',                 muscle:'Glutes'      },
+  { id:'lib_cable_kb',    name:'Cable Glute Kickbacks',        muscle:'Glutes'      },
+  { id:'lib_abduction',   name:'Hip Abduction',                muscle:'Glutes'      },
+  { id:'lib_calf_stand',  name:'Standing Calf Raises',         muscle:'Calves'      },
+  { id:'lib_calf_seat',   name:'Seated Calf Raises',           muscle:'Calves'      },
+  { id:'lib_plank',       name:'Plank',                        muscle:'Core'        },
+  { id:'lib_crunch',      name:'Crunches',                     muscle:'Core'        },
+  { id:'lib_leg_raise',   name:'Leg Raises',                   muscle:'Core'        },
+  { id:'lib_ab_wheel',    name:'Ab Wheel Rollout',             muscle:'Core'        },
+  { id:'lib_russian',     name:'Russian Twists',               muscle:'Core'        },
+  { id:'lib_cable_crunch',name:'Cable Crunches',               muscle:'Core'        },
+  { id:'lib_hanging_kr',  name:'Hanging Knee Raises',          muscle:'Core'        },
+];
+
+const MUSCLE_GROUPS = ['All','Chest','Back','Shoulders','Biceps','Triceps','Quads','Hamstrings','Glutes','Calves','Core','Other'];
+
+function getAllExercises() {
+  const data = loadData();
+  return [...EXERCISE_LIB, ...(data.customExercises || []).map(e => ({ ...e, isCustom: true }))];
+}
+
+// ═══════════════════════════════════════════════════
 // STORAGE HELPERS
 // ═══════════════════════════════════════════════════
 function loadData() {
@@ -516,12 +840,17 @@ function lastBest(dayId, exId, vKey) {
 // ═══════════════════════════════════════════════════
 let activeView  = 'home';
 let activeDayId = null;
-let wip         = null;   // current in-progress session object
+let wip         = null;
 
 let timerInterval = null;
 let timerDuration = 90;
 let timerLeft     = 90;
-const CIRC = 2 * Math.PI * 72; // ≈ 452.4
+const CIRC = 2 * Math.PI * 72;
+
+// Build workout state
+let buildDay           = null;  // { name, exercises: [] }
+let editingCustomDayId = null;
+let pickerFilter       = 'All';
 
 // ═══════════════════════════════════════════════════
 // NAVIGATION
@@ -536,6 +865,7 @@ function nav(view, dayId) {
   if (view === 'home')     { document.getElementById('nav-home').classList.add('active');     renderHome(); }
   if (view === 'progress') { document.getElementById('nav-progress').classList.add('active'); renderProgress(); }
   if (view === 'day')      { activeDayId = dayId; renderDay(dayId); }
+  if (view === 'build')    { renderBuild(); }
 }
 
 // ═══════════════════════════════════════════════════
@@ -578,6 +908,45 @@ function renderHome() {
   });
 
   grid.innerHTML = html;
+
+  // Custom workouts section
+  const customDays = data.customDays || [];
+  const customSection = document.getElementById('custom-days-section');
+  const customGrid    = document.getElementById('custom-days-grid');
+
+  let customHtml = '';
+  customDays.forEach(day => {
+    const completed = data.sessions.some(s => s.dayId === day.id && s.date >= ws && s.date <= t);
+    const inProg    = !!loadWIP(day.id);
+    const exCount   = day.exercises.length;
+    const preview   = day.exercises.slice(0,3).map(e => e.name).join(' · ') + (exCount > 3 ? '…' : '');
+
+    let statusIcon = '';
+    if (completed)   statusIcon = '<span style="color:var(--accent)">✓</span>';
+    else if (inProg) statusIcon = '<span style="color:var(--gold)">●</span>';
+
+    customHtml += `<div class="day-card" onclick="openCustomDay('${day.id}')">
+      <div class="day-badge" style="font-size:20px;color:var(--accent)">⚡</div>
+      <div class="day-info">
+        <div class="day-name">${day.name}</div>
+        <div class="day-sub">${exCount} exercise${exCount !== 1 ? 's' : ''} · ${preview || 'No exercises yet'}</div>
+      </div>
+      <div class="custom-day-actions">
+        ${statusIcon ? `<span style="font-size:18px">${statusIcon}</span>` : ''}
+        <button class="icon-btn" onclick="editCustomDay('${day.id}',event)" title="Edit">✎</button>
+        <button class="icon-btn" onclick="deleteCustomDay('${day.id}',event)" title="Delete">✕</button>
+      </div>
+    </div>`;
+  });
+
+  // Always show "New Workout" card
+  customHtml += `<div class="new-workout-card" onclick="startBuildWorkout()">
+    <div class="new-workout-icon">＋</div>
+    <div class="new-workout-label">New Workout</div>
+  </div>`;
+
+  customGrid.innerHTML = customHtml;
+  customSection.style.display = 'block';
 }
 
 function openDay(dayId) {
@@ -586,7 +955,6 @@ function openDay(dayId) {
 
   wip = loadWIP(dayId);
   if (!wip || wip.date !== today()) {
-    // Fresh session — pre-fill weights from last session
     const last = lastSessionForDay(dayId);
     wip = { dayId, date: today(), exercises: {} };
 
@@ -606,10 +974,45 @@ function openDay(dayId) {
   nav('day', dayId);
 }
 
+function openCustomDay(dayId) {
+  const data = loadData();
+  const day  = (data.customDays || []).find(d => d.id === dayId);
+  if (!day) return;
+
+  wip = loadWIP(dayId);
+  if (!wip || wip.date !== today()) {
+    const last = lastSessionForDay(dayId);
+    wip = { dayId, date: today(), isCustom: true, exercises: {} };
+    day.exercises.forEach(ex => {
+      const lastSets = last?.exercises?.[ex.id] || [];
+      wip.exercises[ex.id] = Array.from({ length: ex.sets }, (_, i) => ({
+        weight: lastSets[i]?.weight || '',
+        reps:   '',
+        done:   false,
+      }));
+    });
+    saveWIP(dayId, wip);
+  }
+  nav('day', dayId);
+}
+
+function deleteCustomDay(dayId, e) {
+  e.stopPropagation();
+  const data = loadData();
+  const day  = (data.customDays || []).find(d => d.id === dayId);
+  if (!day) return;
+  if (!confirm(`Delete "${day.name}"?`)) return;
+  data.customDays = data.customDays.filter(d => d.id !== dayId);
+  saveData(data);
+  renderHome();
+}
+
 // ═══════════════════════════════════════════════════
 // DAY VIEW
 // ═══════════════════════════════════════════════════
 function renderDay(dayId) {
+  if (wip && wip.isCustom) { renderCustomDay(dayId); return; }
+
   const day  = PROGRAM.find(d => d.id === dayId);
   const data = loadData();
   document.getElementById('day-title').textContent = day.name;
@@ -622,7 +1025,6 @@ function renderDay(dayId) {
     const vKey     = variant.key;
     const sKey     = ex.id + '_' + vKey;
 
-    // Ensure sets exist in wip
     if (!wip.exercises[sKey]) {
       const last     = lastSessionForDay(dayId);
       const lastSets = last?.exercises?.[sKey] || [];
@@ -631,11 +1033,10 @@ function renderDay(dayId) {
       }));
       saveWIP(dayId, wip);
     }
-    const sets   = wip.exercises[sKey];
+    const sets    = wip.exercises[sKey];
     const allDone = sets.length > 0 && sets.every(s => s.done);
     const anyDone = sets.some(s => s.done);
 
-    // ── swap toggle ──
     let swapHtml = '';
     if (ex.swap) {
       swapHtml = `<div class="swap-wrap"><div class="swap-row">
@@ -644,13 +1045,11 @@ function renderDay(dayId) {
       </div></div>`;
     }
 
-    // ── beat-this ──
     const lb = lastBest(dayId, ex.id, vKey);
     const beatHtml = lb
       ? `<div class="beat-this">🎯 Beat this: <strong>${lb.weight} lbs × ${lb.reps} reps</strong></div>`
       : `<div class="beat-this baseline">No history yet — set your baseline today!</div>`;
 
-    // ── sets rows ──
     let setsHtml = `<div class="sets-head"><span>SET</span><span>LBS</span><span>REPS</span><span></span></div>`;
     sets.forEach((set, i) => {
       setsHtml += `<div class="set-row${set.done ? ' is-done' : ''}" id="sr-${ex.id}-${i}">
@@ -665,7 +1064,6 @@ function renderDay(dayId) {
       </div>`;
     });
 
-    // ── rest buttons (show after first set done, until all done) ──
     const restHtml = anyDone && !allDone
       ? `<div class="rest-row">
            <button class="rest-trigger" onclick="openTimer(60)">⏱ 60s rest</button>
@@ -678,6 +1076,70 @@ function renderDay(dayId) {
         <div class="ex-name">${variant.name}${variant.note ? ` <span class="ex-note">(${variant.note})</span>` : ''}</div>
         <div class="ex-meta">${ex.sets} sets · ${variant.reps} reps</div>
         ${swapHtml}
+      </div>
+      ${beatHtml}
+      <div class="sets-wrap">${setsHtml}</div>
+      ${restHtml}
+    </div>`;
+  });
+
+  document.getElementById('ex-list').innerHTML = html;
+  refreshFinishBtn();
+}
+
+function renderCustomDay(dayId) {
+  const data = loadData();
+  const day  = (data.customDays || []).find(d => d.id === dayId);
+  if (!day) return;
+
+  document.getElementById('day-title').textContent = day.name;
+  let html = '';
+
+  day.exercises.forEach(ex => {
+    if (!wip.exercises[ex.id]) {
+      const last     = lastSessionForDay(dayId);
+      const lastSets = last?.exercises?.[ex.id] || [];
+      wip.exercises[ex.id] = Array.from({ length: ex.sets }, (_, i) => ({
+        weight: lastSets[i]?.weight || '', reps: '', done: false,
+      }));
+      saveWIP(dayId, wip);
+    }
+
+    const sets    = wip.exercises[ex.id];
+    const allDone = sets.length > 0 && sets.every(s => s.done);
+    const anyDone = sets.some(s => s.done);
+
+    const lastEx  = lastSessionForDay(dayId)?.exercises?.[ex.id];
+    const lb      = bestSet(lastEx);
+    const beatHtml = lb
+      ? `<div class="beat-this">🎯 Beat this: <strong>${lb.weight} lbs × ${lb.reps} reps</strong></div>`
+      : `<div class="beat-this baseline">No history yet — set your baseline today!</div>`;
+
+    let setsHtml = `<div class="sets-head"><span>SET</span><span>LBS</span><span>REPS</span><span></span></div>`;
+    sets.forEach((set, i) => {
+      setsHtml += `<div class="set-row${set.done ? ' is-done' : ''}">
+        <div class="set-num">${i + 1}</div>
+        <input type="number" inputmode="decimal" class="set-input" placeholder="—"
+          value="${set.weight}" ${set.done ? 'disabled' : ''}
+          onchange="setVal('${ex.id}',${i},'weight',this.value)"/>
+        <input type="number" inputmode="numeric" class="set-input" placeholder="—"
+          value="${set.reps}" ${set.done ? 'disabled' : ''}
+          onchange="setVal('${ex.id}',${i},'reps',this.value)"/>
+        <button class="check-btn${set.done ? ' checked' : ''}" onclick="toggleDone('${ex.id}',${i})">${set.done ? '✓' : ''}</button>
+      </div>`;
+    });
+
+    const restHtml = anyDone && !allDone
+      ? `<div class="rest-row">
+           <button class="rest-trigger" onclick="openTimer(60)">⏱ 60s rest</button>
+           <button class="rest-trigger" onclick="openTimer(90)">⏱ 90s rest</button>
+         </div>`
+      : '';
+
+    html += `<div class="ex-card${allDone ? ' all-done' : ''}">
+      <div class="ex-head">
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-meta">${ex.sets} sets · ${ex.reps} reps</div>
       </div>
       ${beatHtml}
       <div class="sets-wrap">${setsHtml}</div>
@@ -731,6 +1193,205 @@ function finishWorkout() {
   wip = null;
   toast('Workout saved! 💪');
   nav('home');
+}
+
+// ═══════════════════════════════════════════════════
+// BUILD WORKOUT
+// ═══════════════════════════════════════════════════
+function startBuildWorkout() {
+  buildDay = { name: '', exercises: [] };
+  editingCustomDayId = null;
+  document.getElementById('build-name').value = '';
+  nav('build');
+}
+
+function editCustomDay(dayId, e) {
+  e?.stopPropagation();
+  const data = loadData();
+  const day  = (data.customDays || []).find(d => d.id === dayId);
+  if (!day) return;
+  buildDay           = JSON.parse(JSON.stringify(day));
+  editingCustomDayId = dayId;
+  document.getElementById('build-name').value = day.name;
+  nav('build');
+}
+
+function cancelBuild() {
+  buildDay           = null;
+  editingCustomDayId = null;
+  nav('home');
+}
+
+function renderBuild() {
+  const listEl = document.getElementById('build-list');
+  if (!buildDay || !buildDay.exercises.length) {
+    listEl.innerHTML = `<div class="build-empty">
+      <div class="build-empty-icon">🏋️</div>
+      Tap <strong>+ Add Exercise</strong> below<br>to build your workout
+    </div>`;
+    return;
+  }
+
+  listEl.innerHTML = buildDay.exercises.map((ex, i) => `
+    <div class="build-ex-card">
+      <div class="build-ex-top">
+        <div class="build-ex-info">
+          <div class="build-ex-nm">${ex.name}</div>
+          <span class="muscle-chip">${ex.muscle}</span>
+        </div>
+        <button class="icon-btn" onclick="removeExFromBuild(${i})">✕</button>
+      </div>
+      <div class="build-ex-cfg">
+        <div class="cfg-group">
+          <div class="cfg-label">Sets</div>
+          <div class="sets-stepper">
+            <button class="step-btn" onclick="adjustSets(${i},-1)">−</button>
+            <div class="step-val">${ex.sets}</div>
+            <button class="step-btn" onclick="adjustSets(${i},1)">+</button>
+          </div>
+        </div>
+        <div class="cfg-group">
+          <div class="cfg-label">Reps</div>
+          <input class="cfg-input" type="text" inputmode="text"
+            placeholder="e.g. 8–10"
+            value="${ex.reps}"
+            onchange="setBuildReps(${i},this.value)"
+            maxlength="12"/>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function adjustSets(i, delta) {
+  buildDay.exercises[i].sets = Math.max(1, Math.min(10, buildDay.exercises[i].sets + delta));
+  renderBuild();
+}
+
+function setBuildReps(i, val) {
+  buildDay.exercises[i].reps = val.trim() || '10';
+}
+
+function removeExFromBuild(i) {
+  buildDay.exercises.splice(i, 1);
+  renderBuild();
+}
+
+function saveBuildWorkout() {
+  const name = document.getElementById('build-name').value.trim();
+  if (!name) { toast('Give your workout a name'); return; }
+  if (!buildDay.exercises.length) { toast('Add at least one exercise'); return; }
+
+  buildDay.name = name;
+
+  const data = loadData();
+  if (!data.customDays) data.customDays = [];
+
+  if (editingCustomDayId) {
+    const idx = data.customDays.findIndex(d => d.id === editingCustomDayId);
+    if (idx >= 0) data.customDays[idx] = { ...buildDay, id: editingCustomDayId };
+  } else {
+    buildDay.id = 'cday_' + Date.now();
+    data.customDays.push(buildDay);
+  }
+
+  saveData(data);
+  buildDay           = null;
+  editingCustomDayId = null;
+  toast(`"${name}" saved!`);
+  nav('home');
+}
+
+// ═══════════════════════════════════════════════════
+// EXERCISE PICKER
+// ═══════════════════════════════════════════════════
+function openPickerOverlay() {
+  pickerFilter = 'All';
+  document.getElementById('picker-search').value = '';
+  renderPicker();
+  document.getElementById('picker-overlay').classList.remove('hidden');
+}
+
+function closePicker() {
+  document.getElementById('picker-overlay').classList.add('hidden');
+}
+
+function setPickerFilter(m) {
+  pickerFilter = m;
+  renderPicker();
+}
+
+function renderPicker() {
+  const chipsEl = document.getElementById('picker-chips');
+  chipsEl.innerHTML = MUSCLE_GROUPS.filter(m => m !== 'Other' || getAllExercises().some(e => e.muscle === 'Other'))
+    .map(m => `<button class="chip${pickerFilter===m?' active':''}" onclick="setPickerFilter('${m}')">${m}</button>`)
+    .join('');
+
+  const search = (document.getElementById('picker-search')?.value || '').toLowerCase().trim();
+  const exercises = getAllExercises().filter(ex => {
+    const matchMuscle = pickerFilter === 'All' || ex.muscle === pickerFilter;
+    const matchSearch = !search || ex.name.toLowerCase().includes(search);
+    return matchMuscle && matchSearch;
+  });
+
+  const listEl = document.getElementById('picker-list');
+  let html = exercises.map(ex =>
+    `<div class="picker-ex-row" onclick="addExToBuild('${ex.id}')">
+      <div class="picker-ex-name">${ex.name}</div>
+      <span class="muscle-chip">${ex.muscle}</span>
+      <div class="picker-add-icon">+</div>
+    </div>`
+  ).join('');
+
+  html += `<div class="add-custom-row" onclick="openAddCustomSheet()">
+    <div class="add-custom-row-icon">＋</div>
+    Add custom exercise…
+  </div>`;
+
+  listEl.innerHTML = html || '<div class="no-data">No exercises found.</div>';
+}
+
+function addExToBuild(exId) {
+  const ex = getAllExercises().find(e => e.id === exId);
+  if (!ex || !buildDay) return;
+  buildDay.exercises.push({
+    id:     'bex_' + Date.now(),
+    libId:  ex.id,
+    name:   ex.name,
+    muscle: ex.muscle,
+    sets:   3,
+    reps:   '10',
+  });
+  renderBuild();
+  closePicker();
+  toast(`${ex.name} added`);
+}
+
+// ═══════════════════════════════════════════════════
+// CUSTOM EXERCISE
+// ═══════════════════════════════════════════════════
+function openAddCustomSheet() {
+  document.getElementById('custom-ex-name').value = '';
+  document.getElementById('custom-ex-overlay').classList.remove('hidden');
+}
+
+function closeCustomExSheet() {
+  document.getElementById('custom-ex-overlay').classList.add('hidden');
+}
+
+function saveCustomEx() {
+  const name = document.getElementById('custom-ex-name').value.trim();
+  if (!name) { toast('Enter an exercise name'); return; }
+  const muscle = document.getElementById('custom-ex-muscle').value;
+
+  const data = loadData();
+  if (!data.customExercises) data.customExercises = [];
+  data.customExercises.push({ id: 'cex_' + Date.now(), name, muscle });
+  saveData(data);
+
+  closeCustomExSheet();
+  renderPicker();
+  toast(`"${name}" added to library`);
 }
 
 // ═══════════════════════════════════════════════════
@@ -825,21 +1486,40 @@ function renderProgress() {
   PROGRAM.forEach(d => {
     daySel.innerHTML += `<option value="${d.id}">${d.label} — ${d.name}</option>`;
   });
+
+  const customDays = data.customDays || [];
+  if (customDays.length) {
+    daySel.innerHTML += '<option disabled>── My Workouts ──</option>';
+    customDays.forEach(d => {
+      daySel.innerHTML += `<option value="${d.id}">⚡ ${d.name}</option>`;
+    });
+  }
+
   document.getElementById('ex-sel').style.display = 'none';
   document.getElementById('week-sel').style.display = 'none';
   document.getElementById('strength-chart').innerHTML = '';
 }
 
 function updateExSel() {
-  const dayId  = document.getElementById('day-sel').value;
-  const exSel  = document.getElementById('ex-sel');
+  const dayId = document.getElementById('day-sel').value;
+  const exSel = document.getElementById('ex-sel');
   exSel.innerHTML = '<option value="">— Select an exercise —</option>';
   exSel.style.display = dayId ? 'block' : 'none';
   document.getElementById('week-sel').style.display = 'none';
   document.getElementById('strength-chart').innerHTML = '';
   if (!dayId) return;
 
+  const data      = loadData();
+  const customDay = (data.customDays || []).find(d => d.id === dayId);
+  if (customDay) {
+    customDay.exercises.forEach(ex => {
+      exSel.innerHTML += `<option value="${ex.id}|custom">${ex.name}</option>`;
+    });
+    return;
+  }
+
   const day = PROGRAM.find(d => d.id === dayId);
+  if (!day) return;
   day.exercises.forEach(ex => {
     exSel.innerHTML += `<option value="${ex.id}|p">${ex.primary.name}</option>`;
     if (ex.swap) exSel.innerHTML += `<option value="${ex.id}|s">↳ ${ex.swap.name}</option>`;
@@ -853,13 +1533,13 @@ function updateStrengthWeekSel() {
 }
 
 function renderStrengthChart() {
-  const val = document.getElementById('ex-sel').value;
+  const val     = document.getElementById('ex-sel').value;
   const chartEl = document.getElementById('strength-chart');
   if (!val) { chartEl.innerHTML = ''; return; }
 
   const [exId, vKey] = val.split('|');
   const dayId = document.getElementById('day-sel').value;
-  const sKey  = exId + '_' + vKey;
+  const sKey  = vKey === 'custom' ? exId : exId + '_' + vKey;
 
   const data   = loadData();
   const allPts = data.sessions
