@@ -1025,10 +1025,13 @@ function getAllExercises() {
 // HISTORY HELPERS
 // ═══════════════════════════════════════════════════
 function lastSessionForDay(dayId) {
-  const t = today();
   return appData.sessions
-    .filter(s => s.dayId === dayId && s.date < t)
-    .sort((a,b) => b.date.localeCompare(a.date))[0] || null;
+    .filter(s => s.dayId === dayId)
+    .sort((a, b) => {
+      // Most recent date first; break ties by completedAt so same-day repeats sort correctly
+      if (b.date !== a.date) return b.date.localeCompare(a.date);
+      return (b.completedAt || '').localeCompare(a.completedAt || '');
+    })[0] || null;
 }
 
 function bestSet(sets) {
