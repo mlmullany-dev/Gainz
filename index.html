@@ -10,6 +10,12 @@
   <title>Gainz</title>
   <link rel="manifest" href="manifest.json"/>
   <link rel="apple-touch-icon" href="icon.svg"/>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -54,7 +60,56 @@
       cursor: pointer; line-height: 1;
     }
 
+    /* user avatar button */
+    .user-btn {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 2px solid var(--border); background: var(--card2);
+      overflow: hidden; cursor: pointer; padding: 0; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .user-btn img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
     .scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: calc(var(--nav-h) + var(--safe-b) + 16px); }
+
+    /* ── LOGIN SCREEN ────────────────────────────── */
+    #login-screen {
+      position: fixed; inset: 0; background: var(--bg);
+      z-index: 500; display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    #login-screen.hidden { display: none; }
+
+    .login-card {
+      background: var(--card); border-radius: 24px; padding: 44px 28px 36px;
+      width: 100%; max-width: 340px; text-align: center;
+      border: 1px solid var(--border);
+    }
+    .login-logo { font-size: 56px; margin-bottom: 16px; }
+    .login-title { font-size: 30px; font-weight: 800; margin-bottom: 8px; }
+    .login-sub { font-size: 15px; color: var(--muted); line-height: 1.5; margin-bottom: 36px; }
+    .google-btn {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      width: 100%; padding: 15px 20px;
+      background: #fff; color: #1f1f1f;
+      border: none; border-radius: 12px;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+      font-family: inherit; transition: background 0.15s;
+    }
+    .google-btn:active { background: #f0f0f0; }
+    .google-btn svg { flex-shrink: 0; }
+
+    /* loading spinner */
+    #loading-screen {
+      position: fixed; inset: 0; background: var(--bg);
+      z-index: 490; display: flex; align-items: center; justify-content: center;
+    }
+    #loading-screen.hidden { display: none; }
+    .spinner {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 3px solid var(--border); border-top-color: var(--accent);
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ── BOTTOM NAV ──────────────────────────────── */
     #bottom-nav {
@@ -105,7 +160,7 @@
       transition: background 0.12s;
     }
     .new-workout-card:active { background: rgba(74,222,128,0.1); }
-    .new-workout-icon { font-size: 22px; width: 34px; text-align: center; flex-shrink: 0; }
+    .new-workout-icon { font-size: 22px; width: 38px; text-align: center; flex-shrink: 0; }
     .new-workout-label { flex: 1; font-size: 15px; font-weight: 600; color: var(--accent); }
 
     /* custom workout card */
@@ -170,6 +225,9 @@
       display: grid; grid-template-columns: 22px 42px 1fr 1fr 36px;
       gap: 6px; align-items: center; margin-bottom: 8px;
     }
+    .set-row:last-child { margin-bottom: 0; }
+
+    .set-num { font-size: 13px; color: var(--muted); font-weight: 700; text-align: center; }
 
     .set-prev {
       font-size: 14px; font-weight: 700; color: var(--muted);
@@ -178,9 +236,6 @@
       padding: 10px 2px; line-height: 1;
     }
     .set-row.is-done .set-prev { opacity: 0.45; }
-    .set-row:last-child { margin-bottom: 0; }
-
-    .set-num { font-size: 13px; color: var(--muted); font-weight: 700; text-align: center; }
 
     .set-input {
       background: var(--card2); border: 1.5px solid var(--border);
@@ -250,7 +305,6 @@
     }
 
     .build-ex-cfg { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .cfg-group {}
     .cfg-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
 
     .sets-stepper { display: flex; align-items: center; }
@@ -489,11 +543,40 @@
   </style>
 </head>
 <body>
+
+<!-- ══ LOADING SCREEN ══════════════════════════════ -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+</div>
+
+<!-- ══ LOGIN SCREEN ════════════════════════════════ -->
+<div id="login-screen" class="hidden">
+  <div class="login-card">
+    <div class="login-logo">💪</div>
+    <div class="login-title">Gainz</div>
+    <div class="login-sub">Track your workouts and strength progress over time.</div>
+    <button class="google-btn" onclick="signInWithGoogle()">
+      <svg width="20" height="20" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      Sign in with Google
+    </button>
+  </div>
+</div>
+
 <div id="app">
 
   <!-- ══ HOME ════════════════════════════════════ -->
   <div id="view-home" class="view active">
-    <div class="header"><h1>💪 Gainz</h1></div>
+    <div class="header">
+      <h1>💪 Gainz</h1>
+      <button class="user-btn" onclick="confirmSignOut()" id="user-btn" title="Sign out">
+        <img id="user-avatar" src="" alt=""/>
+      </button>
+    </div>
     <div class="scroll">
       <div class="section-label">This Week</div>
       <div id="week-grid" class="week-grid"></div>
@@ -649,6 +732,121 @@
 
 <script>
 // ═══════════════════════════════════════════════════
+// FIREBASE INIT
+// ═══════════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyDLUTKA4q7ZoNVAwbdWE57LEG26VDltR_s",
+  authDomain: "gainz-64b62.firebaseapp.com",
+  projectId: "gainz-64b62",
+  storageBucket: "gainz-64b62.firebasestorage.app",
+  messagingSenderId: "791092082027",
+  appId: "1:791092082027:web:2e19da68ecac1c5706c82e"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.firestore();
+
+let currentUser = null;
+let appData     = { sessions: [], bodyweight: [], swaps: {}, customDays: [], customExercises: [] };
+let syncTimeout = null;
+
+// ─── Auth state ───────────────────────────────────
+auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    currentUser = user;
+    // Update avatar
+    const avatar = document.getElementById('user-avatar');
+    if (user.photoURL) avatar.src = user.photoURL;
+    // Load data from Firestore then show app
+    await loadFromFirestore();
+    document.getElementById('loading-screen').classList.add('hidden');
+    document.getElementById('login-screen').classList.add('hidden');
+    renderHome();
+  } else {
+    currentUser = null;
+    appData = { sessions: [], bodyweight: [], swaps: {}, customDays: [], customExercises: [] };
+    document.getElementById('loading-screen').classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+  }
+});
+
+function signInWithGoogle() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).catch(() => toast('Sign-in failed — please try again'));
+}
+
+function confirmSignOut() {
+  if (confirm('Sign out of Gainz?')) auth.signOut();
+}
+
+// ─── Firestore sync ───────────────────────────────
+async function loadFromFirestore() {
+  if (!currentUser) return;
+  try {
+    const doc = await db.collection('users').doc(currentUser.uid)
+                        .collection('data').doc('main').get();
+    if (doc.exists) {
+      const d = doc.data();
+      appData = {
+        sessions:        d.sessions        || [],
+        bodyweight:      d.bodyweight      || [],
+        swaps:           d.swaps           || {},
+        customDays:      d.customDays      || [],
+        customExercises: d.customExercises || [],
+      };
+    } else {
+      // Migrate any existing localStorage data on first login
+      try {
+        const local = JSON.parse(localStorage.getItem('gainz_v1') || 'null');
+        if (local && (local.sessions?.length || local.bodyweight?.length)) {
+          appData = { sessions:[], bodyweight:[], swaps:{}, customDays:[], customExercises:[], ...local };
+          await pushToFirestore();
+          toast('Local data synced to your account ☁️');
+        }
+      } catch(e) {}
+    }
+  } catch(e) {
+    console.error('Firestore load failed:', e);
+    toast('Could not load cloud data — working offline');
+  }
+}
+
+async function pushToFirestore() {
+  if (!currentUser) return;
+  try {
+    await db.collection('users').doc(currentUser.uid)
+            .collection('data').doc('main').set(appData);
+  } catch(e) {
+    console.error('Firestore save failed:', e);
+  }
+}
+
+function scheduleSyncToFirestore() {
+  if (syncTimeout) clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(pushToFirestore, 1500);
+}
+
+// ─── Storage helpers (now use appData + Firestore) ─
+function loadData() { return appData; }
+
+function saveData(d) {
+  appData = d;
+  scheduleSyncToFirestore();
+}
+
+// WIP stays in localStorage (session-specific, no need to cloud sync)
+function loadWIP(dayId) {
+  try { return JSON.parse(localStorage.getItem('gainz_wip_' + dayId) || 'null'); }
+  catch(e) { return null; }
+}
+function saveWIP(dayId, s) {
+  if (s) localStorage.setItem('gainz_wip_' + dayId, JSON.stringify(s));
+  else   localStorage.removeItem('gainz_wip_' + dayId);
+}
+
+function today() { return new Date().toISOString().slice(0, 10); }
+
+// ═══════════════════════════════════════════════════
 // WORKOUT PROGRAM
 // ═══════════════════════════════════════════════════
 const PROGRAM = [
@@ -793,36 +991,15 @@ const EXERCISE_LIB = [
 const MUSCLE_GROUPS = ['All','Chest','Back','Shoulders','Biceps','Triceps','Quads','Hamstrings','Glutes','Calves','Core','Other'];
 
 function getAllExercises() {
-  const data = loadData();
-  return [...EXERCISE_LIB, ...(data.customExercises || []).map(e => ({ ...e, isCustom: true }))];
+  return [...EXERCISE_LIB, ...(appData.customExercises || []).map(e => ({ ...e, isCustom: true }))];
 }
-
-// ═══════════════════════════════════════════════════
-// STORAGE HELPERS
-// ═══════════════════════════════════════════════════
-function loadData() {
-  try { return JSON.parse(localStorage.getItem('gainz_v1') || '{"sessions":[],"bodyweight":[],"swaps":{}}'); }
-  catch(e) { return { sessions:[], bodyweight:[], swaps:{} }; }
-}
-function saveData(d) { localStorage.setItem('gainz_v1', JSON.stringify(d)); }
-
-function loadWIP(dayId) {
-  try { return JSON.parse(localStorage.getItem('gainz_wip_' + dayId) || 'null'); }
-  catch(e) { return null; }
-}
-function saveWIP(dayId, s) {
-  if (s) localStorage.setItem('gainz_wip_' + dayId, JSON.stringify(s));
-  else   localStorage.removeItem('gainz_wip_' + dayId);
-}
-
-function today() { return new Date().toISOString().slice(0, 10); }
 
 // ═══════════════════════════════════════════════════
 // HISTORY HELPERS
 // ═══════════════════════════════════════════════════
 function lastSessionForDay(dayId) {
-  const d = loadData(), t = today();
-  return d.sessions
+  const t = today();
+  return appData.sessions
     .filter(s => s.dayId === dayId && s.date < t)
     .sort((a,b) => b.date.localeCompare(a.date))[0] || null;
 }
@@ -841,8 +1018,7 @@ function bestSet(sets) {
 function lastBest(dayId, exId, vKey) {
   const session = lastSessionForDay(dayId);
   if (!session) return null;
-  const ex = session.exercises && session.exercises[exId + '_' + vKey];
-  return bestSet(ex);
+  return bestSet(session.exercises?.[exId + '_' + vKey]);
 }
 
 // ═══════════════════════════════════════════════════
@@ -858,7 +1034,7 @@ let timerLeft     = 90;
 const CIRC = 2 * Math.PI * 72;
 
 // Build workout state
-let buildDay           = null;  // { name, exercises: [] }
+let buildDay           = null;
 let editingCustomDayId = null;
 let pickerFilter       = 'All';
 
@@ -888,16 +1064,15 @@ function weekStart() {
 }
 
 function renderHome() {
-  const grid  = document.getElementById('week-grid');
-  const data  = loadData();
+  const grid     = document.getElementById('week-grid');
   const todayDow = new Date().getDay();
-  const t  = today();
-  const ws = weekStart();
+  const t        = today();
+  const ws       = weekStart();
 
   let html = '';
   PROGRAM.forEach(day => {
     const isToday   = day.dayIndex === todayDow;
-    const completed = data.sessions.some(s => s.dayId === day.id && s.date >= ws && s.date <= t);
+    const completed = appData.sessions.some(s => s.dayId === day.id && s.date >= ws && s.date <= t);
     const inProg    = !!loadWIP(day.id);
 
     let icon = '';
@@ -916,17 +1091,16 @@ function renderHome() {
       <div class="day-icon">${icon}</div>
     </div>`;
   });
-
   grid.innerHTML = html;
 
-  // Custom workouts section
-  const customDays = data.customDays || [];
+  // Custom workouts
+  const customDays    = appData.customDays || [];
   const customSection = document.getElementById('custom-days-section');
   const customGrid    = document.getElementById('custom-days-grid');
 
   let customHtml = '';
   customDays.forEach(day => {
-    const completed = data.sessions.some(s => s.dayId === day.id && s.date >= ws && s.date <= t);
+    const completed = appData.sessions.some(s => s.dayId === day.id && s.date >= ws && s.date <= t);
     const inProg    = !!loadWIP(day.id);
     const exCount   = day.exercises.length;
     const preview   = day.exercises.slice(0,3).map(e => e.name).join(' · ') + (exCount > 3 ? '…' : '');
@@ -943,13 +1117,12 @@ function renderHome() {
       </div>
       <div class="custom-day-actions">
         ${statusIcon ? `<span style="font-size:18px">${statusIcon}</span>` : ''}
-        <button class="icon-btn" onclick="editCustomDay('${day.id}',event)" title="Edit">✎</button>
-        <button class="icon-btn" onclick="deleteCustomDay('${day.id}',event)" title="Delete">✕</button>
+        <button class="icon-btn" onclick="editCustomDay('${day.id}',event)">✎</button>
+        <button class="icon-btn" onclick="deleteCustomDay('${day.id}',event)">✕</button>
       </div>
     </div>`;
   });
 
-  // Always show "New Workout" card
   customHtml += `<div class="new-workout-card" onclick="startBuildWorkout()">
     <div class="new-workout-icon">＋</div>
     <div class="new-workout-label">New Workout</div>
@@ -961,22 +1134,18 @@ function renderHome() {
 
 function openDay(dayId) {
   const day = PROGRAM.find(d => d.id === dayId);
-  const data = loadData();
 
   wip = loadWIP(dayId);
   if (!wip || wip.date !== today()) {
     const last = lastSessionForDay(dayId);
     wip = { dayId, date: today(), exercises: {} };
-
     day.exercises.forEach(ex => {
-      const useSwap = !!(data.swaps && data.swaps[ex.id]);
-      const vKey    = useSwap && ex.swap ? ex.swap.key : ex.primary.key;
-      const sKey    = ex.id + '_' + vKey;
+      const useSwap  = !!(appData.swaps && appData.swaps[ex.id]);
+      const vKey     = useSwap && ex.swap ? ex.swap.key : ex.primary.key;
+      const sKey     = ex.id + '_' + vKey;
       const lastSets = last?.exercises?.[sKey] || [];
       wip.exercises[sKey] = Array.from({ length: ex.sets }, (_, i) => ({
-        weight: lastSets[i]?.weight || '',
-        reps:   '',
-        done:   false,
+        weight: lastSets[i]?.weight || '', reps: '', done: false,
       }));
     });
     saveWIP(dayId, wip);
@@ -985,8 +1154,7 @@ function openDay(dayId) {
 }
 
 function openCustomDay(dayId) {
-  const data = loadData();
-  const day  = (data.customDays || []).find(d => d.id === dayId);
+  const day = (appData.customDays || []).find(d => d.id === dayId);
   if (!day) return;
 
   wip = loadWIP(dayId);
@@ -996,9 +1164,7 @@ function openCustomDay(dayId) {
     day.exercises.forEach(ex => {
       const lastSets = last?.exercises?.[ex.id] || [];
       wip.exercises[ex.id] = Array.from({ length: ex.sets }, (_, i) => ({
-        weight: lastSets[i]?.weight || '',
-        reps:   '',
-        done:   false,
+        weight: lastSets[i]?.weight || '', reps: '', done: false,
       }));
     });
     saveWIP(dayId, wip);
@@ -1008,12 +1174,11 @@ function openCustomDay(dayId) {
 
 function deleteCustomDay(dayId, e) {
   e.stopPropagation();
-  const data = loadData();
-  const day  = (data.customDays || []).find(d => d.id === dayId);
-  if (!day) return;
-  if (!confirm(`Delete "${day.name}"?`)) return;
-  data.customDays = data.customDays.filter(d => d.id !== dayId);
-  saveData(data);
+  const day = (appData.customDays || []).find(d => d.id === dayId);
+  if (!day || !confirm(`Delete "${day.name}"?`)) return;
+  const d = loadData();
+  d.customDays = d.customDays.filter(x => x.id !== dayId);
+  saveData(d);
   renderHome();
 }
 
@@ -1023,17 +1188,15 @@ function deleteCustomDay(dayId, e) {
 function renderDay(dayId) {
   if (wip && wip.isCustom) { renderCustomDay(dayId); return; }
 
-  const day  = PROGRAM.find(d => d.id === dayId);
-  const data = loadData();
+  const day = PROGRAM.find(d => d.id === dayId);
   document.getElementById('day-title').textContent = day.name;
 
   let html = '';
-
   day.exercises.forEach((ex) => {
-    const useSwap  = !!(data.swaps && data.swaps[ex.id]) && !!ex.swap;
-    const variant  = useSwap ? ex.swap : ex.primary;
-    const vKey     = variant.key;
-    const sKey     = ex.id + '_' + vKey;
+    const useSwap = !!(appData.swaps && appData.swaps[ex.id]) && !!ex.swap;
+    const variant = useSwap ? ex.swap : ex.primary;
+    const vKey    = variant.key;
+    const sKey    = ex.id + '_' + vKey;
 
     if (!wip.exercises[sKey]) {
       const last     = lastSessionForDay(dayId);
@@ -1061,7 +1224,7 @@ function renderDay(dayId) {
       : `<div class="beat-this baseline">No history yet — set your baseline today!</div>`;
 
     const lastSession = lastSessionForDay(dayId);
-    const lastSets = lastSession?.exercises?.[sKey] || [];
+    const lastSets    = lastSession?.exercises?.[sKey] || [];
 
     let setsHtml = `<div class="sets-head"><span>SET</span><span>PREV</span><span>LBS</span><span>REPS</span><span></span></div>`;
     sets.forEach((set, i) => {
@@ -1103,8 +1266,7 @@ function renderDay(dayId) {
 }
 
 function renderCustomDay(dayId) {
-  const data = loadData();
-  const day  = (data.customDays || []).find(d => d.id === dayId);
+  const day = (appData.customDays || []).find(d => d.id === dayId);
   if (!day) return;
 
   document.getElementById('day-title').textContent = day.name;
@@ -1182,10 +1344,10 @@ function toggleDone(sKey, idx) {
 }
 
 function setSwap(exId, useSwap) {
-  const data = loadData();
-  if (!data.swaps) data.swaps = {};
-  data.swaps[exId] = useSwap;
-  saveData(data);
+  const d = loadData();
+  if (!d.swaps) d.swaps = {};
+  d.swaps[exId] = useSwap;
+  saveData(d);
   renderDay(activeDayId);
 }
 
@@ -1204,9 +1366,9 @@ function saveNote(val) {
 function finishWorkout() {
   if (!wip) return;
   wip.note = (document.getElementById('session-notes')?.value || '').trim();
-  const data = loadData();
-  data.sessions.push({ ...wip, completedAt: new Date().toISOString() });
-  saveData(data);
+  const d = loadData();
+  d.sessions.push({ ...wip, completedAt: new Date().toISOString() });
+  saveData(d);
   saveWIP(activeDayId, null);
   wip = null;
   toast('Workout saved! 💪');
@@ -1225,8 +1387,7 @@ function startBuildWorkout() {
 
 function editCustomDay(dayId, e) {
   e?.stopPropagation();
-  const data = loadData();
-  const day  = (data.customDays || []).find(d => d.id === dayId);
+  const day = (appData.customDays || []).find(d => d.id === dayId);
   if (!day) return;
   buildDay           = JSON.parse(JSON.stringify(day));
   editingCustomDayId = dayId;
@@ -1235,8 +1396,7 @@ function editCustomDay(dayId, e) {
 }
 
 function cancelBuild() {
-  buildDay           = null;
-  editingCustomDayId = null;
+  buildDay = null; editingCustomDayId = null;
   nav('home');
 }
 
@@ -1249,7 +1409,6 @@ function renderBuild() {
     </div>`;
     return;
   }
-
   listEl.innerHTML = buildDay.exercises.map((ex, i) => `
     <div class="build-ex-card">
       <div class="build-ex-top">
@@ -1260,7 +1419,7 @@ function renderBuild() {
         <button class="icon-btn" onclick="removeExFromBuild(${i})">✕</button>
       </div>
       <div class="build-ex-cfg">
-        <div class="cfg-group">
+        <div>
           <div class="cfg-label">Sets</div>
           <div class="sets-stepper">
             <button class="step-btn" onclick="adjustSets(${i},-1)">−</button>
@@ -1268,13 +1427,11 @@ function renderBuild() {
             <button class="step-btn" onclick="adjustSets(${i},1)">+</button>
           </div>
         </div>
-        <div class="cfg-group">
+        <div>
           <div class="cfg-label">Reps</div>
           <input class="cfg-input" type="text" inputmode="text"
-            placeholder="e.g. 8–10"
-            value="${ex.reps}"
-            onchange="setBuildReps(${i},this.value)"
-            maxlength="12"/>
+            placeholder="e.g. 8–10" value="${ex.reps}"
+            onchange="setBuildReps(${i},this.value)" maxlength="12"/>
         </div>
       </div>
     </div>
@@ -1285,37 +1442,25 @@ function adjustSets(i, delta) {
   buildDay.exercises[i].sets = Math.max(1, Math.min(10, buildDay.exercises[i].sets + delta));
   renderBuild();
 }
-
-function setBuildReps(i, val) {
-  buildDay.exercises[i].reps = val.trim() || '10';
-}
-
-function removeExFromBuild(i) {
-  buildDay.exercises.splice(i, 1);
-  renderBuild();
-}
+function setBuildReps(i, val) { buildDay.exercises[i].reps = val.trim() || '10'; }
+function removeExFromBuild(i) { buildDay.exercises.splice(i, 1); renderBuild(); }
 
 function saveBuildWorkout() {
   const name = document.getElementById('build-name').value.trim();
   if (!name) { toast('Give your workout a name'); return; }
   if (!buildDay.exercises.length) { toast('Add at least one exercise'); return; }
-
   buildDay.name = name;
-
-  const data = loadData();
-  if (!data.customDays) data.customDays = [];
-
+  const d = loadData();
+  if (!d.customDays) d.customDays = [];
   if (editingCustomDayId) {
-    const idx = data.customDays.findIndex(d => d.id === editingCustomDayId);
-    if (idx >= 0) data.customDays[idx] = { ...buildDay, id: editingCustomDayId };
+    const idx = d.customDays.findIndex(x => x.id === editingCustomDayId);
+    if (idx >= 0) d.customDays[idx] = { ...buildDay, id: editingCustomDayId };
   } else {
     buildDay.id = 'cday_' + Date.now();
-    data.customDays.push(buildDay);
+    d.customDays.push(buildDay);
   }
-
-  saveData(data);
-  buildDay           = null;
-  editingCustomDayId = null;
+  saveData(d);
+  buildDay = null; editingCustomDayId = null;
   toast(`"${name}" saved!`);
   nav('home');
 }
@@ -1329,23 +1474,17 @@ function openPickerOverlay() {
   renderPicker();
   document.getElementById('picker-overlay').classList.remove('hidden');
 }
-
-function closePicker() {
-  document.getElementById('picker-overlay').classList.add('hidden');
-}
-
-function setPickerFilter(m) {
-  pickerFilter = m;
-  renderPicker();
-}
+function closePicker() { document.getElementById('picker-overlay').classList.add('hidden'); }
+function setPickerFilter(m) { pickerFilter = m; renderPicker(); }
 
 function renderPicker() {
   const chipsEl = document.getElementById('picker-chips');
-  chipsEl.innerHTML = MUSCLE_GROUPS.filter(m => m !== 'Other' || getAllExercises().some(e => e.muscle === 'Other'))
+  chipsEl.innerHTML = MUSCLE_GROUPS
+    .filter(m => m !== 'Other' || getAllExercises().some(e => e.muscle === 'Other'))
     .map(m => `<button class="chip${pickerFilter===m?' active':''}" onclick="setPickerFilter('${m}')">${m}</button>`)
     .join('');
 
-  const search = (document.getElementById('picker-search')?.value || '').toLowerCase().trim();
+  const search    = (document.getElementById('picker-search')?.value || '').toLowerCase().trim();
   const exercises = getAllExercises().filter(ex => {
     const matchMuscle = pickerFilter === 'All' || ex.muscle === pickerFilter;
     const matchSearch = !search || ex.name.toLowerCase().includes(search);
@@ -1360,26 +1499,17 @@ function renderPicker() {
       <div class="picker-add-icon">+</div>
     </div>`
   ).join('');
-
   html += `<div class="add-custom-row" onclick="openAddCustomSheet()">
     <div class="add-custom-row-icon">＋</div>
     Add custom exercise…
   </div>`;
-
   listEl.innerHTML = html || '<div class="no-data">No exercises found.</div>';
 }
 
 function addExToBuild(exId) {
   const ex = getAllExercises().find(e => e.id === exId);
   if (!ex || !buildDay) return;
-  buildDay.exercises.push({
-    id:     'bex_' + Date.now(),
-    libId:  ex.id,
-    name:   ex.name,
-    muscle: ex.muscle,
-    sets:   3,
-    reps:   '10',
-  });
+  buildDay.exercises.push({ id:'bex_'+Date.now(), libId:ex.id, name:ex.name, muscle:ex.muscle, sets:3, reps:'10' });
   renderBuild();
   closePicker();
   toast(`${ex.name} added`);
@@ -1392,21 +1522,16 @@ function openAddCustomSheet() {
   document.getElementById('custom-ex-name').value = '';
   document.getElementById('custom-ex-overlay').classList.remove('hidden');
 }
-
-function closeCustomExSheet() {
-  document.getElementById('custom-ex-overlay').classList.add('hidden');
-}
+function closeCustomExSheet() { document.getElementById('custom-ex-overlay').classList.add('hidden'); }
 
 function saveCustomEx() {
   const name = document.getElementById('custom-ex-name').value.trim();
   if (!name) { toast('Enter an exercise name'); return; }
   const muscle = document.getElementById('custom-ex-muscle').value;
-
-  const data = loadData();
-  if (!data.customExercises) data.customExercises = [];
-  data.customExercises.push({ id: 'cex_' + Date.now(), name, muscle });
-  saveData(data);
-
+  const d = loadData();
+  if (!d.customExercises) d.customExercises = [];
+  d.customExercises.push({ id:'cex_'+Date.now(), name, muscle });
+  saveData(d);
   closeCustomExSheet();
   renderPicker();
   toast(`"${name}" added to library`);
@@ -1416,8 +1541,7 @@ function saveCustomEx() {
 // REST TIMER
 // ═══════════════════════════════════════════════════
 function openTimer(seconds) {
-  timerDuration = seconds;
-  timerLeft     = seconds;
+  timerDuration = seconds; timerLeft = seconds;
   document.getElementById('timer-overlay').classList.remove('hidden');
   document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
   tickTimer();
@@ -1431,21 +1555,13 @@ function openTimer(seconds) {
     } else { tickTimer(); }
   }, 1000);
 }
-
-function setTimer(sec) {
-  if (timerInterval) clearInterval(timerInterval);
-  openTimer(sec);
-}
-
+function setTimer(sec) { if (timerInterval) clearInterval(timerInterval); openTimer(sec); }
 function tickTimer() {
   const mins = Math.floor(timerLeft / 60), secs = timerLeft % 60;
   document.getElementById('ring-time').textContent =
     timerLeft >= 60 ? `${mins}:${secs.toString().padStart(2,'0')}` : timerLeft;
-  const pct    = timerLeft / timerDuration;
-  const offset = CIRC * (1 - pct);
-  document.getElementById('ring-fg').style.strokeDashoffset = offset;
+  document.getElementById('ring-fg').style.strokeDashoffset = CIRC * (1 - timerLeft / timerDuration);
 }
-
 function closeTimer() {
   if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   document.getElementById('timer-overlay').classList.add('hidden');
@@ -1461,12 +1577,10 @@ function getTrainingWeeks(sessions) {
   const dow    = first.getDay();
   const mon    = new Date(first);
   mon.setDate(first.getDate() - (dow === 0 ? 6 : dow - 1));
-
   const weeks = [], now = new Date();
   let cur = new Date(mon), num = 1;
   while (cur <= now && num <= 20) {
-    const end = new Date(cur);
-    end.setDate(cur.getDate() + 6);
+    const end = new Date(cur); end.setDate(cur.getDate() + 6);
     weeks.push({ num, start: cur.toISOString().slice(0,10), end: end.toISOString().slice(0,10) });
     cur = new Date(cur); cur.setDate(cur.getDate() + 7); num++;
   }
@@ -1495,8 +1609,7 @@ function weekFilteredPts(pts, selId) {
 // PROGRESS VIEW
 // ═══════════════════════════════════════════════════
 function renderProgress() {
-  const data = loadData();
-  buildWeekSel('bw-week-sel', data.sessions);
+  buildWeekSel('bw-week-sel', appData.sessions);
   renderBWChart();
 
   const daySel = document.getElementById('day-sel');
@@ -1504,15 +1617,13 @@ function renderProgress() {
   PROGRAM.forEach(d => {
     daySel.innerHTML += `<option value="${d.id}">${d.label}: ${d.name}</option>`;
   });
-
-  const customDays = data.customDays || [];
+  const customDays = appData.customDays || [];
   if (customDays.length) {
     daySel.innerHTML += '<option disabled>── My Workouts ──</option>';
     customDays.forEach(d => {
       daySel.innerHTML += `<option value="${d.id}">⚡ ${d.name}</option>`;
     });
   }
-
   document.getElementById('ex-sel').style.display = 'none';
   document.getElementById('week-sel').style.display = 'none';
   document.getElementById('strength-chart').innerHTML = '';
@@ -1527,15 +1638,13 @@ function updateExSel() {
   document.getElementById('strength-chart').innerHTML = '';
   if (!dayId) return;
 
-  const data      = loadData();
-  const customDay = (data.customDays || []).find(d => d.id === dayId);
+  const customDay = (appData.customDays || []).find(d => d.id === dayId);
   if (customDay) {
     customDay.exercises.forEach(ex => {
       exSel.innerHTML += `<option value="${ex.id}|custom">${ex.name}</option>`;
     });
     return;
   }
-
   const day = PROGRAM.find(d => d.id === dayId);
   if (!day) return;
   day.exercises.forEach(ex => {
@@ -1545,8 +1654,7 @@ function updateExSel() {
 }
 
 function updateStrengthWeekSel() {
-  const data = loadData();
-  buildWeekSel('week-sel', data.sessions);
+  buildWeekSel('week-sel', appData.sessions);
   renderStrengthChart();
 }
 
@@ -1559,15 +1667,13 @@ function renderStrengthChart() {
   const dayId = document.getElementById('day-sel').value;
   const sKey  = vKey === 'custom' ? exId : exId + '_' + vKey;
 
-  const data   = loadData();
-  const allPts = data.sessions
+  const allPts = appData.sessions
     .filter(s => s.dayId === dayId && s.exercises?.[sKey])
     .map(s => { const b = bestSet(s.exercises[sKey]); return b ? { date: s.date, value: b.weight, reps: b.reps } : null; })
     .filter(Boolean)
     .sort((a,b) => a.date.localeCompare(b.date));
 
   const points = weekFilteredPts(allPts, 'week-sel');
-
   chartEl.innerHTML = points.length
     ? svgChart(points, 'lbs')
     : '<div class="no-data">No data for this selection yet.</div>';
@@ -1577,25 +1683,21 @@ function logBW() {
   const input = document.getElementById('bw-input');
   const val   = parseFloat(input.value);
   if (!val || val < 50 || val > 500) { toast('Enter a weight between 50–500 lbs'); return; }
-
-  const data  = loadData();
-  if (!data.bodyweight) data.bodyweight = [];
+  const d = loadData();
+  if (!d.bodyweight) d.bodyweight = [];
   const t = today();
-  const i = data.bodyweight.findIndex(b => b.date === t);
-  if (i >= 0) data.bodyweight[i].weight = val;
-  else data.bodyweight.push({ date: t, weight: val });
-
-  saveData(data);
-  input.value = '';
-  input.blur();
+  const i = d.bodyweight.findIndex(b => b.date === t);
+  if (i >= 0) d.bodyweight[i].weight = val;
+  else d.bodyweight.push({ date: t, weight: val });
+  saveData(d);
+  input.value = ''; input.blur();
   toast(`Logged ${val} lbs`);
   renderBWChart();
 }
 
 function renderBWChart() {
-  const data    = loadData();
   const chartEl = document.getElementById('bw-chart');
-  const allPts  = (data.bodyweight || [])
+  const allPts  = (appData.bodyweight || [])
     .sort((a,b) => a.date.localeCompare(b.date))
     .map(b => ({ date: b.date, value: b.weight }));
   const pts = weekFilteredPts(allPts, 'bw-week-sel');
@@ -1610,52 +1712,30 @@ function renderBWChart() {
 function svgChart(pts, unit) {
   const W = 320, H = 140;
   const pad = { t:16, r:12, b:28, l:44 };
-  const iW  = W - pad.l - pad.r;
-  const iH  = H - pad.t - pad.b;
-
+  const iW  = W - pad.l - pad.r, iH = H - pad.t - pad.b;
   const vals = pts.map(p => p.value);
-  const mn   = Math.min(...vals), mx = Math.max(...vals);
-  const rng  = mx - mn || 1;
-
-  const toX = i => pad.l + (i / Math.max(pts.length - 1, 1)) * iW;
-  const toY = v => pad.t + iH - ((v - mn) / rng) * iH;
-
+  const mn   = Math.min(...vals), mx = Math.max(...vals), rng = mx - mn || 1;
+  const toX  = i => pad.l + (i / Math.max(pts.length - 1, 1)) * iW;
+  const toY  = v => pad.t + iH - ((v - mn) / rng) * iH;
   const pathD = pts.map((p,i) => `${i===0?'M':'L'}${toX(i).toFixed(1)},${toY(p.value).toFixed(1)}`).join(' ');
   const fillD = pathD + ` L${toX(pts.length-1).toFixed(1)},${(pad.t+iH).toFixed(1)} L${toX(0).toFixed(1)},${(pad.t+iH).toFixed(1)} Z`;
-
-  const yTicks = [mx, (mn+mx)/2, mn];
-  const yPos   = [pad.t, pad.t + iH/2, pad.t + iH];
-
-  const xIdxs = pts.length <= 3
-    ? pts.map((_,i) => i)
-    : [0, Math.round((pts.length-1)/2), pts.length-1];
-
+  const yTicks = [mx, (mn+mx)/2, mn], yPos = [pad.t, pad.t+iH/2, pad.t+iH];
+  const xIdxs = pts.length <= 3 ? pts.map((_,i)=>i) : [0, Math.round((pts.length-1)/2), pts.length-1];
   const fmtDate = s => { const d = new Date(s+'T12:00:00'); return `${d.getMonth()+1}/${d.getDate()}`; };
 
   let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block;background:var(--card2);border-radius:8px">
-    <defs>
-      <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#4ade80" stop-opacity="0.22"/>
-        <stop offset="100%" stop-color="#4ade80" stop-opacity="0"/>
-      </linearGradient>
-    </defs>`;
-
+    <defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4ade80" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#4ade80" stop-opacity="0"/>
+    </linearGradient></defs>`;
   yTicks.forEach((v,i) => {
     svg += `<line x1="${pad.l}" y1="${yPos[i]}" x2="${W-pad.r}" y2="${yPos[i]}" stroke="#2e2e2e" stroke-width="1"/>
       <text x="${pad.l-6}" y="${yPos[i]+4}" text-anchor="end" fill="#666" font-size="10" font-family="-apple-system,sans-serif">${Math.round(v)}</text>`;
   });
-
   if (pts.length > 1) svg += `<path d="${fillD}" fill="url(#cg)"/>`;
   svg += `<path d="${pathD}" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
-
-  pts.forEach((p,i) => {
-    svg += `<circle cx="${toX(i).toFixed(1)}" cy="${toY(p.value).toFixed(1)}" r="4" fill="#4ade80" stroke="#1c1c1c" stroke-width="2"/>`;
-  });
-
-  xIdxs.forEach(i => {
-    svg += `<text x="${toX(i).toFixed(1)}" y="${H-5}" text-anchor="middle" fill="#666" font-size="10" font-family="-apple-system,sans-serif">${fmtDate(pts[i].date)}</text>`;
-  });
-
+  pts.forEach((p,i) => { svg += `<circle cx="${toX(i).toFixed(1)}" cy="${toY(p.value).toFixed(1)}" r="4" fill="#4ade80" stroke="#1c1c1c" stroke-width="2"/>`; });
+  xIdxs.forEach(i => { svg += `<text x="${toX(i).toFixed(1)}" y="${H-5}" text-anchor="middle" fill="#666" font-size="10" font-family="-apple-system,sans-serif">${fmtDate(pts[i].date)}</text>`; });
   svg += '</svg>';
   return svg;
 }
@@ -1672,14 +1752,10 @@ function toast(msg) {
   toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
 }
 
-// ═══════════════════════════════════════════════════
-// SERVICE WORKER + INIT
-// ═══════════════════════════════════════════════════
+// Service worker (keep for offline PWA support)
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
-
-renderHome();
 </script>
 </body>
 </html>
