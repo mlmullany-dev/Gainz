@@ -158,16 +158,26 @@
     /* sets table */
     .sets-wrap { padding: 0 16px 10px; }
     .sets-head {
-      display: grid; grid-template-columns: 28px 1fr 1fr 40px;
-      gap: 8px; padding: 0 2px; margin-bottom: 6px;
+      display: grid; grid-template-columns: 22px 42px 1fr 1fr 36px;
+      gap: 6px; padding: 0 2px; margin-bottom: 6px;
       font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px;
     }
-    .sets-head span:nth-child(2), .sets-head span:nth-child(3) { text-align: center; }
+    .sets-head span:nth-child(2),
+    .sets-head span:nth-child(3),
+    .sets-head span:nth-child(4) { text-align: center; }
 
     .set-row {
-      display: grid; grid-template-columns: 28px 1fr 1fr 40px;
-      gap: 8px; align-items: center; margin-bottom: 8px;
+      display: grid; grid-template-columns: 22px 42px 1fr 1fr 36px;
+      gap: 6px; align-items: center; margin-bottom: 8px;
     }
+
+    .set-prev {
+      font-size: 14px; font-weight: 700; color: var(--muted);
+      text-align: center; background: var(--card2);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px 2px; line-height: 1;
+    }
+    .set-row.is-done .set-prev { opacity: 0.45; }
     .set-row:last-child { margin-bottom: 0; }
 
     .set-num { font-size: 13px; color: var(--muted); font-weight: 700; text-align: center; }
@@ -183,7 +193,7 @@
     .set-row.is-done .set-input { opacity: 0.45; }
 
     .check-btn {
-      width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border);
+      width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border);
       background: none; color: transparent; font-size: 17px;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; transition: all 0.15s; flex-shrink: 0;
@@ -1050,10 +1060,15 @@ function renderDay(dayId) {
       ? `<div class="beat-this">🎯 Beat this: <strong>${lb.weight} lbs × ${lb.reps} reps</strong></div>`
       : `<div class="beat-this baseline">No history yet — set your baseline today!</div>`;
 
-    let setsHtml = `<div class="sets-head"><span>SET</span><span>LBS</span><span>REPS</span><span></span></div>`;
+    const lastSession = lastSessionForDay(dayId);
+    const lastSets = lastSession?.exercises?.[sKey] || [];
+
+    let setsHtml = `<div class="sets-head"><span>SET</span><span>PREV</span><span>LBS</span><span>REPS</span><span></span></div>`;
     sets.forEach((set, i) => {
+      const prev = lastSets[i]?.weight || '—';
       setsHtml += `<div class="set-row${set.done ? ' is-done' : ''}" id="sr-${ex.id}-${i}">
         <div class="set-num">${i + 1}</div>
+        <div class="set-prev">${prev}</div>
         <input type="number" inputmode="decimal" class="set-input" placeholder="—"
           value="${set.weight}" ${set.done ? 'disabled' : ''}
           onchange="setVal('${sKey}',${i},'weight',this.value)"/>
@@ -1109,16 +1124,19 @@ function renderCustomDay(dayId) {
     const allDone = sets.length > 0 && sets.every(s => s.done);
     const anyDone = sets.some(s => s.done);
 
-    const lastEx  = lastSessionForDay(dayId)?.exercises?.[ex.id];
-    const lb      = bestSet(lastEx);
+    const lastSession2 = lastSessionForDay(dayId);
+    const lastExSets   = lastSession2?.exercises?.[ex.id] || [];
+    const lb           = bestSet(lastExSets);
     const beatHtml = lb
       ? `<div class="beat-this">🎯 Beat this: <strong>${lb.weight} lbs × ${lb.reps} reps</strong></div>`
       : `<div class="beat-this baseline">No history yet — set your baseline today!</div>`;
 
-    let setsHtml = `<div class="sets-head"><span>SET</span><span>LBS</span><span>REPS</span><span></span></div>`;
+    let setsHtml = `<div class="sets-head"><span>SET</span><span>PREV</span><span>LBS</span><span>REPS</span><span></span></div>`;
     sets.forEach((set, i) => {
+      const prev = lastExSets[i]?.weight || '—';
       setsHtml += `<div class="set-row${set.done ? ' is-done' : ''}">
         <div class="set-num">${i + 1}</div>
+        <div class="set-prev">${prev}</div>
         <input type="number" inputmode="decimal" class="set-input" placeholder="—"
           value="${set.weight}" ${set.done ? 'disabled' : ''}
           onchange="setVal('${ex.id}',${i},'weight',this.value)"/>
