@@ -563,6 +563,44 @@
     .notes-ta:focus { outline: none; border-color: var(--accent); }
     .notes-ta::placeholder { color: #555; }
 
+    /* ── STEPS ───────────────────────────────────── */
+    .steps-ring-wrap {
+      position: relative; width: 140px; height: 140px;
+      margin: 0 auto 16px;
+    }
+    .steps-ring-wrap svg { transform: rotate(-90deg); }
+    .steps-ring-bg  { fill: none; stroke: var(--card2); stroke-width: 10; }
+    .steps-ring-fg  { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+    .steps-ring-center {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .steps-count { font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; }
+    .steps-goal  { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 3px; }
+
+    .steps-quick-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .steps-quick-btn {
+      flex: 1; padding: 10px 8px; border-radius: 9px;
+      border: 1px solid var(--border); background: var(--card2);
+      color: var(--text); font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+    .steps-quick-btn:active { background: var(--border); }
+
+    .steps-manual-row { display: flex; gap: 8px; }
+    .steps-manual-input {
+      flex: 1; background: var(--card2); border: 1.5px solid var(--border);
+      border-radius: 9px; color: var(--text); font-size: 16px; font-weight: 700;
+      text-align: center; padding: 10px 8px; font-family: inherit;
+    }
+    .steps-manual-input:focus { outline: none; border-color: var(--accent); }
+    .steps-set-btn {
+      padding: 10px 18px; border-radius: 9px; border: none;
+      background: var(--accent); color: #000; font-size: 14px;
+      font-weight: 700; cursor: pointer; flex-shrink: 0;
+    }
+    .steps-pct { font-size: 13px; color: var(--muted); font-weight: 600; text-align: center; margin-bottom: 14px; }
+    .steps-pct b { color: var(--text); }
+
     /* ── DAILY LOG ───────────────────────────────── */
     .log-date-bar {
       display: flex; align-items: center; justify-content: space-between;
@@ -799,6 +837,33 @@
         <div class="log-card-title">💧 Water Intake</div>
         <div class="water-drops" id="water-drops"></div>
         <div class="water-tally"  id="water-tally"></div>
+      </div>
+
+      <!-- Steps -->
+      <div class="log-card">
+        <div class="log-card-title">🚶 Steps</div>
+        <div class="steps-ring-wrap">
+          <svg width="140" height="140" viewBox="0 0 140 140">
+            <circle class="steps-ring-bg" cx="70" cy="70" r="60"/>
+            <circle id="steps-ring-fg" class="steps-ring-fg" cx="70" cy="70" r="60"
+              stroke-dasharray="376.99" stroke-dashoffset="376.99"/>
+          </svg>
+          <div class="steps-ring-center">
+            <div class="steps-count" id="steps-count">0</div>
+            <div class="steps-goal">/ 10,000</div>
+          </div>
+        </div>
+        <div class="steps-pct" id="steps-pct">0% of daily goal</div>
+        <div class="steps-quick-row">
+          <button class="steps-quick-btn" onclick="addSteps(500)">+ 500</button>
+          <button class="steps-quick-btn" onclick="addSteps(1000)">+ 1,000</button>
+          <button class="steps-quick-btn" onclick="addSteps(2500)">+ 2,500</button>
+        </div>
+        <div class="steps-manual-row">
+          <input id="steps-input" class="steps-manual-input" type="number"
+            inputmode="numeric" placeholder="Enter total steps"/>
+          <button class="steps-set-btn" onclick="setStepsManual()">Set</button>
+        </div>
       </div>
 
       <!-- Macros -->
@@ -2063,9 +2128,50 @@ function renderLog() {
   document.getElementById('log-next-btn').disabled = isToday;
 
   const entry = getLogEntry(logDate);
+  renderSteps(entry.steps || 0);
   renderWaterDrops(entry.water || 0);
   renderMacros(entry);
   renderFoodList(entry);
+}
+
+// ── Steps ──────────────────────────────────────────
+const STEPS_GOAL  = 10000;
+const STEPS_CIRC  = 2 * Math.PI * 60; // ≈ 376.99
+
+function renderSteps(steps) {
+  steps = steps || 0;
+  const pct    = Math.min(1, steps / STEPS_GOAL);
+  const offset = STEPS_CIRC * (1 - pct);
+  const color  = pct >= 1 ? '#4ade80' : pct >= 0.5 ? '#60a5fa' : '#f59e0b';
+
+  document.getElementById('steps-count').textContent = steps.toLocaleString();
+  const fg = document.getElementById('steps-ring-fg');
+  fg.style.strokeDashoffset = offset;
+  fg.style.stroke = color;
+
+  const remaining = Math.max(0, STEPS_GOAL - steps);
+  document.getElementById('steps-pct').innerHTML = pct >= 1
+    ? '<b style="color:#4ade80">Goal reached! 🎉</b>'
+    : `<b>${Math.round(pct * 100)}%</b> of daily goal · ${remaining.toLocaleString()} to go`;
+}
+
+function addSteps(n) {
+  const entry = getLogEntry(logDate);
+  entry.steps = (entry.steps || 0) + n;
+  saveLogEntry(logDate, entry);
+  renderSteps(entry.steps);
+}
+
+function setStepsManual() {
+  const val = parseInt(document.getElementById('steps-input').value);
+  if (!val || val < 0) { toast('Enter a valid step count'); return; }
+  const entry = getLogEntry(logDate);
+  entry.steps = val;
+  saveLogEntry(logDate, entry);
+  document.getElementById('steps-input').value = '';
+  document.getElementById('steps-input').blur();
+  renderSteps(entry.steps);
+  toast(`Steps updated to ${val.toLocaleString()}`);
 }
 
 // ── Water ──────────────────────────────────────────

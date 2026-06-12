@@ -5,7 +5,8 @@
       "Bash(git add *)",
       "Bash(git commit -m 'Add Firebase auth, Firestore sync, ink blue theme, welcome home screen, exercise library builder *)",
       "Bash(git push *)",
-      "Bash(git commit -m 'Allow unlimited workout repeats per week — fix lastSessionForDay to reference most recent completed session regardless of date *)"
+      "Bash(git commit -m 'Allow unlimited workout repeats per week — fix lastSessionForDay to reference most recent completed session regardless of date *)",
+      "Bash(git commit -m 'Add Daily Log tab — water intake, macro targets, and food tracking *)"
     ]
   }
 }
