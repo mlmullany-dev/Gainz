@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Add Firebase auth, Firestore sync, ink blue theme, welcome home screen, exercise library builder *)",
+      "Bash(git push *)"
     ]
   }
 }
