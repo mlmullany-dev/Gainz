@@ -562,6 +562,108 @@
     }
     .notes-ta:focus { outline: none; border-color: var(--accent); }
     .notes-ta::placeholder { color: #555; }
+
+    /* ── DAILY LOG ───────────────────────────────── */
+    .log-date-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px; background: var(--card);
+      border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .log-nav-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--card2); border: 1px solid var(--border);
+      color: var(--text); font-size: 22px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.15s;
+    }
+    .log-nav-btn:disabled { opacity: 0.25; pointer-events: none; }
+    .log-date-main { font-size: 16px; font-weight: 700; text-align: center; }
+    .log-date-sub  { font-size: 12px; color: var(--muted); text-align: center; margin-top: 2px; }
+
+    .log-card {
+      background: var(--card); border-radius: var(--r);
+      border: 1px solid var(--border); padding: 16px;
+      margin: 12px 16px 0;
+    }
+    .log-card-title {
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.8px;
+      margin-bottom: 14px; display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .log-card-action {
+      font-size: 13px; font-weight: 600; color: var(--accent);
+      background: none; border: none; cursor: pointer;
+      text-transform: none; letter-spacing: 0; font-family: inherit;
+    }
+
+    /* Water */
+    .water-drops { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .wdrop {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 2px solid var(--border); background: var(--card2);
+      cursor: pointer; font-size: 0; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+    .wdrop.on { background: #1565c0; border-color: #42a5f5; font-size: 18px; }
+    .wdrop.on::after { content: '💧'; }
+    .water-tally { font-size: 13px; color: var(--muted); font-weight: 600; }
+    .water-tally b { color: #60a5fa; }
+
+    /* Macro bars */
+    .macro-row { margin-bottom: 13px; }
+    .macro-row:last-child { margin-bottom: 0; }
+    .macro-label-row {
+      display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;
+    }
+    .macro-name { font-size: 13px; font-weight: 700; }
+    .macro-nums { font-size: 12px; color: var(--muted); }
+    .macro-nums b { color: var(--text); }
+    .macro-track { height: 9px; background: var(--card2); border-radius: 5px; overflow: hidden; }
+    .macro-fill  { height: 100%; border-radius: 5px; transition: width 0.4s ease; }
+
+    .no-targets-msg { color: var(--muted); font-size: 14px; text-align: center; padding: 4px 0 8px; }
+    .outline-btn {
+      display: block; width: 100%; margin-top: 10px; padding: 11px;
+      border-radius: 9px; border: 1.5px solid var(--accent);
+      background: transparent; color: var(--accent);
+      font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
+    }
+
+    /* Food list */
+    .food-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+    }
+    .food-item:last-child { border-bottom: none; }
+    .food-info { flex: 1; min-width: 0; }
+    .food-name  { font-size: 14px; font-weight: 600; }
+    .food-macs  { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .food-cal-badge { font-size: 15px; font-weight: 800; color: var(--accent); flex-shrink: 0; }
+    .food-empty { text-align: center; color: var(--muted); font-size: 14px; padding: 12px 0; }
+    .add-food-btn {
+      display: block; width: 100%; margin-top: 12px; padding: 12px;
+      border-radius: 9px; border: 1.5px dashed var(--accent);
+      background: rgba(74,222,128,0.05); color: var(--accent);
+      font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;
+    }
+    .add-food-btn:active { background: rgba(74,222,128,0.1); }
+
+    /* Sheet inputs grid */
+    .sheet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .sheet-field label {
+      display: block; font-size: 11px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px;
+    }
+    .sheet-field input {
+      width: 100%; background: var(--card2); border: 1.5px solid var(--border);
+      border-radius: 9px; color: var(--text); font-size: 16px; font-weight: 700;
+      text-align: center; padding: 11px 8px; font-family: inherit;
+    }
+    .sheet-field input:focus { outline: none; border-color: var(--accent); }
+    .sheet-field.full { grid-column: 1 / -1; }
+    .sheet-field.full input { text-align: left; font-size: 15px; font-weight: 500; }
   </style>
 </head>
 <body>
@@ -679,6 +781,45 @@
     </div>
   </div>
 
+  <!-- ══ DAILY LOG ════════════════════════════════ -->
+  <div id="view-log" class="view">
+    <div class="header"><h1>📋 Daily Log</h1></div>
+    <div class="log-date-bar">
+      <button class="log-nav-btn" id="log-prev-btn" onclick="navigateLog(-1)">‹</button>
+      <div>
+        <div class="log-date-main" id="log-date-main"></div>
+        <div class="log-date-sub"  id="log-date-sub"></div>
+      </div>
+      <button class="log-nav-btn" id="log-next-btn" onclick="navigateLog(1)">›</button>
+    </div>
+    <div class="scroll">
+
+      <!-- Water -->
+      <div class="log-card">
+        <div class="log-card-title">💧 Water Intake</div>
+        <div class="water-drops" id="water-drops"></div>
+        <div class="water-tally"  id="water-tally"></div>
+      </div>
+
+      <!-- Macros -->
+      <div class="log-card">
+        <div class="log-card-title">
+          🎯 Macros
+          <button class="log-card-action" onclick="openTargetsSheet()">Edit Targets</button>
+        </div>
+        <div id="macro-content"></div>
+      </div>
+
+      <!-- Foods -->
+      <div class="log-card" style="margin-bottom:16px">
+        <div class="log-card-title">🍽️ Food Log</div>
+        <div id="food-list"></div>
+        <button class="add-food-btn" onclick="openAddFoodSheet()">+ Add Food</button>
+      </div>
+
+    </div>
+  </div>
+
 </div><!-- #app -->
 
 <!-- ══ BOTTOM NAV ══════════════════════════════════ -->
@@ -686,6 +827,12 @@
   <button id="nav-home" class="active" onclick="nav('home')">
     <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
     Home
+  </button>
+  <button id="nav-log" onclick="nav('log')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/>
+    </svg>
+    Log
   </button>
   <button id="nav-progress" onclick="nav('progress')">
     <svg viewBox="0 0 24 24"><path d="M3.5 18.5l6-6 4 4L22 6.92"/><path d="M3.5 18.5l6-6 4 4L22 6.92" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M22 7v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -751,6 +898,66 @@
     </select>
     <button class="sheet-save-btn" onclick="saveCustomEx()">Add to Library</button>
     <button class="sheet-cancel-btn" onclick="closeCustomExSheet()">Cancel</button>
+  </div>
+</div>
+
+<!-- ══ ADD FOOD OVERLAY ════════════════════════════ -->
+<div id="add-food-overlay" class="overlay hidden">
+  <div class="sheet-small">
+    <div class="sheet-drag"></div>
+    <div class="sheet-title">Add Food</div>
+    <div class="sheet-grid">
+      <div class="sheet-field full">
+        <label>Food Name</label>
+        <input id="food-name" type="text" placeholder="e.g. Chicken breast" maxlength="60"/>
+      </div>
+      <div class="sheet-field full">
+        <label>Calories</label>
+        <input id="food-cal" type="number" inputmode="decimal" placeholder="0"/>
+      </div>
+      <div class="sheet-field">
+        <label>Protein (g)</label>
+        <input id="food-protein" type="number" inputmode="decimal" placeholder="0"/>
+      </div>
+      <div class="sheet-field">
+        <label>Carbs (g)</label>
+        <input id="food-carbs" type="number" inputmode="decimal" placeholder="0"/>
+      </div>
+      <div class="sheet-field">
+        <label>Fat (g)</label>
+        <input id="food-fat" type="number" inputmode="decimal" placeholder="0"/>
+      </div>
+    </div>
+    <button class="sheet-save-btn" onclick="saveFood()">Add to Log</button>
+    <button class="sheet-cancel-btn" onclick="closeAddFoodSheet()">Cancel</button>
+  </div>
+</div>
+
+<!-- ══ MACRO TARGETS OVERLAY ══════════════════════ -->
+<div id="targets-overlay" class="overlay hidden">
+  <div class="sheet-small">
+    <div class="sheet-drag"></div>
+    <div class="sheet-title">Daily Macro Targets</div>
+    <div class="sheet-grid">
+      <div class="sheet-field full">
+        <label>Calories</label>
+        <input id="target-cal" type="number" inputmode="decimal" placeholder="e.g. 2000"/>
+      </div>
+      <div class="sheet-field">
+        <label>Protein (g)</label>
+        <input id="target-protein" type="number" inputmode="decimal" placeholder="150"/>
+      </div>
+      <div class="sheet-field">
+        <label>Carbs (g)</label>
+        <input id="target-carbs" type="number" inputmode="decimal" placeholder="200"/>
+      </div>
+      <div class="sheet-field">
+        <label>Fat (g)</label>
+        <input id="target-fat" type="number" inputmode="decimal" placeholder="65"/>
+      </div>
+    </div>
+    <button class="sheet-save-btn" onclick="saveTargets()">Save Targets</button>
+    <button class="sheet-cancel-btn" onclick="closeTargetsSheet()">Cancel</button>
   </div>
 </div>
 
@@ -820,6 +1027,8 @@ async function loadFromFirestore() {
         swaps:           d.swaps           || {},
         customDays:      d.customDays      || [],
         customExercises: d.customExercises || [],
+        dailyLogs:       d.dailyLogs       || {},
+        macroTargets:    d.macroTargets    || null,
       };
     } else {
       // Migrate any existing localStorage data on first login
@@ -1068,6 +1277,9 @@ let buildDay           = null;
 let editingCustomDayId = null;
 let pickerFilter       = 'All';
 
+// Daily log state
+let logDate = null; // set to today() on first nav
+
 // ═══════════════════════════════════════════════════
 // NAVIGATION
 // ═══════════════════════════════════════════════════
@@ -1079,6 +1291,7 @@ function nav(view, dayId) {
   activeView = view;
 
   if (view === 'home')     { document.getElementById('nav-home').classList.add('active');     renderHome(); }
+  if (view === 'log')      { document.getElementById('nav-log').classList.add('active');      if (!logDate) logDate = today(); renderLog(); }
   if (view === 'progress') { document.getElementById('nav-progress').classList.add('active'); renderProgress(); }
   if (view === 'day')      { activeDayId = dayId; renderDay(dayId); }
   if (view === 'build')    { renderBuild(); }
@@ -1808,6 +2021,204 @@ function toast(msg) {
   el.classList.add('show');
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+// ═══════════════════════════════════════════════════
+// DAILY LOG
+// ═══════════════════════════════════════════════════
+const MONTHS   = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const WEEKDAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+function getLogEntry(date) {
+  if (!appData.dailyLogs) appData.dailyLogs = {};
+  return appData.dailyLogs[date] || { water: 0, foods: [] };
+}
+
+function saveLogEntry(date, entry) {
+  const d = loadData();
+  if (!d.dailyLogs) d.dailyLogs = {};
+  d.dailyLogs[date] = entry;
+  saveData(d);
+}
+
+function navigateLog(delta) {
+  const d = new Date(logDate + 'T12:00:00');
+  d.setDate(d.getDate() + delta);
+  const nd = d.toISOString().slice(0, 10);
+  if (nd > today()) return;
+  logDate = nd;
+  renderLog();
+}
+
+function renderLog() {
+  const isToday = logDate === today();
+  const d       = new Date(logDate + 'T12:00:00');
+
+  document.getElementById('log-date-main').textContent =
+    isToday ? 'Today' : `${MONTHS[d.getMonth()]} ${d.getDate()}`;
+  document.getElementById('log-date-sub').textContent =
+    isToday
+      ? `${WEEKDAYS[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}`
+      : WEEKDAYS[d.getDay()];
+  document.getElementById('log-next-btn').disabled = isToday;
+
+  const entry = getLogEntry(logDate);
+  renderWaterDrops(entry.water || 0);
+  renderMacros(entry);
+  renderFoodList(entry);
+}
+
+// ── Water ──────────────────────────────────────────
+function renderWaterDrops(water) {
+  const show = Math.max(8, water + 1);
+  let html = '';
+  for (let i = 1; i <= Math.min(show, 16); i++) {
+    html += `<button class="wdrop${i <= water ? ' on' : ''}" onclick="setWater(${i})" title="${i} glass${i !== 1 ? 'es' : ''}"></button>`;
+  }
+  document.getElementById('water-drops').innerHTML = html;
+  document.getElementById('water-tally').innerHTML =
+    `<b>${water}</b> glass${water !== 1 ? 'es' : ''} today`;
+}
+
+function setWater(n) {
+  const entry = getLogEntry(logDate);
+  entry.water = (n === (entry.water || 0)) ? n - 1 : n;
+  entry.water = Math.max(0, entry.water);
+  saveLogEntry(logDate, entry);
+  renderWaterDrops(entry.water);
+  renderMacros(entry); // calorie/macro bars don't change but keeps render fresh
+}
+
+// ── Macros ─────────────────────────────────────────
+function renderMacros(entry) {
+  const targets = appData.macroTargets;
+  const el      = document.getElementById('macro-content');
+
+  if (!targets || !targets.calories) {
+    el.innerHTML = `
+      <div class="no-targets-msg">Set your daily targets to start tracking</div>
+      <button class="outline-btn" onclick="openTargetsSheet()">+ Set Macro Targets</button>`;
+    return;
+  }
+
+  const totals = { calories:0, protein:0, carbs:0, fat:0 };
+  (entry.foods || []).forEach(f => {
+    totals.calories += f.calories || 0;
+    totals.protein  += f.protein  || 0;
+    totals.carbs    += f.carbs    || 0;
+    totals.fat      += f.fat      || 0;
+  });
+
+  const macros = [
+    { key:'calories', label:'Calories', color:'#f59e0b', unit:''  },
+    { key:'protein',  label:'Protein',  color:'#60a5fa', unit:'g' },
+    { key:'carbs',    label:'Carbs',    color:'#a78bfa', unit:'g' },
+    { key:'fat',      label:'Fat',      color:'#f472b6', unit:'g' },
+  ];
+
+  el.innerHTML = macros.map(m => {
+    const actual    = Math.round(totals[m.key] * 10) / 10;
+    const target    = targets[m.key] || 0;
+    const pct       = target ? Math.min(100, (actual / target) * 100) : 0;
+    const remaining = target - actual;
+    const statusTxt = remaining > 0
+      ? `${Math.round(remaining)}${m.unit} left`
+      : `<span style="color:#4ade80">goal met! 🎉</span>`;
+    return `<div class="macro-row">
+      <div class="macro-label-row">
+        <span class="macro-name">${m.label}</span>
+        <span class="macro-nums"><b>${actual}${m.unit}</b> / ${target}${m.unit} · ${statusTxt}</span>
+      </div>
+      <div class="macro-track">
+        <div class="macro-fill" style="width:${pct}%;background:${m.color}"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Foods ──────────────────────────────────────────
+function renderFoodList(entry) {
+  const foods = entry.foods || [];
+  const el    = document.getElementById('food-list');
+  if (!foods.length) {
+    el.innerHTML = '<div class="food-empty">No foods logged yet — tap Add Food to start</div>';
+    return;
+  }
+  el.innerHTML = foods.map((f, i) => {
+    const parts = [
+      f.protein ? `${f.protein}g protein` : null,
+      f.carbs   ? `${f.carbs}g carbs`     : null,
+      f.fat     ? `${f.fat}g fat`         : null,
+    ].filter(Boolean).join(' · ');
+    return `<div class="food-item">
+      <div class="food-info">
+        <div class="food-name">${f.name}</div>
+        ${parts ? `<div class="food-macs">${parts}</div>` : ''}
+      </div>
+      <div class="food-cal-badge">${f.calories || 0} cal</div>
+      <button class="icon-btn" onclick="deleteFood(${i})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function openAddFoodSheet() {
+  ['food-name','food-cal','food-protein','food-carbs','food-fat'].forEach(id =>
+    document.getElementById(id).value = '');
+  document.getElementById('add-food-overlay').classList.remove('hidden');
+}
+function closeAddFoodSheet() {
+  document.getElementById('add-food-overlay').classList.add('hidden');
+}
+function saveFood() {
+  const name = document.getElementById('food-name').value.trim();
+  if (!name) { toast('Enter a food name'); return; }
+  const food = {
+    id:       'f_' + Date.now(),
+    name,
+    calories: parseFloat(document.getElementById('food-cal').value)     || 0,
+    protein:  parseFloat(document.getElementById('food-protein').value) || 0,
+    carbs:    parseFloat(document.getElementById('food-carbs').value)   || 0,
+    fat:      parseFloat(document.getElementById('food-fat').value)     || 0,
+  };
+  const entry = getLogEntry(logDate);
+  if (!entry.foods) entry.foods = [];
+  entry.foods.push(food);
+  saveLogEntry(logDate, entry);
+  closeAddFoodSheet();
+  renderLog();
+  toast(`${name} added`);
+}
+function deleteFood(i) {
+  const entry = getLogEntry(logDate);
+  entry.foods.splice(i, 1);
+  saveLogEntry(logDate, entry);
+  renderLog();
+}
+
+// ── Targets ────────────────────────────────────────
+function openTargetsSheet() {
+  const t = appData.macroTargets || {};
+  document.getElementById('target-cal').value     = t.calories || '';
+  document.getElementById('target-protein').value = t.protein  || '';
+  document.getElementById('target-carbs').value   = t.carbs    || '';
+  document.getElementById('target-fat').value     = t.fat      || '';
+  document.getElementById('targets-overlay').classList.remove('hidden');
+}
+function closeTargetsSheet() {
+  document.getElementById('targets-overlay').classList.add('hidden');
+}
+function saveTargets() {
+  const calories = parseFloat(document.getElementById('target-cal').value)     || 0;
+  const protein  = parseFloat(document.getElementById('target-protein').value) || 0;
+  const carbs    = parseFloat(document.getElementById('target-carbs').value)   || 0;
+  const fat      = parseFloat(document.getElementById('target-fat').value)     || 0;
+  if (!calories && !protein && !carbs && !fat) { toast('Enter at least one target'); return; }
+  const d = loadData();
+  d.macroTargets = { calories, protein, carbs, fat };
+  saveData(d);
+  closeTargetsSheet();
+  renderLog();
+  toast('Targets saved!');
 }
 
 // Service worker (keep for offline PWA support)
