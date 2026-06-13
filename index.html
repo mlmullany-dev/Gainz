@@ -603,9 +603,124 @@
     .notes-ta:focus { outline: none; border-color: var(--accent); }
     .notes-ta::placeholder { color: #555; }
 
-    /* ── PROGRAMS LIST ───────────────────────────── */
-    #bottom-nav button { font-size: 10px; }
+    /* ── NAV (5 tabs) ────────────────────────────── */
+    #bottom-nav button { font-size: 9px; }
     #bottom-nav button svg { width: 20px; height: 20px; }
+
+    /* ── BENCHMARKS ──────────────────────────────── */
+    .profile-setup {
+      margin: 20px 16px; background: var(--card); border-radius: var(--r);
+      border: 1px solid var(--border); padding: 24px 20px; text-align: center;
+    }
+    .profile-setup h2 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .profile-setup p  { font-size: 14px; color: var(--muted); line-height: 1.5; margin-bottom: 20px; }
+    .toggle-row { display: flex; background: var(--card2); border-radius: 10px; padding: 3px; gap: 3px; margin-bottom: 16px; }
+    .toggle-btn {
+      flex: 1; padding: 10px 8px; border-radius: 8px; border: none;
+      background: none; color: var(--muted); font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s; font-family: inherit;
+    }
+    .toggle-btn.active { background: var(--accent); color: #000; }
+    .age-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 20px; }
+    .age-btn {
+      padding: 9px 4px; border-radius: 8px; border: 1.5px solid var(--border);
+      background: var(--card2); color: var(--muted); font-size: 11px; font-weight: 700;
+      cursor: pointer; text-align: center; font-family: inherit;
+    }
+    .age-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(74,222,128,0.08); }
+
+    .bm-list { padding: 8px 16px 0; display: flex; flex-direction: column; gap: 14px; }
+
+    .bm-card {
+      background: var(--card); border-radius: var(--r);
+      border: 1px solid var(--border); overflow: hidden;
+    }
+    .bm-card-head { padding: 14px 16px 10px; }
+    .bm-card-top  { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .bm-name { font-size: 15px; font-weight: 800; flex: 1; }
+    .cat-tag {
+      font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 50px;
+      letter-spacing: 0.3px; flex-shrink: 0;
+    }
+    .cat-cardiorespiratory { background: rgba(239,68,68,0.15);  color: #f87171; }
+    .cat-strength          { background: rgba(59,130,246,0.15); color: #93c5fd; }
+    .cat-stability         { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+    .cat-mobility          { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+
+    .bm-result-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .bm-result-val { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .bm-result-unit { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .bm-tested-date { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+    .tier-badge {
+      font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 50px;
+      letter-spacing: 0.3px; flex-shrink: 0;
+    }
+    .tier-unranked  { background: rgba(136,136,136,0.15); color: var(--muted); }
+    .tier-bronze    { background: rgba(205,127,50,0.2);   color: #d4956a; }
+    .tier-silver    { background: rgba(148,163,184,0.2);  color: #cbd5e1; }
+    .tier-gold      { background: rgba(251,191,36,0.2);   color: var(--gold); }
+    .tier-platinum  { background: rgba(192,132,252,0.2);  color: #d8b4fe; }
+
+    .tier-row {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 12px;
+    }
+    .tier-cell {
+      border-radius: 8px; padding: 7px 4px; text-align: center;
+      border: 1.5px solid transparent; background: var(--card2);
+    }
+    .tier-cell.achieved { border-color: currentColor; }
+    .tier-cell-name { font-size: 9px; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase; }
+    .tier-cell-val  { font-size: 13px; font-weight: 800; margin-top: 3px; font-variant-numeric: tabular-nums; }
+
+    .bm-actions { display: flex; gap: 8px; padding: 0 16px 14px; }
+    .bm-info-btn {
+      padding: 10px 14px; border-radius: 9px; border: 1px solid var(--border);
+      background: var(--card2); color: var(--muted); font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+    }
+    .bm-log-btn {
+      flex: 1; padding: 10px 14px; border-radius: 9px; border: none;
+      background: var(--accent); color: #000; font-size: 13px; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+    }
+
+    .bm-no-result { font-size: 13px; color: var(--muted); font-style: italic; margin-bottom: 10px; }
+
+    .bm-overdue { font-size: 11px; color: var(--gold); font-weight: 600; margin-bottom: 6px; }
+
+    /* benchmark info sheet */
+    .info-sheet {
+      background: var(--card); border-radius: 24px 24px 0 0;
+      width: 100%; max-height: 88vh; display: flex; flex-direction: column;
+    }
+    .info-section { padding: 14px 20px 0; }
+    .info-section-title { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+    .info-section-body  { font-size: 14px; color: var(--text); line-height: 1.65; }
+    .protocol-box {
+      background: var(--card2); border-radius: 10px; padding: 12px 14px;
+      font-size: 13px; color: var(--muted); line-height: 1.55; margin-top: 0;
+    }
+
+    /* log test sheet */
+    .log-test-sheet {
+      background: var(--card); border-radius: 24px 24px 0 0;
+      padding: 20px 20px calc(28px + var(--safe-b)); width: 100%;
+    }
+    .log-test-input {
+      width: 100%; background: var(--card2); border: 1.5px solid var(--border);
+      border-radius: 10px; color: var(--text); font-size: 32px; font-weight: 800;
+      text-align: center; padding: 16px 8px; font-family: inherit;
+      font-variant-numeric: tabular-nums; margin-bottom: 12px;
+    }
+    .log-test-input:focus { outline: none; border-color: var(--accent); }
+    .log-test-unit { text-align: center; font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+    .log-test-preview {
+      text-align: center; font-size: 15px; font-weight: 700; min-height: 28px;
+      margin-bottom: 16px;
+    }
+
+    /* ── PROGRAMS LIST ───────────────────────────── */
 
     .prog-list { padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px; }
 
@@ -1018,6 +1133,15 @@
     </div>
   </div>
 
+  <!-- ══ BENCHMARKS ═══════════════════════════════ -->
+  <div id="view-benchmarks" class="view">
+    <div class="header"><h1>🏅 Benchmarks</h1></div>
+    <div class="scroll">
+      <div id="bm-profile-setup"></div>
+      <div id="bm-list"  class="bm-list"></div>
+    </div>
+  </div>
+
   <!-- ══ PROGRAMS ═════════════════════════════════ -->
   <div id="view-programs" class="view">
     <div class="header"><h1>📋 Programs</h1></div>
@@ -1122,20 +1246,20 @@
     Home
   </button>
   <button id="nav-programs" onclick="nav('programs')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/>
-    </svg>
-    Programs
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
+    Plans
   </button>
   <button id="nav-log" onclick="nav('log')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/>
-    </svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
     Log
+  </button>
+  <button id="nav-benchmarks" onclick="nav('benchmarks')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8 14l-2 7 6-3 6 3-2-7"/></svg>
+    Test
   </button>
   <button id="nav-progress" onclick="nav('progress')">
     <svg viewBox="0 0 24 24"><path d="M3.5 18.5l6-6 4 4L22 6.92"/><path d="M3.5 18.5l6-6 4 4L22 6.92" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M22 7v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Progress
+    Stats
   </button>
 </nav>
 
@@ -1197,6 +1321,34 @@
     </select>
     <button class="sheet-save-btn" onclick="saveCustomEx()">Add to Library</button>
     <button class="sheet-cancel-btn" onclick="closeCustomExSheet()">Cancel</button>
+  </div>
+</div>
+
+<!-- ══ LOG TEST OVERLAY ══════════════════════════ -->
+<div id="log-test-overlay" class="overlay hidden">
+  <div class="log-test-sheet">
+    <div class="sheet-drag"></div>
+    <div class="sheet-title" id="log-test-title">Log Result</div>
+    <input id="log-test-input" class="log-test-input" type="number" inputmode="decimal" placeholder="0"
+      oninput="previewTier()"/>
+    <div class="log-test-unit" id="log-test-unit"></div>
+    <div class="log-test-preview" id="log-test-preview"></div>
+    <button class="sheet-save-btn" onclick="saveTestResult()">Save Result</button>
+    <button class="sheet-cancel-btn" onclick="document.getElementById('log-test-overlay').classList.add('hidden')">Cancel</button>
+  </div>
+</div>
+
+<!-- ══ BENCHMARK INFO OVERLAY ════════════════════ -->
+<div id="bm-info-overlay" class="overlay hidden">
+  <div class="info-sheet">
+    <div class="picker-drag"></div>
+    <div class="picker-header">
+      <h2 id="bm-info-name">About</h2>
+      <button class="picker-close" onclick="document.getElementById('bm-info-overlay').classList.add('hidden')">✕</button>
+    </div>
+    <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(20px + var(--safe-b))">
+      <div id="bm-info-content"></div>
+    </div>
   </div>
 </div>
 
@@ -1366,7 +1518,9 @@ async function loadFromFirestore() {
         customExercises: d.customExercises || [],
         dailyLogs:       d.dailyLogs       || {},
         macroTargets:    d.macroTargets    || null,
-        activeProgram:   d.activeProgram   || null,
+        activeProgram:    d.activeProgram    || null,
+        userProfile:      d.userProfile      || null,
+        benchmarkResults: d.benchmarkResults || {},
       };
     } else {
       // Migrate any existing localStorage data on first login
@@ -1773,9 +1927,10 @@ function nav(view, dayId) {
 
   activeView = view;
 
-  if (view === 'home')           { document.getElementById('nav-home').classList.add('active');     renderHome(); }
-  if (view === 'programs')       { document.getElementById('nav-programs').classList.add('active'); renderPrograms(); }
-  if (view === 'program-detail') { document.getElementById('nav-programs').classList.add('active'); renderProgramDetail(); }
+  if (view === 'home')           { document.getElementById('nav-home').classList.add('active');         renderHome(); }
+  if (view === 'programs')       { document.getElementById('nav-programs').classList.add('active');   renderPrograms(); }
+  if (view === 'program-detail') { document.getElementById('nav-programs').classList.add('active');   renderProgramDetail(); }
+  if (view === 'benchmarks')     { document.getElementById('nav-benchmarks').classList.add('active'); renderBenchmarks(); }
   if (view === 'log')            { document.getElementById('nav-log').classList.add('active');      if (!logDate) logDate = today(); renderLog(); }
   if (view === 'progress')       { document.getElementById('nav-progress').classList.add('active'); renderProgress(); }
   if (view === 'day')            { activeDayId = dayId; renderDay(dayId); }
@@ -2576,6 +2731,255 @@ function toast(msg) {
   el.classList.add('show');
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+// ═══════════════════════════════════════════════════
+// BENCHMARKS DATA
+// ═══════════════════════════════════════════════════
+const BENCHMARKS = [
+  { id:'vo2max',          name:'VO2 Max',                         category:'cardiorespiratory', unit:'ml/kg/min',          icon:'🫀',
+    info:{ what:'VO2 max is the maximum amount of oxygen your body can use during intense exercise. It reflects how well your heart, lungs, blood, and muscles work together as a system.', why:'VO2 max is arguably the single strongest predictor of longevity we can measure. Moving from low to even below-average cardiorespiratory fitness dramatically reduces all-cause mortality risk. It also declines roughly 10% per decade after 30 unless you train it.', how:'Easiest: use the estimate from an Apple Watch or Garmin after several outdoor runs. More accurate: do the Cooper test (run as far as possible in 12 minutes on a track) or get a lab-based metabolic cart test. Improve it with 2–3 Zone 2 sessions plus one interval session per week.' },
+    protocol:'Use wearable estimate, lab test, or Cooper 12-minute run test. Retest quarterly.',
+    thresholds:{ female:{ '20-29':{bronze:33,silver:38,gold:43,platinum:48},'30-39':{bronze:31,silver:36,gold:41,platinum:46},'40-49':{bronze:29,silver:34,gold:39,platinum:44},'50-59':{bronze:26,silver:31,gold:36,platinum:41},'60+':{bronze:23,silver:28,gold:33,platinum:38} }, male:{ '20-29':{bronze:40,silver:46,gold:52,platinum:58},'30-39':{bronze:38,silver:44,gold:50,platinum:56},'40-49':{bronze:35,silver:41,gold:47,platinum:53},'50-59':{bronze:32,silver:38,gold:44,platinum:50},'60+':{bronze:28,silver:34,gold:40,platinum:46} } } },
+  { id:'grip_strength',   name:'Grip Strength',                   category:'strength',          unit:'lbs (stronger hand)', icon:'✊',
+    info:{ what:'Grip strength is the maximum force you can produce squeezing with one hand, measured with a handheld dynamometer. It serves as a window into your total-body strength and neuromuscular health.', why:'Grip strength is one of the most validated biomarkers in longevity research. It predicts all-cause mortality, cardiovascular disease, and future disability better than many traditional clinical measures. Weak grip in midlife is an early warning sign of accelerated aging.', how:'Stand tall, arm at side, elbow straight. Squeeze the dynamometer as hard as possible for 3–5 seconds. Take 3 attempts per hand with 30–60 sec rest; record the best single result from your stronger hand. Build it with deadlifts, farmer\'s carries, dead hangs, and heavy rows without straps.' },
+    protocol:'Hand dynamometer. Standing, arm at side. Best of 3 per hand; score the stronger hand.',
+    thresholds:{ female:{ '20-29':{bronze:55,silver:65,gold:75,platinum:85},'30-39':{bronze:55,silver:65,gold:75,platinum:85},'40-49':{bronze:50,silver:60,gold:70,platinum:80},'50-59':{bronze:45,silver:55,gold:65,platinum:75},'60+':{bronze:40,silver:50,gold:60,platinum:70} }, male:{ '20-29':{bronze:90,silver:105,gold:120,platinum:135},'30-39':{bronze:90,silver:105,gold:120,platinum:135},'40-49':{bronze:85,silver:100,gold:115,platinum:130},'50-59':{bronze:80,silver:90,gold:105,platinum:120},'60+':{bronze:70,silver:80,gold:95,platinum:110} } } },
+  { id:'deadlift_relative', name:'Deadlift (Relative)',           category:'strength',          unit:'× bodyweight',        icon:'🏋️',
+    info:{ what:'The deadlift measures your ability to lift a loaded barbell or trap bar from the floor. Scoring it relative to bodyweight makes the benchmark fair across all body sizes.', why:'Pulling strength from the floor is the foundation of functional independence — it\'s the same pattern as picking up a child, a suitcase, or a bag of mulch. It protects against falls, preserves bone density, and muscle is your metabolic reserve during illness and recovery.', how:'Use a conventional or trap bar deadlift. Warm up, then work up to a heavy 3–5 rep set and estimate your one-rep max using a calculator. Divide by bodyweight. Keep a flat back, push the floor away, and stop any set when form degrades.' },
+    protocol:'Conventional or trap bar. Use true 1RM or estimate from 3–5RM (Epley formula). Divide by bodyweight.',
+    thresholds:{ female:{ '20-29':{bronze:0.75,silver:1.0,gold:1.25,platinum:1.5},'30-39':{bronze:0.75,silver:1.0,gold:1.25,platinum:1.5},'40-49':{bronze:0.7,silver:0.9,gold:1.15,platinum:1.4},'50-59':{bronze:0.6,silver:0.8,gold:1.0,platinum:1.25},'60+':{bronze:0.5,silver:0.7,gold:0.9,platinum:1.1} }, male:{ '20-29':{bronze:1.25,silver:1.5,gold:2.0,platinum:2.5},'30-39':{bronze:1.25,silver:1.5,gold:2.0,platinum:2.5},'40-49':{bronze:1.15,silver:1.4,gold:1.8,platinum:2.25},'50-59':{bronze:1.0,silver:1.25,gold:1.6,platinum:2.0},'60+':{bronze:0.85,silver:1.1,gold:1.4,platinum:1.75} } } },
+  { id:'dead_hang',       name:'Dead Hang',                       category:'strength',          unit:'seconds',             icon:'🙌',
+    info:{ what:'A dead hang is simply hanging from a pull-up bar with straight arms for as long as possible. It tests grip endurance, shoulder integrity, and connective tissue strength.', why:'Hanging combines grip strength (a proven longevity marker) with shoulder health and mobility. The ability to support your own bodyweight from your hands is a strong proxy for upper-body resilience, and the hang decompresses the spine and maintains overhead range of motion that desk life erodes.', how:'Grab a pull-up bar shoulder-width, palms forward. Step off so feet are fully off the ground, arms straight, shoulders relaxed but not completely slack. Start timer when feet leave the ground; stop when you let go. Build by hanging for shorter sets at the end of workouts, adding 5–10 seconds per week.' },
+    protocol:'Passive hang, double overhand, feet off floor. Timer stops when grip releases.',
+    thresholds:{ female:{ '20-29':{bronze:30,silver:60,gold:90,platinum:120},'30-39':{bronze:30,silver:60,gold:90,platinum:120},'40-49':{bronze:25,silver:50,gold:80,platinum:110},'50-59':{bronze:20,silver:40,gold:70,platinum:95},'60+':{bronze:15,silver:30,gold:55,platinum:80} }, male:{ '20-29':{bronze:45,silver:75,gold:110,platinum:150},'30-39':{bronze:45,silver:75,gold:110,platinum:150},'40-49':{bronze:40,silver:70,gold:100,platinum:135},'50-59':{bronze:30,silver:60,gold:90,platinum:120},'60+':{bronze:25,silver:45,gold:75,platinum:100} } } },
+  { id:'single_leg_balance', name:'Single-Leg Balance',          category:'stability',         unit:'seconds (weaker leg)', icon:'🦵',
+    info:{ what:'Stand on one leg, hands on hips, eyes open. Measures the integration of your vision, inner ear, joint position sense, and lower-body stability.', why:'Balance silently declines with age and falls are a leading cause of injury and loss of independence. Research links inability to balance for 10 seconds in midlife with roughly double the risk of death over the following decade. Unlike many markers, balance responds quickly to practice.', how:'Barefoot or flat shoes. Lift one foot a few inches, hands on hips. Start timer when foot lifts; stop when foot touches down, hands leave hips, or you hop. Test both legs and record the weaker side. Practice daily while brushing your teeth.' },
+    protocol:'Barefoot, hands on hips, eyes open. Score the weaker leg.',
+    thresholds:{ female:{ '20-29':{bronze:30,silver:45,gold:60,platinum:90},'30-39':{bronze:30,silver:45,gold:60,platinum:90},'40-49':{bronze:25,silver:40,gold:60,platinum:85},'50-59':{bronze:20,silver:30,gold:45,platinum:70},'60+':{bronze:10,silver:20,gold:35,platinum:55} }, male:{ '20-29':{bronze:30,silver:45,gold:60,platinum:90},'30-39':{bronze:30,silver:45,gold:60,platinum:90},'40-49':{bronze:25,silver:40,gold:60,platinum:85},'50-59':{bronze:20,silver:30,gold:45,platinum:70},'60+':{bronze:10,silver:20,gold:35,platinum:55} } } },
+  { id:'sit_to_stand',    name:'Sit-to-Stand Test',               category:'mobility',          unit:'points (0–10)',        icon:'🧘',
+    info:{ what:'Sit down on the floor and stand back up using as little support as possible. Scored out of 10, losing points for each hand, knee, or forearm used and for losing balance.', why:'The SRT compresses strength, flexibility, balance, and body composition into one movement. In the original study of adults 51–80, lower scores were strongly associated with higher all-cause mortality. Being able to get off the floor unassisted is a non-negotiable skill for independent aging.', how:'Start at 10 points. Cross one foot behind the other and lower to a cross-legged seated position, then stand back up. Subtract 1 for each hand, forearm, knee, or side of leg used for support on the way down or up; subtract 0.5 for any visible wobble. Platinum = perfect 10 with arms crossed over chest.' },
+    protocol:'Start at 10 pts. Subtract 1 per hand/knee/forearm used; 0.5 per wobble. Platinum = 10 with arms crossed.',
+    thresholds:{ female:{ '20-29':{bronze:7,silver:8.5,gold:10,platinum:10},'30-39':{bronze:7,silver:8.5,gold:10,platinum:10},'40-49':{bronze:7,silver:8.5,gold:10,platinum:10},'50-59':{bronze:6,silver:8,gold:9.5,platinum:10},'60+':{bronze:5,silver:7,gold:9,platinum:10} }, male:{ '20-29':{bronze:7,silver:8.5,gold:10,platinum:10},'30-39':{bronze:7,silver:8.5,gold:10,platinum:10},'40-49':{bronze:7,silver:8.5,gold:10,platinum:10},'50-59':{bronze:6,silver:8,gold:9.5,platinum:10},'60+':{bronze:5,silver:7,gold:9,platinum:10} } } },
+  { id:'push_ups',        name:'Push-Ups (Strict)',                category:'strength',          unit:'consecutive reps',    icon:'💪',
+    info:{ what:'Count how many strict, consecutive push-ups you can perform from your toes with full range of motion. Measures upper-body pushing strength, core stability, and muscular endurance together.', why:'Push-up capacity is a cheap proxy for cardiovascular and musculoskeletal health. A Harvard study found men who could do more than 40 push-ups had dramatically lower cardiovascular event risk over 10 years compared to those who could do fewer than 10. The test also exposes core weakness and shoulder dysfunction early.', how:'Rigid plank from toes, hands slightly wider than shoulders. Lower until chest is within a fist of the floor, press to full lockout. Count reps; the set ends when you rest longer than 2 seconds or form breaks. Build with incline push-ups on a bench, lowering the incline over time.' },
+    protocol:'From toes, full ROM. Chest to within a fist of the floor, full lockout. Count consecutive reps until form breaks.',
+    thresholds:{ female:{ '20-29':{bronze:10,silver:18,gold:28,platinum:40},'30-39':{bronze:8,silver:15,gold:25,platinum:35},'40-49':{bronze:6,silver:12,gold:20,platinum:30},'50-59':{bronze:5,silver:10,gold:16,platinum:25},'60+':{bronze:3,silver:8,gold:12,platinum:20} }, male:{ '20-29':{bronze:20,silver:30,gold:42,platinum:55},'30-39':{bronze:18,silver:27,gold:38,platinum:50},'40-49':{bronze:15,silver:24,gold:34,platinum:45},'50-59':{bronze:12,silver:20,gold:28,platinum:38},'60+':{bronze:10,silver:15,gold:22,platinum:30} } } },
+  { id:'sit_ups',         name:'Sit-Ups (60 Seconds)',             category:'strength',          unit:'reps in 60 sec',      icon:'🔄',
+    info:{ what:'Count how many full sit-ups you can complete in 60 seconds. Measures trunk flexion strength, hip flexor capacity, and core muscular endurance under time pressure.', why:'Core endurance stabilizes your spine during deadlifts and carries, supports posture, and protects against low-back injury — one of the most common causes of lost activity in midlife. Timed sit-ups have decades of normative data from military fitness testing.', how:'Lie on back, knees bent ~90°, feet anchored. Hands crossed over chest or fingers at temples. Shoulder blades touch floor at bottom; elbows or chest reach thighs at top. Count max reps in 60 seconds. Anyone with low-back issues can substitute a plank-hold standard.' },
+    protocol:'Knees bent 90°, feet anchored, hands on chest. Shoulder blades touch floor; elbows reach thighs. Max reps in 60 sec.',
+    thresholds:{ female:{ '20-29':{bronze:25,silver:35,gold:43,platinum:50},'30-39':{bronze:22,silver:30,gold:38,platinum:46},'40-49':{bronze:18,silver:26,gold:34,platinum:42},'50-59':{bronze:14,silver:22,gold:30,platinum:38},'60+':{bronze:10,silver:17,gold:24,platinum:32} }, male:{ '20-29':{bronze:30,silver:40,gold:48,platinum:56},'30-39':{bronze:27,silver:36,gold:44,platinum:52},'40-49':{bronze:23,silver:32,gold:40,platinum:48},'50-59':{bronze:19,silver:27,gold:35,platinum:43},'60+':{bronze:15,silver:22,gold:30,platinum:38} } } },
+];
+
+const TIER_CONFIG = {
+  bronze:   { label:'Bronze',   color:'#d4956a', bg:'rgba(205,127,50,0.18)'  },
+  silver:   { label:'Silver',   color:'#cbd5e1', bg:'rgba(148,163,184,0.18)' },
+  gold:     { label:'Gold',     color:'#fbbf24', bg:'rgba(251,191,36,0.18)'  },
+  platinum: { label:'Platinum', color:'#d8b4fe', bg:'rgba(192,132,252,0.18)' },
+};
+const AGE_BRACKETS = ['20-29','30-39','40-49','50-59','60+'];
+
+let currentBmId = null; // which metric is being logged
+
+function scoreTier(metric, sex, ageBracket, value) {
+  const t = metric.thresholds[sex]?.[ageBracket];
+  if (!t) return null;
+  for (const tier of ['platinum','gold','silver','bronze']) {
+    if (value >= t[tier]) return tier;
+  }
+  return null;
+}
+
+function getLatestResult(metricId) {
+  const results = appData.benchmarkResults?.[metricId];
+  if (!results?.length) return null;
+  return [...results].sort((a,b) => b.date.localeCompare(a.date))[0];
+}
+
+function daysSince(dateStr) {
+  return Math.floor((new Date() - new Date(dateStr + 'T12:00:00')) / (1000*60*60*24));
+}
+
+// ── Render ─────────────────────────────────────────
+function renderBenchmarks() {
+  const profile = appData.userProfile;
+
+  // Profile setup prompt
+  const setupEl = document.getElementById('bm-profile-setup');
+  if (!profile) {
+    setupEl.innerHTML = `<div class="profile-setup">
+      <div style="font-size:40px;margin-bottom:12px">🏅</div>
+      <h2>Set Your Profile</h2>
+      <p>Tell us your sex and age bracket so we can show the right benchmarks for you.</p>
+      <div style="text-align:left;margin-bottom:12px">
+        <div class="sheet-label" style="text-align:left;margin-bottom:8px">Sex</div>
+        <div class="toggle-row" id="bm-sex-toggle">
+          <button class="toggle-btn active" data-sex="female" onclick="bmSelectSex('female')">Female</button>
+          <button class="toggle-btn"        data-sex="male"   onclick="bmSelectSex('male')">Male</button>
+        </div>
+        <div class="sheet-label" style="text-align:left;margin-bottom:8px">Age Bracket</div>
+        <div class="age-grid" id="bm-age-grid">
+          ${AGE_BRACKETS.map(a => `<button class="age-btn" data-age="${a}" onclick="bmSelectAge('${a}')">${a}</button>`).join('')}
+        </div>
+      </div>
+      <button class="sheet-save-btn" onclick="saveBmProfile()">Save Profile</button>
+    </div>`;
+    document.getElementById('bm-list').innerHTML = '';
+    return;
+  }
+
+  // Show profile strip with edit link
+  setupEl.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px 0">
+    <div style="font-size:13px;color:var(--muted)">
+      <b style="color:var(--text)">${profile.sex === 'female' ? 'Female' : 'Male'}</b> · Ages ${profile.ageBracket}
+    </div>
+    <button onclick="editBmProfile()" style="background:none;border:none;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer">Edit</button>
+  </div>`;
+
+  // Benchmark cards
+  document.getElementById('bm-list').innerHTML = BENCHMARKS.map(bm => bmCard(bm, profile)).join('');
+}
+
+function bmCard(bm, profile) {
+  const latest  = getLatestResult(bm.id);
+  const tier    = latest ? scoreTier(bm, profile.sex, profile.ageBracket, latest.value) : null;
+  const t       = bm.thresholds[profile.sex][profile.ageBracket];
+  const isOverdue = latest && daysSince(latest.date) > 85;
+  const tc      = TIER_CONFIG;
+
+  // Tier threshold row
+  const tierRow = ['bronze','silver','gold','platinum'].map(name => {
+    const achieved = tier && ['platinum','gold','silver','bronze'].indexOf(tier) <= ['platinum','gold','silver','bronze'].indexOf(name);
+    const cfg = tc[name];
+    return `<div class="tier-cell${achieved ? ' achieved' : ''}" style="color:${cfg.color};${achieved ? `background:${cfg.bg}` : ''}">
+      <div class="tier-cell-name">${cfg.label}</div>
+      <div class="tier-cell-val">≥${t[name]}</div>
+    </div>`;
+  }).join('');
+
+  const tierBadge = tier
+    ? `<span class="tier-badge tier-${tier}">${tc[tier].label}</span>`
+    : `<span class="tier-badge tier-unranked">Unranked</span>`;
+
+  const resultHtml = latest
+    ? `<div class="bm-result-row">
+        <div>
+          <div class="bm-result-val" style="color:${tier ? tc[tier].color : 'var(--text)'}">${latest.value}</div>
+          <div class="bm-result-unit">${bm.unit}</div>
+        </div>
+        ${tierBadge}
+        <div class="bm-tested-date">Tested ${fmtBmDate(latest.date)}</div>
+       </div>`
+    : `<div class="bm-no-result">Not tested yet — tap Log Test to begin</div>`;
+
+  const overdueHtml = isOverdue
+    ? `<div class="bm-overdue">⏰ Due for retest (${daysSince(latest.date)} days ago)</div>`
+    : '';
+
+  return `<div class="bm-card">
+    <div class="bm-card-head">
+      <div class="bm-card-top">
+        <span style="font-size:20px">${bm.icon}</span>
+        <div class="bm-name">${bm.name}</div>
+        <div class="cat-tag cat-${bm.category}">${bm.category}</div>
+      </div>
+      ${overdueHtml}
+      ${resultHtml}
+      <div class="tier-row">${tierRow}</div>
+    </div>
+    <div class="bm-actions">
+      <button class="bm-info-btn" onclick="openBmInfo('${bm.id}')">ℹ Info</button>
+      <button class="bm-log-btn"  onclick="openLogTest('${bm.id}')">+ Log Test</button>
+    </div>
+  </div>`;
+}
+
+function fmtBmDate(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  return `${MONTHS[d.getMonth()]} ${d.getDate()}`;
+}
+
+// ── Profile ────────────────────────────────────────
+let _bmSex = 'female', _bmAge = null;
+
+function bmSelectSex(sex) {
+  _bmSex = sex;
+  document.querySelectorAll('#bm-sex-toggle .toggle-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.sex === sex));
+}
+function bmSelectAge(age) {
+  _bmAge = age;
+  document.querySelectorAll('#bm-age-grid .age-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.age === age));
+}
+function saveBmProfile() {
+  if (!_bmAge) { toast('Select an age bracket'); return; }
+  const d = loadData();
+  d.userProfile = { sex: _bmSex, ageBracket: _bmAge };
+  saveData(d);
+  renderBenchmarks();
+  toast('Profile saved!');
+}
+function editBmProfile() {
+  const p = appData.userProfile;
+  _bmSex = p?.sex || 'female';
+  _bmAge = p?.ageBracket || null;
+  const d = loadData(); d.userProfile = null; saveData(d);
+  renderBenchmarks();
+}
+
+// ── Log Test ───────────────────────────────────────
+function openLogTest(metricId) {
+  currentBmId = metricId;
+  const bm = BENCHMARKS.find(b => b.id === metricId);
+  document.getElementById('log-test-title').textContent = `Log: ${bm.name}`;
+  document.getElementById('log-test-unit').textContent  = bm.unit;
+  document.getElementById('log-test-input').value = '';
+  document.getElementById('log-test-preview').innerHTML = '';
+  document.getElementById('log-test-overlay').classList.remove('hidden');
+  setTimeout(() => document.getElementById('log-test-input').focus(), 300);
+}
+
+function previewTier() {
+  const val  = parseFloat(document.getElementById('log-test-input').value);
+  const prev = document.getElementById('log-test-preview');
+  if (!val || !currentBmId || !appData.userProfile) { prev.innerHTML = ''; return; }
+  const bm   = BENCHMARKS.find(b => b.id === currentBmId);
+  const tier = scoreTier(bm, appData.userProfile.sex, appData.userProfile.ageBracket, val);
+  if (tier) {
+    const cfg = TIER_CONFIG[tier];
+    prev.innerHTML = `<span class="tier-badge tier-${tier}" style="font-size:14px">${cfg.label}</span>`;
+  } else {
+    prev.innerHTML = `<span style="color:var(--muted);font-size:13px">Below Bronze threshold</span>`;
+  }
+}
+
+function saveTestResult() {
+  const val = parseFloat(document.getElementById('log-test-input').value);
+  if (!val && val !== 0) { toast('Enter a result'); return; }
+  const d = loadData();
+  if (!d.benchmarkResults) d.benchmarkResults = {};
+  if (!d.benchmarkResults[currentBmId]) d.benchmarkResults[currentBmId] = [];
+  d.benchmarkResults[currentBmId].push({ date: today(), value: val });
+  saveData(d);
+  document.getElementById('log-test-overlay').classList.add('hidden');
+  renderBenchmarks();
+  const bm = BENCHMARKS.find(b => b.id === currentBmId);
+  const tier = scoreTier(bm, appData.userProfile.sex, appData.userProfile.ageBracket, val);
+  toast(tier ? `${TIER_CONFIG[tier].label} tier! 🏅` : 'Result saved!');
+}
+
+// ── Info Sheet ─────────────────────────────────────
+function openBmInfo(metricId) {
+  const bm = BENCHMARKS.find(b => b.id === metricId);
+  document.getElementById('bm-info-name').textContent = `${bm.icon} ${bm.name}`;
+  document.getElementById('bm-info-content').innerHTML = `
+    <div class="info-section"><div class="info-section-title">What It Is</div><div class="info-section-body">${bm.info.what}</div></div>
+    <div class="info-section" style="margin-top:14px"><div class="info-section-title">Why It Matters</div><div class="info-section-body">${bm.info.why}</div></div>
+    <div class="info-section" style="margin-top:14px"><div class="info-section-title">How to Test</div><div class="info-section-body">${bm.info.how}</div></div>
+    <div class="info-section" style="margin-top:14px;padding-bottom:24px"><div class="info-section-title">Protocol</div><div class="protocol-box">${bm.protocol}</div></div>
+  `;
+  document.getElementById('bm-info-overlay').classList.remove('hidden');
 }
 
 // ═══════════════════════════════════════════════════
