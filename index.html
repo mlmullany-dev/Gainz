@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
   <meta name="apple-mobile-web-app-title" content="Gainz"/>
-  <meta name="theme-color" content="#111111"/>
+  <meta name="theme-color" content="#001F5B"/>
   <title>Gainz</title>
   <link rel="manifest" href="manifest.json"/>
   <link rel="apple-touch-icon" href="icon.svg"/>
@@ -25,20 +25,45 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     :root {
-      --bg:          #0b1929;
-      --card:        #112240;
-      --card2:       #172d50;
-      --border:      #1e3d5c;
-      --text:        #e8f0fe;
-      --muted:       #6b8eaa;
-      --accent:      #4ade80;
-      --accent-dark: #166534;
-      --gold:        #fbbf24;
-      --r:           14px;
+      /* ── Design tokens (raw palette) ───────────── */
+      --navy:        #001F5B;   --navy-hover:  #0A2E6E;
+      --coral:       #FF6F61;   --coral-hover: #E85B4E;
+      --amber:       #FFBF00;   --amber-soft:  #FFE08A;
+      --slate:       #2C3E50;   --slate-muted: #5A6B7B;
+      --off-white:   #F8F8F8;   --white:       #FFFFFF;
+      --border-c:    #E2E6EB;
+      --amber-text:  #8A6A00;   /* dark amber that passes AA as text on white */
+
+      /* ── Semantic roles ────────────────────────── */
+      --color-bg:         var(--off-white);
+      --color-surface:    var(--white);
+      --color-brand:      var(--navy);
+      --color-cta:        var(--coral);
+      --color-cta-hover:  var(--coral-hover);
+      --color-accent:     var(--amber);
+      --color-text:       var(--slate);
+      --color-text-muted: var(--slate-muted);
+      --color-border:     var(--border-c);
+
+      /* ── Legacy variable names remapped → light theme ─ */
+      --bg:          var(--off-white);
+      --card:        var(--white);
+      --card2:       #EDF1F6;
+      --border:      var(--border-c);
+      --text:        var(--slate);
+      --muted:       var(--slate-muted);
+      --accent:      var(--navy);        /* accent text/icons/active states → brand navy (accessible) */
+      --accent-dark: var(--navy-hover);
+      --gold:        var(--amber-text);  /* amber used as TEXT → darkened for contrast */
+      --card-shadow: 0 2px 8px rgba(0,31,91,0.08);
+      --r:           16px;
       --nav-h:       60px;
       --safe-t:      env(safe-area-inset-top, 0px);
       --safe-b:      env(safe-area-inset-bottom, 0px);
     }
+
+    html, body { font-size: 16px; line-height: 1.5; }
+    h1, h2, h3 { letter-spacing: -0.01em; }
 
     html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Poppins', sans-serif; font-size: 15px; overflow: hidden; }
 
@@ -72,16 +97,16 @@
     .header {
       padding: 14px 20px 12px;
       padding-top: calc(var(--safe-t) + 14px);
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
+      background: var(--color-brand);
+      border-bottom: none;
       display: flex; align-items: center; gap: 12px;
       flex-shrink: 0;
     }
-    .header h1 { font-size: 20px; font-weight: 700; flex: 1; }
+    .header h1 { font-size: 20px; font-weight: 700; flex: 1; color: var(--white); }
 
     .back-btn {
       width: 36px; height: 36px; border-radius: 50%;
-      background: var(--card2); border: none; color: var(--text);
+      background: rgba(255,255,255,0.15); border: none; color: var(--white);
       font-size: 20px; display: flex; align-items: center; justify-content: center;
       cursor: pointer; line-height: 1;
     }
@@ -89,7 +114,7 @@
     /* user avatar button */
     .user-btn {
       width: 34px; height: 34px; border-radius: 50%;
-      border: 2px solid var(--border); background: var(--card2);
+      border: 2px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.15);
       overflow: hidden; cursor: pointer; padding: 0; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
     }
@@ -143,16 +168,16 @@
       position: fixed; bottom: 0; left: 0; right: 0;
       height: calc(var(--nav-h) + var(--safe-b));
       padding-bottom: var(--safe-b);
-      background: #0a1622; border-top: 1px solid var(--border);
+      background: var(--color-brand); border-top: none;
       display: flex; z-index: 100;
     }
     #bottom-nav button {
-      flex: 1; background: none; border: none; color: var(--muted);
+      flex: 1; background: none; border: none; color: rgba(255,255,255,0.55);
       font-size: 11px; font-weight: 600; letter-spacing: 0.3px;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 4px; cursor: pointer; transition: color 0.15s;
     }
-    #bottom-nav button.active { color: var(--accent); }
+    #bottom-nav button.active { color: var(--color-accent); }
     #bottom-nav button svg { width: 22px; height: 22px; fill: currentColor; }
 
     /* ── SECTION LABEL ───────────────────────────── */
@@ -168,9 +193,7 @@
     }
     .welcome-name {
       font-size: 28px; font-weight: 800; line-height: 1.1; margin-bottom: 20px;
-      background: linear-gradient(120deg, #e8f0fe 0%, #93c5fd 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--color-brand);
     }
     .welcome-stats { display: flex; gap: 10px; }
     .welcome-stat {
@@ -190,7 +213,7 @@
       transition: transform 0.12s, background 0.12s;
     }
     .day-card:active { transform: scale(0.975); background: var(--card2); }
-    .day-card.today { border-color: var(--accent); background: rgba(74,222,128,0.05); }
+    .day-card.today { border-color: var(--accent); background: rgba(0,31,91,0.05); }
 
     .day-badge { font-size: 10px; font-weight: 800; color: var(--muted); width: 38px; text-align: center; letter-spacing: 0.3px; line-height: 1.3; }
     .day-card.today .day-badge { color: var(--accent); }
@@ -203,12 +226,12 @@
 
     /* new workout card */
     .new-workout-card {
-      background: rgba(74,222,128,0.05); border-radius: var(--r); padding: 16px 18px;
+      background: rgba(0,31,91,0.05); border-radius: var(--r); padding: 16px 18px;
       border: 1.5px dashed var(--accent); cursor: pointer;
       display: flex; align-items: center; gap: 14px; min-height: 64px;
       transition: background 0.12s;
     }
-    .new-workout-card:active { background: rgba(74,222,128,0.1); }
+    .new-workout-card:active { background: rgba(0,31,91,0.1); }
     .new-workout-icon { font-size: 22px; width: 38px; text-align: center; flex-shrink: 0; }
     .new-workout-label { flex: 1; font-size: 15px; font-weight: 600; color: var(--accent); }
 
@@ -389,7 +412,7 @@
     .build-ex-nm { font-size: 15px; font-weight: 700; }
     .muscle-chip {
       display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 9px;
-      border-radius: 50px; background: rgba(74,222,128,0.1);
+      border-radius: 50px; background: rgba(0,31,91,0.1);
       color: var(--accent); margin-top: 4px;
     }
 
@@ -423,11 +446,11 @@
     .add-ex-btn {
       margin: 4px 16px 16px; padding: 15px;
       border-radius: var(--r); border: 1.5px dashed var(--accent);
-      background: rgba(74,222,128,0.05); color: var(--accent);
+      background: rgba(0,31,91,0.05); color: var(--accent);
       font-size: 15px; font-weight: 700; cursor: pointer; width: calc(100% - 32px);
       display: block;
     }
-    .add-ex-btn:active { background: rgba(74,222,128,0.1); }
+    .add-ex-btn:active { background: rgba(0,31,91,0.1); }
 
     .build-empty {
       text-align: center; color: var(--muted); font-size: 14px;
@@ -479,7 +502,7 @@
       color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer;
       white-space: nowrap;
     }
-    .chip.active { border-color: var(--accent); color: var(--accent); background: rgba(74,222,128,0.08); }
+    .chip.active { border-color: var(--accent); color: var(--accent); background: rgba(0,31,91,0.08); }
 
     .picker-list { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px calc(16px + var(--safe-b)); }
 
@@ -654,7 +677,7 @@
       background: var(--card2); color: var(--muted); font-size: 11px; font-weight: 700;
       cursor: pointer; text-align: center; font-family: inherit;
     }
-    .age-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(74,222,128,0.08); }
+    .age-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0,31,91,0.08); }
 
     .bm-list { padding: 8px 16px 0; display: flex; flex-direction: column; gap: 14px; }
 
@@ -684,10 +707,10 @@
       letter-spacing: 0.3px; flex-shrink: 0;
     }
     .tier-unranked  { background: rgba(136,136,136,0.15); color: var(--muted); }
-    .tier-bronze    { background: rgba(205,127,50,0.2);   color: #d4956a; }
-    .tier-silver    { background: rgba(148,163,184,0.2);  color: #cbd5e1; }
-    .tier-gold      { background: rgba(251,191,36,0.2);   color: var(--gold); }
-    .tier-platinum  { background: rgba(192,132,252,0.2);  color: #d8b4fe; }
+    .tier-bronze    { background: rgba(205,127,50,0.18);  color: #9C5A2C; }
+    .tier-silver    { background: rgba(100,116,139,0.18);  color: #56657A; }
+    .tier-gold      { background: rgba(251,191,36,0.22);  color: #8A6A00; }
+    .tier-platinum  { background: rgba(124,92,191,0.16);  color: #6D4FB3; }
 
     .tier-row {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 12px;
@@ -708,9 +731,10 @@
     }
     .bm-log-btn {
       flex: 1; padding: 10px 14px; border-radius: 9px; border: none;
-      background: var(--accent); color: #000; font-size: 13px; font-weight: 700;
+      background: var(--color-cta); color: var(--color-brand); font-size: 13px; font-weight: 700;
       cursor: pointer; font-family: inherit;
     }
+    .bm-log-btn:active { background: var(--color-cta-hover); }
 
     .bm-no-result { font-size: 13px; color: var(--muted); font-style: italic; margin-bottom: 10px; }
 
@@ -820,7 +844,7 @@
     #view-program-detail .info-box.gold {
       background: rgba(160,100,20,0.12); border-color: rgba(160,100,20,0.25); color: #6b4010;
     }
-    #view-program-detail .follow-btn.on  { background: #4ade80; color: #000; }
+    #view-program-detail .follow-btn.on  { background: var(--color-cta); color: var(--color-brand); }
     #view-program-detail .follow-btn.off {
       background: rgba(255,255,255,0.18); color: rgba(26,15,8,0.5);
       border-color: rgba(0,0,0,0.12);
@@ -829,7 +853,7 @@
     /* ── AUTO-FILL BANNER ────────────────────────── */
     .autofill-banner {
       margin: 10px 16px 0; padding: 12px 14px;
-      background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.25);
+      background: rgba(0,31,91,0.08); border: 1px solid rgba(0,31,91,0.25);
       border-radius: 10px; display: flex; align-items: center; gap: 10px;
     }
     .autofill-banner-text { flex: 1; }
@@ -880,7 +904,7 @@
       background: var(--card2); color: var(--muted); font-size: 13px; font-weight: 600;
       cursor: pointer; text-align: center; font-family: inherit; transition: all 0.15s;
     }
-    .ftype-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(74,222,128,0.08); }
+    .ftype-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0,31,91,0.08); }
 
     .feedback-field { margin-bottom: 14px; }
     .feedback-field label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 7px; }
@@ -950,7 +974,7 @@
     }
     .plan-day-name { font-size: 15px; font-weight: 800; }
     .plan-day-date { font-size: 12px; color: var(--muted); }
-    .plan-day-today { font-size: 10px; font-weight: 800; color: var(--accent); padding: 2px 7px; border-radius: 50px; background: rgba(74,222,128,0.15); }
+    .plan-day-today { font-size: 10px; font-weight: 800; color: var(--accent); padding: 2px 7px; border-radius: 50px; background: rgba(0,31,91,0.15); }
 
     .plan-workout-sel {
       width: 100%; background: var(--card2); border: 1.5px solid var(--border);
@@ -1039,7 +1063,7 @@
     /* active-program badge */
     .active-prog-banner {
       margin: 0 16px 12px; padding: 12px 14px;
-      background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.25);
+      background: rgba(0,31,91,0.08); border: 1px solid rgba(0,31,91,0.25);
       border-radius: 10px; display: flex; align-items: center; gap: 10px;
       cursor: pointer;
     }
@@ -1186,7 +1210,7 @@
     .tip-title { font-size: 15px; font-weight: 700; }
     .tip-steps {
       font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 50px;
-      background: rgba(96,165,250,0.15); color: #60a5fa; flex-shrink: 0;
+      background: rgba(96,165,250,0.18); color: var(--color-brand); flex-shrink: 0;
     }
     .tip-body { font-size: 14px; color: var(--muted); line-height: 1.55; }
 
@@ -1236,7 +1260,7 @@
     .wdrop.on { background: #1e88e5; border-color: #42a5f5; }
     .wdrop.on::after { content: ''; display: block; width: 12px; height: 12px; border-radius: 50% 50% 50% 0; background: #fff; opacity: 0.9; transform: rotate(-45deg); }
     .water-tally { font-size: 13px; color: var(--muted); font-weight: 600; }
-    .water-tally b { color: #60a5fa; }
+    .water-tally b { color: var(--color-brand); }
 
     /* Macro bars */
     .macro-row { margin-bottom: 13px; }
@@ -1272,10 +1296,10 @@
     .add-food-btn {
       display: block; width: 100%; margin-top: 12px; padding: 12px;
       border-radius: 9px; border: 1.5px dashed var(--accent);
-      background: rgba(74,222,128,0.05); color: var(--accent);
+      background: rgba(0,31,91,0.05); color: var(--accent);
       font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;
     }
-    .add-food-btn:active { background: rgba(74,222,128,0.1); }
+    .add-food-btn:active { background: rgba(0,31,91,0.1); }
 
     /* Sheet inputs grid */
     .sheet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
@@ -1291,6 +1315,44 @@
     .sheet-field input:focus { outline: none; border-color: var(--accent); }
     .sheet-field.full { grid-column: 1 / -1; }
     .sheet-field.full input { text-align: left; font-size: 15px; font-weight: 500; }
+    /* ═══════════════════════════════════════════════
+       DESIGN SYSTEM — surfaces, button roles, a11y
+       (appended last so it authoritatively overrides)
+       ═══════════════════════════════════════════════ */
+
+    /* Card surfaces get a soft navy shadow */
+    .day-card, .ex-card, .prog-card, .pcard, .log-card, .bm-card,
+    .build-ex-card, .new-workout-card, .plan-week-card, .plan-day-card,
+    .welcome-stat, .login-card {
+      box-shadow: var(--card-shadow);
+    }
+
+    /* Primary CTA → coral fill, navy text */
+    .finish-btn, .completion-save-btn, .sheet-save-btn, .header-save-btn,
+    .plan-save-btn, .log-btn, .steps-set-btn {
+      background: var(--color-cta); color: var(--color-brand); font-weight: 600;
+    }
+    .finish-btn:active, .completion-save-btn:active, .sheet-save-btn:active,
+    .header-save-btn:active, .plan-save-btn:active, .log-btn:active, .steps-set-btn:active {
+      background: var(--color-cta-hover);
+    }
+
+    /* Secondary → amber fill, navy text */
+    .add-ex-btn, .add-food-btn, .outline-btn {
+      background: var(--color-accent); color: var(--color-brand);
+      border: none; font-weight: 600;
+    }
+    .add-ex-btn:active, .add-food-btn:active, .outline-btn:active { background: var(--amber-soft); }
+
+    /* Selection / segmented active states → navy fill, white text */
+    .swap-btn.active, .toggle-btn.active { background: var(--color-brand); color: var(--white); }
+    .check-btn.checked { background: var(--color-brand); border-color: var(--color-brand); color: var(--white); }
+
+    /* Google sign-in keeps its brand white, add a border on off-white bg */
+    .google-btn { border: 1px solid var(--color-border); }
+
+    /* In-progress dot uses bright amber on light surfaces */
+    .day-icon span { font-weight: 700; }
   </style>
 </head>
 <body>
@@ -1990,7 +2052,7 @@ const WORKOUT_PLANS = [
     icon: '🌱',
     color: '#4ade80',
     level: 'Beginner',
-    levelBg: 'rgba(74,222,128,0.15)',
+    levelBg: 'rgba(0,31,91,0.15)',
     weeks: 6,
     freq: '3–4×/wk',
     time: '30 min',
@@ -3210,7 +3272,7 @@ function renderBenchmarkProgress() {
       </div>`;
     }
     return `<div class="bm-report-cell">
-      <div class="bm-report-name">${bm.icon} ${bm.name}</div>
+      <div class="bm-report-name">${bm.name}</div>
       <div class="bm-report-untested">Not tested</div>
     </div>`;
   }).join('');
@@ -3369,17 +3431,17 @@ function svgChart(pts, unit) {
 
   let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;display:block;background:var(--card2);border-radius:8px">
     <defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#4ade80" stop-opacity="0.22"/>
-      <stop offset="100%" stop-color="#4ade80" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#001F5B" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#001F5B" stop-opacity="0"/>
     </linearGradient></defs>`;
   yTicks.forEach((v,i) => {
-    svg += `<line x1="${pad.l}" y1="${yPos[i]}" x2="${W-pad.r}" y2="${yPos[i]}" stroke="#2e2e2e" stroke-width="1"/>
-      <text x="${pad.l-6}" y="${yPos[i]+4}" text-anchor="end" fill="#666" font-size="10" font-family="-apple-system,sans-serif">${Math.round(v)}</text>`;
+    svg += `<line x1="${pad.l}" y1="${yPos[i]}" x2="${W-pad.r}" y2="${yPos[i]}" stroke="#E2E6EB" stroke-width="1"/>
+      <text x="${pad.l-6}" y="${yPos[i]+4}" text-anchor="end" fill="#5A6B7B" font-size="10" font-family="Poppins,sans-serif">${Math.round(v)}</text>`;
   });
   if (pts.length > 1) svg += `<path d="${fillD}" fill="url(#cg)"/>`;
-  svg += `<path d="${pathD}" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
-  pts.forEach((p,i) => { svg += `<circle cx="${toX(i).toFixed(1)}" cy="${toY(p.value).toFixed(1)}" r="4" fill="#4ade80" stroke="#1c1c1c" stroke-width="2"/>`; });
-  xIdxs.forEach(i => { svg += `<text x="${toX(i).toFixed(1)}" y="${H-5}" text-anchor="middle" fill="#666" font-size="10" font-family="-apple-system,sans-serif">${fmtDate(pts[i].date)}</text>`; });
+  svg += `<path d="${pathD}" fill="none" stroke="#001F5B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  pts.forEach((p,i) => { svg += `<circle cx="${toX(i).toFixed(1)}" cy="${toY(p.value).toFixed(1)}" r="4" fill="#001F5B" stroke="#FFFFFF" stroke-width="2"/>`; });
+  xIdxs.forEach(i => { svg += `<text x="${toX(i).toFixed(1)}" y="${H-5}" text-anchor="middle" fill="#5A6B7B" font-size="10" font-family="Poppins,sans-serif">${fmtDate(pts[i].date)}</text>`; });
   svg += '</svg>';
   return svg;
 }
@@ -3435,10 +3497,10 @@ const BENCHMARKS = [
 ];
 
 const TIER_CONFIG = {
-  bronze:   { label:'Bronze',   color:'#d4956a', bg:'rgba(205,127,50,0.18)'  },
-  silver:   { label:'Silver',   color:'#cbd5e1', bg:'rgba(148,163,184,0.18)' },
-  gold:     { label:'Gold',     color:'#fbbf24', bg:'rgba(251,191,36,0.18)'  },
-  platinum: { label:'Platinum', color:'#d8b4fe', bg:'rgba(192,132,252,0.18)' },
+  bronze:   { label:'Bronze',   color:'#9C5A2C', bg:'rgba(205,127,50,0.18)'  },
+  silver:   { label:'Silver',   color:'#56657A', bg:'rgba(100,116,139,0.18)' },
+  gold:     { label:'Gold',     color:'#8A6A00', bg:'rgba(251,191,36,0.22)'  },
+  platinum: { label:'Platinum', color:'#6D4FB3', bg:'rgba(124,92,191,0.16)' },
 };
 const AGE_BRACKETS = ['20-29','30-39','40-49','50-59','60+'];
 
@@ -3542,7 +3604,6 @@ function bmCard(bm, profile) {
   return `<div class="bm-card">
     <div class="bm-card-head">
       <div class="bm-card-top">
-        <div class="cat-tag cat-${bm.category}" style="font-size:10px;padding:3px 8px">${bm.category}</div>
         <div class="bm-name">${bm.name}</div>
         <div class="cat-tag cat-${bm.category}">${bm.category}</div>
       </div>
@@ -4264,7 +4325,7 @@ function renderSteps(steps) {
   steps = steps || 0;
   const pct    = Math.min(1, steps / STEPS_GOAL);
   const offset = STEPS_CIRC * (1 - pct);
-  const color  = pct >= 1 ? '#4ade80' : pct >= 0.5 ? '#60a5fa' : '#f59e0b';
+  const color  = pct >= 1 ? '#001F5B' : '#FFBF00';
 
   document.getElementById('steps-count').textContent = steps.toLocaleString();
   const fg = document.getElementById('steps-ring-fg');
@@ -4273,7 +4334,7 @@ function renderSteps(steps) {
 
   const remaining = Math.max(0, STEPS_GOAL - steps);
   document.getElementById('steps-pct').innerHTML = pct >= 1
-    ? '<b style="color:#4ade80">Goal reached!</b>'
+    ? '<b style="color:var(--color-brand)">Goal reached!</b>'
     : `<b>${Math.round(pct * 100)}%</b> of daily goal · ${remaining.toLocaleString()} to go`;
 }
 
@@ -4351,7 +4412,7 @@ function renderMacros(entry) {
     const remaining = target - actual;
     const statusTxt = remaining > 0
       ? `${Math.round(remaining)}${m.unit} left`
-      : `<span style="color:#4ade80">goal met!</span>`;
+      : `<span style="color:var(--color-brand);font-weight:700">goal met!</span>`;
     return `<div class="macro-row">
       <div class="macro-label-row">
         <span class="macro-name">${m.label}</span>

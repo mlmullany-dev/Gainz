@@ -22,7 +22,10 @@
       "Bash(cp \"/Users/michellefitzgerald/Downloads/image \\(2\\).png\" /Users/michellefitzgerald/Gainz/statue.png)",
       "Bash(git commit -m 'Replace login emoji with Discobolus statue image *)",
       "Bash(grep -n \"⚖️\\\\|📊\\\\|goal met\\\\|🎉\\\\|Active ✓\\\\|⚡ \\\\${d\\\\.\" /Users/michellefitzgerald/Gainz/index.html)",
-      "Bash(git commit -m 'Switch to Barlow/Barlow Condensed font + purge all emojis from UI *)"
+      "Bash(git commit -m 'Switch to Barlow/Barlow Condensed font + purge all emojis from UI *)",
+      "Bash(git commit -m 'Switch to Poppins — wellness-focused rounded font with full weight hierarchy *)",
+      "Bash(git commit -m 'Apply Mushroom #BA9E88 theme to Programs page with contrast-adjusted cards and text *)",
+      "Bash(git commit -m 'Make home workouts dynamic — follow any plan to replace the tracked program *)"
     ]
   }
 }
