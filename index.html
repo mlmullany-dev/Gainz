@@ -11,6 +11,11 @@
   <link rel="manifest" href="manifest.json"/>
   <link rel="apple-touch-icon" href="icon.svg"/>
 
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -35,7 +40,25 @@
       --safe-b:      env(safe-area-inset-bottom, 0px);
     }
 
-    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif; font-size: 16px; overflow: hidden; }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Barlow', sans-serif; font-size: 16px; overflow: hidden; }
+
+    /* Barlow Condensed for all display / heading / large-number contexts */
+    h1, .header h1,
+    .welcome-name, .welcome-stat-num,
+    .login-title,
+    .steps-count,
+    .ring-time,
+    .vol-num, .volume-stat-num,
+    .completion-stat-num, .completion-title,
+    .pcard-name, .pdetail-name,
+    .bm-result-val, .log-date-main,
+    .week-range-main, .plan-day-name,
+    .day-name, .phase-title,
+    .feedback-ty-title,
+    .sheet-title, .picker-header h2,
+    .section-label,
+    .tier-cell-val,
+    .prog-detail-name { font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.3px; }
 
     /* ── LAYOUT ──────────────────────────────────── */
     #app { height: 100dvh; display: flex; flex-direction: column; }
@@ -1128,8 +1151,8 @@
       display: flex; align-items: center; justify-content: center;
       transition: all 0.15s;
     }
-    .wdrop.on { background: #1565c0; border-color: #42a5f5; font-size: 18px; }
-    .wdrop.on::after { content: '💧'; }
+    .wdrop.on { background: #1e88e5; border-color: #42a5f5; }
+    .wdrop.on::after { content: ''; display: block; width: 12px; height: 12px; border-radius: 50% 50% 50% 0; background: #fff; opacity: 0.9; transform: rotate(-45deg); }
     .water-tally { font-size: 13px; color: var(--muted); font-weight: 600; }
     .water-tally b { color: #60a5fa; }
 
@@ -1218,7 +1241,7 @@
   <!-- ══ HOME ════════════════════════════════════ -->
   <div id="view-home" class="view active">
     <div class="header">
-      <h1>💪 Gainz</h1>
+      <h1>Gainz</h1>
       <button class="user-btn" onclick="confirmSignOut()" id="user-btn" title="Sign out">
         <img id="user-avatar" src="" alt=""/>
       </button>
@@ -1232,7 +1255,7 @@
       </div>
       <div class="section-label">This Week</div>
       <div class="plan-week-card" onclick="openWeeklyPlan()" style="margin-bottom:12px">
-        <span style="font-size:22px">📅</span>
+        <div style="width:36px;height:36px;border-radius:8px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
         <div style="flex:1">
           <div style="font-size:14px;font-weight:700">Plan Your Week</div>
           <div id="plan-week-status" style="font-size:12px;color:var(--muted);margin-top:2px">Schedule workouts &amp; meals for the week ahead</div>
@@ -1245,7 +1268,7 @@
         <div id="custom-days-grid" class="week-grid"></div>
       </div>
       <div class="feedback-link-row">
-        <button class="feedback-link-btn" onclick="openFeedback()">💌 Send feedback or request a feature</button>
+        <button class="feedback-link-btn" onclick="openFeedback()">Send feedback or request a feature</button>
       </div>
     </div>
   </div>
@@ -1297,7 +1320,7 @@
 
   <!-- ══ PROGRESS ════════════════════════════════ -->
   <div id="view-progress" class="view">
-    <div class="header"><h1>📈 Progress</h1></div>
+    <div class="header"><h1>Progress</h1></div>
     <div class="scroll">
       <div class="prog-content">
 
@@ -1340,7 +1363,7 @@
   <div id="view-weekly-plan" class="view">
     <div class="header">
       <button class="back-btn" onclick="nav('home')" aria-label="Back">&#8592;</button>
-      <h1>📅 Weekly Plan</h1>
+      <h1>Weekly Plan</h1>
     </div>
     <div class="week-header">
       <button class="week-nav-btn" id="wp-prev-btn" onclick="shiftPlanWeek(-1)">‹</button>
@@ -1354,13 +1377,13 @@
       <div id="autofill-banner"></div>
       <div id="plan-days-list"></div>
       <div id="plan-summary" class="plan-week-summary"></div>
-      <button class="plan-save-btn" onclick="saveWeeklyPlan()">Save Plan 💾</button>
+      <button class="plan-save-btn" onclick="saveWeeklyPlan()">Save Plan</button>
     </div>
   </div>
 
   <!-- ══ BENCHMARKS ═══════════════════════════════ -->
   <div id="view-benchmarks" class="view">
-    <div class="header"><h1>🏅 Benchmarks</h1></div>
+    <div class="header"><h1>Benchmarks</h1></div>
     <div class="scroll">
       <div id="bm-profile-setup"></div>
       <div id="bm-list"  class="bm-list"></div>
@@ -1369,7 +1392,7 @@
 
   <!-- ══ PROGRAMS ═════════════════════════════════ -->
   <div id="view-programs" class="view">
-    <div class="header"><h1>📋 Programs</h1></div>
+    <div class="header"><h1>Programs</h1></div>
     <div class="scroll">
       <div id="active-prog-banner"></div>
       <div id="prog-list" class="prog-list"></div>
@@ -1396,7 +1419,7 @@
 
   <!-- ══ DAILY LOG ════════════════════════════════ -->
   <div id="view-log" class="view">
-    <div class="header"><h1>📋 Daily Log</h1></div>
+    <div class="header"><h1>Daily Log</h1></div>
     <div class="log-date-bar">
       <button class="log-nav-btn" id="log-prev-btn" onclick="navigateLog(-1)">‹</button>
       <div>
@@ -1409,14 +1432,14 @@
 
       <!-- Water -->
       <div class="log-card">
-        <div class="log-card-title">💧 Water Intake</div>
+        <div class="log-card-title">Water Intake</div>
         <div class="water-drops" id="water-drops"></div>
         <div class="water-tally"  id="water-tally"></div>
       </div>
 
       <!-- Steps -->
       <div class="log-card">
-        <div class="log-card-title">🚶 Steps</div>
+        <div class="log-card-title">Steps</div>
         <div class="steps-ring-wrap">
           <svg width="140" height="140" viewBox="0 0 140 140">
             <circle class="steps-ring-bg" cx="70" cy="70" r="60"/>
@@ -1439,13 +1462,13 @@
             inputmode="numeric" placeholder="Enter total steps"/>
           <button class="steps-set-btn" onclick="setStepsManual()">Set</button>
         </div>
-        <button class="steps-tips-btn" onclick="openStepsTips()">👟 Quick Tips to Get Your Steps</button>
+        <button class="steps-tips-btn" onclick="openStepsTips()">Quick Tips to Get Your Steps</button>
       </div>
 
       <!-- Macros -->
       <div class="log-card">
         <div class="log-card-title">
-          🎯 Macros
+          Macros
           <button class="log-card-action" onclick="openTargetsSheet()">Edit Targets</button>
         </div>
         <div id="macro-content"></div>
@@ -1453,7 +1476,7 @@
 
       <!-- Foods -->
       <div class="log-card" style="margin-bottom:16px">
-        <div class="log-card-title">🍽️ Food Log</div>
+        <div class="log-card-title">Food Log</div>
         <div id="food-list"></div>
         <button class="add-food-btn" onclick="openAddFoodSheet()">+ Add Food</button>
       </div>
@@ -1557,7 +1580,7 @@
     <!-- Form state -->
     <div id="feedback-form-state">
       <div class="picker-header">
-        <h2>💌 Send Feedback</h2>
+        <h2>Send Feedback</h2>
         <button class="picker-close" onclick="closeFeedback()">✕</button>
       </div>
       <div class="feedback-scroll">
@@ -1568,10 +1591,10 @@
         <div class="feedback-field">
           <label>Type</label>
           <div class="feedback-type-grid">
-            <button class="ftype-btn active" data-type="Feature Request"  onclick="selectFType(this)">✨ Feature Request</button>
-            <button class="ftype-btn"        data-type="Bug Report"       onclick="selectFType(this)">🐛 Bug Report</button>
-            <button class="ftype-btn"        data-type="General Feedback" onclick="selectFType(this)">💬 General Feedback</button>
-            <button class="ftype-btn"        data-type="Question"         onclick="selectFType(this)">❓ Question</button>
+            <button class="ftype-btn active" data-type="Feature Request"  onclick="selectFType(this)">Feature Request</button>
+            <button class="ftype-btn"        data-type="Bug Report"       onclick="selectFType(this)">Bug Report</button>
+            <button class="ftype-btn"        data-type="General Feedback" onclick="selectFType(this)">General Feedback</button>
+            <button class="ftype-btn"        data-type="Question"         onclick="selectFType(this)">Question</button>
           </div>
         </div>
 
@@ -1598,7 +1621,7 @@
     <!-- Thank-you state -->
     <div id="feedback-thanks-state" style="display:none">
       <div class="feedback-thankyou">
-        <div class="feedback-ty-icon">🙏</div>
+        <div class="feedback-ty-icon"><img src="statue.png" style="width:72px;height:72px;object-fit:cover;border-radius:12px"/></div>
         <div class="feedback-ty-title">Thank you!</div>
         <div class="feedback-ty-body">
           Your feedback means a lot to us. We review every request and suggestion regularly — your input genuinely shapes where this app goes next.
@@ -1642,7 +1665,7 @@
   <div class="tips-sheet">
     <div class="picker-drag"></div>
     <div class="picker-header">
-      <h2>👟 Sneaky Steps</h2>
+      <h2>Sneaky Steps</h2>
       <button class="picker-close" onclick="document.getElementById('steps-tips-overlay').classList.add('hidden')">✕</button>
     </div>
     <p style="font-size:13px;color:var(--muted);padding:8px 20px 4px;flex-shrink:0">Short, creative ways to hit your daily goal without it feeling like exercise.</p>
@@ -1653,7 +1676,7 @@
 <!-- ══ WORKOUT COMPLETION OVERLAY ════════════════ -->
 <div id="completion-overlay" class="overlay hidden">
   <div class="completion-sheet">
-    <div class="completion-emoji">💪</div>
+    <div class="completion-emoji"><img src="statue.png" style="width:72px;height:72px;object-fit:cover;border-radius:12px"/></div>
     <div class="completion-title">Workout Complete!</div>
     <div class="completion-sub" id="completion-sub">Great session</div>
     <div class="completion-stats">
@@ -2341,7 +2364,7 @@ function renderHome() {
       const diffMs  = new Date() - startD;
       const weekNum = Math.min(plan.weeks, Math.floor(diffMs / (7*24*60*60*1000)) + 1);
       apBanner.innerHTML = `<div class="active-prog-banner" onclick="openPlan('${plan.id}')">
-        <span style="font-size:22px">${plan.icon}</span>
+        <div style="width:8px;height:32px;border-radius:4px;background:${plan.color};flex-shrink:0"></div>
         <div class="active-prog-text">
           <div class="active-prog-name">${plan.name}</div>
           <div class="active-prog-sub">Week ${weekNum} of ${plan.weeks} · ${plan.tagline}</div>
@@ -2356,7 +2379,7 @@ function renderHome() {
 
   // Welcome section
   const firstName = currentUser?.displayName?.split(' ')[0] || 'there';
-  document.getElementById('welcome-greeting').textContent = `${getGreeting()} 👋`;
+  document.getElementById('welcome-greeting').textContent = getGreeting();
   document.getElementById('welcome-name').textContent = firstName + '!';
   const weekCount  = appData.sessions.filter(s => s.date >= ws && s.date <= t).length;
   const totalCount = appData.sessions.length;
@@ -2416,7 +2439,7 @@ function renderHome() {
     else if (inProg) statusIcon = '<span style="color:var(--gold)">●</span>';
 
     customHtml += `<div class="day-card" onclick="openCustomDay('${day.id}')">
-      <div class="day-badge" style="font-size:20px;color:var(--accent)">⚡</div>
+      <div class="day-badge" style="color:var(--accent)">MY</div>
       <div class="day-info">
         <div class="day-name">${day.name}</div>
         <div class="day-sub">${exCount} exercise${exCount !== 1 ? 's' : ''} · ${preview || 'No exercises yet'}</div>
@@ -2526,7 +2549,7 @@ function renderDay(dayId) {
 
     const lb = lastBest(dayId, ex.id, vKey);
     const beatHtml = lb
-      ? `<div class="beat-this">🎯 Beat this: <strong>${lb.weight} lbs × ${lb.reps} reps</strong></div>`
+      ? `<div class="beat-this">Beat this: <strong>${lb.weight} lbs × ${lb.reps} reps</strong></div>`
       : `<div class="beat-this baseline">No history yet — set your baseline today!</div>`;
 
     const lastSession = lastSessionForDay(dayId);
@@ -2550,8 +2573,8 @@ function renderDay(dayId) {
 
     const restHtml = anyDone && !allDone
       ? `<div class="rest-row">
-           <button class="rest-trigger" onclick="openTimer(60)">⏱ 60s rest</button>
-           <button class="rest-trigger" onclick="openTimer(90)">⏱ 90s rest</button>
+           <button class="rest-trigger" onclick="openTimer(60)">60s rest</button>
+           <button class="rest-trigger" onclick="openTimer(90)">90s rest</button>
          </div>`
       : '';
 
@@ -2596,7 +2619,7 @@ function renderCustomDay(dayId) {
     const lastExSets   = lastSession2?.exercises?.[ex.id] || [];
     const lb           = bestSet(lastExSets);
     const beatHtml = lb
-      ? `<div class="beat-this">🎯 Beat this: <strong>${lb.weight} lbs × ${lb.reps} reps</strong></div>`
+      ? `<div class="beat-this">Beat this: <strong>${lb.weight} lbs × ${lb.reps} reps</strong></div>`
       : `<div class="beat-this baseline">No history yet — set your baseline today!</div>`;
 
     let setsHtml = `<div class="sets-head"><span>SET</span><span>PREV</span><span>LBS</span><span>REPS</span><span></span></div>`;
@@ -2617,8 +2640,8 @@ function renderCustomDay(dayId) {
 
     const restHtml = anyDone && !allDone
       ? `<div class="rest-row">
-           <button class="rest-trigger" onclick="openTimer(60)">⏱ 60s rest</button>
-           <button class="rest-trigger" onclick="openTimer(90)">⏱ 90s rest</button>
+           <button class="rest-trigger" onclick="openTimer(60)">60s rest</button>
+           <button class="rest-trigger" onclick="openTimer(90)">90s rest</button>
          </div>`
       : '';
 
@@ -2724,7 +2747,7 @@ function confirmFinishWorkout() {
   saveWIP(activeDayId, null);
   wip = null;
   document.getElementById('completion-overlay').classList.add('hidden');
-  toast('Workout saved! 💪');
+  toast('Workout saved!');
   nav('home');
 }
 
@@ -2980,7 +3003,7 @@ function renderBenchmarkProgress() {
     if (tier) {
       const cfg = TIER_CONFIG[tier];
       return `<div class="bm-report-cell">
-        <div class="bm-report-name">${bm.icon} ${bm.name}</div>
+        <div class="bm-report-name">${bm.name}</div>
         <div class="bm-report-badge" style="background:${cfg.bg};color:${cfg.color}">${cfg.label}</div>
       </div>`;
     }
@@ -2993,7 +3016,7 @@ function renderBenchmarkProgress() {
   // ── Build metric selector for chart ──
   const hasTested = BENCHMARKS.filter(bm => (results[bm.id]?.length ?? 0) > 1);
   const selOptions = hasTested.length
-    ? hasTested.map(bm => `<option value="${bm.id}">${bm.icon} ${bm.name}</option>`).join('')
+    ? hasTested.map(bm => `<option value="${bm.id}">${bm.name}</option>`).join('')
     : '<option value="">— No history yet —</option>';
 
   el.innerHTML = `
@@ -3040,7 +3063,7 @@ function renderProgress() {
   if (customDays.length) {
     daySel.innerHTML += '<option disabled>── My Workouts ──</option>';
     customDays.forEach(d => {
-      daySel.innerHTML += `<option value="${d.id}">⚡ ${d.name}</option>`;
+      daySel.innerHTML += `<option value="${d.id}">${d.name}</option>`;
     });
   }
   document.getElementById('ex-sel').style.display = 'none';
@@ -3311,13 +3334,13 @@ function bmCard(bm, profile) {
     : `<div class="bm-no-result">Not tested yet — tap Log Test to begin</div>`;
 
   const overdueHtml = isOverdue
-    ? `<div class="bm-overdue">⏰ Due for retest (${daysSince(latest.date)} days ago)</div>`
+    ? `<div class="bm-overdue">Due for retest — ${daysSince(latest.date)} days since last test</div>`
     : '';
 
   return `<div class="bm-card">
     <div class="bm-card-head">
       <div class="bm-card-top">
-        <span style="font-size:20px">${bm.icon}</span>
+        <div class="cat-tag cat-${bm.category}" style="font-size:10px;padding:3px 8px">${bm.category}</div>
         <div class="bm-name">${bm.name}</div>
         <div class="cat-tag cat-${bm.category}">${bm.category}</div>
       </div>
@@ -3404,13 +3427,13 @@ function saveTestResult() {
   renderBenchmarks();
   const bm = BENCHMARKS.find(b => b.id === currentBmId);
   const tier = scoreTier(bm, appData.userProfile.sex, appData.userProfile.ageBracket, val);
-  toast(tier ? `${TIER_CONFIG[tier].label} tier! 🏅` : 'Result saved!');
+  toast(tier ? `${TIER_CONFIG[tier].label} tier unlocked!` : 'Result saved!');
 }
 
 // ── Info Sheet ─────────────────────────────────────
 function openBmInfo(metricId) {
   const bm = BENCHMARKS.find(b => b.id === metricId);
-  document.getElementById('bm-info-name').textContent = `${bm.icon} ${bm.name}`;
+  document.getElementById('bm-info-name').textContent = bm.name;
   document.getElementById('bm-info-content').innerHTML = `
     <div class="info-section"><div class="info-section-title">What It Is</div><div class="info-section-body">${bm.info.what}</div></div>
     <div class="info-section" style="margin-top:14px"><div class="info-section-title">Why It Matters</div><div class="info-section-body">${bm.info.why}</div></div>
@@ -3433,7 +3456,7 @@ function renderPrograms() {
       const startD  = new Date(ap.startDate + 'T12:00:00');
       const weekNum = Math.min(plan.weeks, Math.floor((new Date() - startD) / (7*24*60*60*1000)) + 1);
       bannerEl.innerHTML = `<div class="active-prog-banner" onclick="openPlan('${plan.id}')">
-        <span style="font-size:22px">${plan.icon}</span>
+        <div style="width:8px;height:32px;border-radius:4px;background:${plan.color};flex-shrink:0"></div>
         <div class="active-prog-text">
           <div class="active-prog-name">Following: ${plan.name}</div>
           <div class="active-prog-sub">Week ${weekNum} of ${plan.weeks} · Tap to view</div>
@@ -3452,7 +3475,7 @@ function renderPrograms() {
       <div class="pcard-band" style="background:${plan.color}"></div>
       <div class="pcard-body">
         <div class="pcard-top">
-          <div class="pcard-icon">${plan.icon}</div>
+          <div class="pcard-icon" style="width:10px;height:10px;border-radius:50%;background:${plan.color};flex-shrink:0"></div>
           <div class="pcard-name">${plan.name}</div>
           <div class="pcard-level" style="background:${plan.levelBg};color:${plan.color}">${plan.level}</div>
         </div>
@@ -3477,7 +3500,7 @@ function renderProgramDetail() {
   if (!plan) return;
 
   document.getElementById('pdetail-title').textContent   = plan.name;
-  document.getElementById('pdetail-icon').textContent    = plan.icon;
+  document.getElementById('pdetail-icon').innerHTML = `<div style="width:48px;height:6px;border-radius:3px;background:${plan.color}"></div>`;
   document.getElementById('pdetail-name').textContent    = plan.name;
   document.getElementById('pdetail-tagline').textContent = plan.tagline;
   document.getElementById('pdetail-stats').innerHTML = `
@@ -3494,17 +3517,17 @@ function renderProgramDetail() {
 
   // Doctor note (Late Bloomer)
   if (plan.doctorNote) {
-    html += `<div class="ds"><div class="info-box gold">⚕️ ${plan.doctorNote}</div></div>`;
+    html += `<div class="ds"><div class="info-box gold">${plan.doctorNote}</div></div>`;
   }
 
   // Progression note (Oly)
   if (plan.progression) {
-    html += `<div class="ds"><div class="info-box blue">📈 ${plan.progression}</div></div>`;
+    html += `<div class="ds"><div class="info-box blue">${plan.progression}</div></div>`;
   }
 
   // Program note (Full Body)
   if (plan.note) {
-    html += `<div class="ds"><div class="info-box blue">💡 ${plan.note}</div></div>`;
+    html += `<div class="ds"><div class="info-box blue">${plan.note}</div></div>`;
   }
 
   // Day schedule (Oly + Full Body)
@@ -3538,8 +3561,8 @@ function renderProgramDetail() {
   // Warmup / Balance (Late Bloomer)
   if (plan.warmup) {
     html += `<div class="ds"><div class="ds-title">Every Session</div>
-      <div class="info-box blue" style="margin-bottom:8px">🔥 Warm-up: ${plan.warmup}</div>
-      <div class="info-box blue">⚖️ Balance Finisher: ${plan.balance}</div>
+      <div class="info-box blue" style="margin-bottom:8px">Warm-up: ${plan.warmup}</div>
+      <div class="info-box blue">Balance Finisher: ${plan.balance}</div>
     </div>`;
   }
 
@@ -3583,7 +3606,7 @@ function toggleFollowProgram() {
     toast('Program unfollowed');
   } else {
     d.activeProgram = { id: plan.id, startDate: today() };
-    toast(`Now following ${plan.name}! 💪`);
+    toast(`Now following ${plan.name}!`);
   }
   saveData(d);
   renderProgramDetail();
@@ -3818,7 +3841,7 @@ function renderWeeklyPlan() {
   if (planInfo && PLAN_AUTOFILL[planInfo.id]) {
     bannerEl.innerHTML = `<div class="autofill-banner">
       <div class="autofill-banner-text">
-        <div class="autofill-banner-title">${planInfo.icon} Following: ${planInfo.name}</div>
+        <div class="autofill-banner-title">Following: ${planInfo.name}</div>
         <div class="autofill-banner-sub">Auto-schedule ${planInfo.freq} based on your program</div>
       </div>
       <button class="autofill-btn" onclick="autoFillWeek()">Auto-fill</button>
@@ -3857,7 +3880,7 @@ function renderPlanDays() {
         ${workoutOptions.replace(`value="${day.workoutId}"`, `value="${day.workoutId}" selected`)}
       </select>
       <div class="eat-out-row">
-        <div class="eat-out-label">🍽️ Eating out?</div>
+        <div class="eat-out-label">Eating out?</div>
         <label class="toggle-switch">
           <input type="checkbox" id="pw-eatout-${i}" ${day.eatOut ? 'checked' : ''}
             onchange="planDraft[${i}].eatOut=this.checked;toggleEatOutDetails(${i})"/>
@@ -3902,7 +3925,7 @@ function updatePlanSummary() {
   }
 
   document.getElementById('plan-summary').innerHTML = `
-    <div class="plan-summary-title">📊 Week Summary</div>
+    <div class="plan-summary-title">Week Summary</div>
     <div class="plan-summary-grid">
       <div class="plan-summary-item">
         <div class="plan-summary-val">${trainingDays}</div>
@@ -3923,7 +3946,7 @@ function saveWeeklyPlan() {
   planDraft.forEach(day => { daysMap[day.date] = { workoutId: day.workoutId, eatOut: day.eatOut, eatOutNotes: day.eatOutNotes }; });
   d.weeklyPlans[planWeekStart] = { days: daysMap, savedAt: new Date().toISOString() };
   saveData(d);
-  toast('Week plan saved! 📅');
+  toast('Week plan saved!');
 
   // Update home badge
   const trainingDays = planDraft.filter(x => x.workoutId && x.workoutId !== '').length;
@@ -3948,7 +3971,7 @@ function autoFillWeek() {
 
   // Re-render just the day cards (don't reload planDraft from storage)
   renderPlanDays();
-  toast(`Week auto-filled for ${planInfo.name} 📅`);
+  toast(`Week auto-filled for ${planInfo.name}`);
 }
 
 // ═══════════════════════════════════════════════════
@@ -4042,7 +4065,7 @@ function renderSteps(steps) {
 
   const remaining = Math.max(0, STEPS_GOAL - steps);
   document.getElementById('steps-pct').innerHTML = pct >= 1
-    ? '<b style="color:#4ade80">Goal reached! 🎉</b>'
+    ? '<b style="color:#4ade80">Goal reached!</b>'
     : `<b>${Math.round(pct * 100)}%</b> of daily goal · ${remaining.toLocaleString()} to go`;
 }
 
@@ -4120,7 +4143,7 @@ function renderMacros(entry) {
     const remaining = target - actual;
     const statusTxt = remaining > 0
       ? `${Math.round(remaining)}${m.unit} left`
-      : `<span style="color:#4ade80">goal met! 🎉</span>`;
+      : `<span style="color:#4ade80">goal met!</span>`;
     return `<div class="macro-row">
       <div class="macro-label-row">
         <span class="macro-name">${m.label}</span>
