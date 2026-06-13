@@ -1679,21 +1679,16 @@
         </div>
         <div class="steps-pct" id="steps-pct">0% of daily goal</div>
         <div class="steps-dist" id="steps-dist" style="text-align:center;margin-bottom:12px"></div>
-        <div class="steps-quick-row">
-          <button class="steps-quick-btn" onclick="addSteps(100)">+ 100</button>
-          <button class="steps-quick-btn" onclick="addSteps(500)">+ 500</button>
-          <button class="steps-quick-btn" onclick="addSteps(1000)">+ 1,000</button>
-          <button class="steps-quick-btn" onclick="addSteps(2500)">+ 2,500</button>
-        </div>
         <div class="steps-unit-row">
           <button class="steps-unit-btn active" id="su-steps"  onclick="setStepsUnit('steps')">Steps</button>
           <button class="steps-unit-btn"        id="su-miles"  onclick="setStepsUnit('miles')">Miles</button>
           <button class="steps-unit-btn"        id="su-meters" onclick="setStepsUnit('meters')">Meters</button>
         </div>
+        <div class="steps-quick-row" id="steps-quick-row"></div>
         <div class="steps-manual-row">
           <input id="steps-input" class="steps-manual-input" type="number"
-            inputmode="decimal" placeholder="Total steps"/>
-          <button class="steps-set-btn" onclick="setStepsManual()">Set</button>
+            inputmode="decimal" placeholder="Add steps"/>
+          <button class="steps-set-btn" onclick="addStepsManual()">Add</button>
         </div>
         <button class="steps-tips-btn" onclick="openStepsTips()">Quick Tips to Get Your Steps</button>
       </div>
@@ -4700,6 +4695,7 @@ function renderLog() {
   // Steps unit toggle reflects current selection
   ['steps','miles','meters'].forEach(u =>
     document.getElementById('su-' + u).classList.toggle('active', stepsUnit === u));
+  renderStepsQuickRow();
 }
 
 // ── Steps ──────────────────────────────────────────
@@ -4709,15 +4705,31 @@ const STEPS_PER_MI  = 2112;             // avg steps per mile
 const METERS_PER_ST = 0.762;            // avg stride length
 let stepsUnit = 'steps';
 
+// Quick-add increments, expressed in the selected unit
+const STEP_INCREMENTS = {
+  steps:  [100, 500, 1000, 2500],
+  miles:  [0.25, 0.5, 1, 2],
+  meters: [250, 500, 1000, 2000],
+};
+
 function setStepsUnit(unit) {
   stepsUnit = unit;
   ['steps','miles','meters'].forEach(u =>
     document.getElementById('su-' + u).classList.toggle('active', u === unit));
   const input = document.getElementById('steps-input');
   input.value = '';
-  input.placeholder = unit === 'steps' ? 'Total steps'
-                    : unit === 'miles' ? 'Distance (miles)'
-                    : 'Distance (meters)';
+  input.placeholder = unit === 'steps' ? 'Add steps'
+                    : unit === 'miles' ? 'Add miles'
+                    : 'Add meters';
+  renderStepsQuickRow();
+}
+
+function renderStepsQuickRow() {
+  const incs = STEP_INCREMENTS[stepsUnit] || STEP_INCREMENTS.steps;
+  document.getElementById('steps-quick-row').innerHTML = incs.map(n => {
+    const label = stepsUnit === 'miles' ? n : n.toLocaleString();
+    return `<button class="steps-quick-btn" onclick="addStepsUnit(${n})">+ ${label}</button>`;
+  }).join('');
 }
 
 function distanceLabel(steps) {
@@ -4744,13 +4756,6 @@ function renderSteps(steps) {
   document.getElementById('steps-dist').textContent = steps > 0 ? distanceLabel(steps) : '';
 }
 
-function addSteps(n) {
-  const entry = getLogEntry(logDate);
-  entry.steps = (entry.steps || 0) + n;
-  saveLogEntry(logDate, entry);
-  renderSteps(entry.steps);
-}
-
 // Convert whatever unit the user typed into a step count
 function toSteps(val, unit) {
   if (unit === 'miles')  return Math.round(val * STEPS_PER_MI);
@@ -4758,17 +4763,27 @@ function toSteps(val, unit) {
   return Math.round(val);
 }
 
-function setStepsManual() {
+// Quick-add a preset amount (given in the currently selected unit)
+function addStepsUnit(amount) {
+  const steps = toSteps(amount, stepsUnit);
+  const entry = getLogEntry(logDate);
+  entry.steps = (entry.steps || 0) + steps;
+  saveLogEntry(logDate, entry);
+  renderSteps(entry.steps);
+}
+
+// Add the typed amount (in the selected unit) to today's total
+function addStepsManual() {
   const val = parseFloat(document.getElementById('steps-input').value);
   if (!val || val < 0) { toast('Enter a valid amount'); return; }
   const steps = toSteps(val, stepsUnit);
   const entry = getLogEntry(logDate);
-  entry.steps = steps;
+  entry.steps = (entry.steps || 0) + steps;
   saveLogEntry(logDate, entry);
   document.getElementById('steps-input').value = '';
   document.getElementById('steps-input').blur();
   renderSteps(entry.steps);
-  toast(`Steps updated to ${steps.toLocaleString()}`);
+  toast(`Added ${steps.toLocaleString()} steps`);
 }
 
 // ── Supplements & sleep ─────────────────────────────

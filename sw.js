@@ -1,4 +1,4 @@
-const CACHE = 'gainz-v9';
+const CACHE = 'gainz-v10';
 const STATIC = ['./manifest.json', './icon.svg'];
 
 self.addEventListener('install', e => {
