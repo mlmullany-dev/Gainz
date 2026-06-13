@@ -1276,6 +1276,77 @@
 
     /* In-progress dot uses bright amber on light surfaces */
     .day-icon span { font-weight: 700; }
+
+    /* ═══ MACRO CALCULATOR ═══ */
+    .calc-sheet {
+      background: var(--color-surface); border-radius: 24px 24px 0 0;
+      width: 100%; max-height: 92vh; display: flex; flex-direction: column;
+    }
+    .calc-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 20px calc(20px + var(--safe-b)); }
+    .calc-q { margin-bottom: 18px; }
+    .calc-q-label { font-size: 14px; font-weight: 600; color: var(--color-text); margin-bottom: 8px; }
+    .calc-q-num { color: var(--color-text-muted); font-weight: 600; margin-right: 6px; }
+    .seg-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .seg-btn {
+      flex: 1; min-width: fit-content; padding: 10px 12px; border-radius: 10px;
+      border: 1.5px solid var(--color-border); background: var(--color-surface);
+      color: var(--color-text-muted); font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: inherit; text-align: center; transition: all 0.12s;
+    }
+    .seg-btn.active { border-color: var(--color-brand); background: var(--color-brand); color: var(--white); }
+    .calc-input {
+      width: 100%; background: var(--card2); border: 1.5px solid var(--color-border);
+      border-radius: 10px; color: var(--color-text); font-size: 16px; font-weight: 600;
+      padding: 11px 14px; font-family: inherit;
+    }
+    .calc-input:focus { outline: none; border-color: var(--color-brand); }
+    .calc-input-row { display: flex; gap: 8px; }
+    .calc-input-row .calc-input { flex: 1; }
+
+    .calc-result {
+      background: var(--card2); border: 1.5px solid var(--color-border);
+      border-radius: 14px; padding: 18px 16px; margin-bottom: 16px; text-align: center;
+    }
+    .calc-result-cal { font-size: 34px; font-weight: 700; color: var(--color-brand); line-height: 1; letter-spacing: -0.5px; }
+    .calc-result-cal-lbl { font-size: 12px; color: var(--color-text-muted); font-weight: 600; margin-top: 4px; }
+    .calc-result-macros { display: flex; gap: 10px; margin-top: 16px; }
+    .calc-macro { flex: 1; background: var(--color-surface); border-radius: 10px; padding: 10px 6px; }
+    .calc-macro-val { font-size: 18px; font-weight: 700; color: var(--color-text); }
+    .calc-macro-lbl { font-size: 10px; color: var(--color-text-muted); font-weight: 600; margin-top: 2px; letter-spacing: 0.3px; }
+
+    /* ═══ SUPPLEMENTS & SLEEP ═══ */
+    .supp-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; border-bottom: 1px solid var(--color-border);
+    }
+    .supp-row:last-child { border-bottom: none; }
+    .supp-label { font-size: 14px; font-weight: 600; color: var(--color-text); }
+    .supp-sub { font-size: 12px; color: var(--color-text-muted); margin-top: 2px; }
+    .supp-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .creatine-amt {
+      width: 58px; background: var(--card2); border: 1.5px solid var(--color-border);
+      border-radius: 8px; color: var(--color-text); font-size: 15px; font-weight: 700;
+      text-align: center; padding: 7px 4px; font-family: inherit;
+    }
+    .creatine-amt:focus { outline: none; border-color: var(--color-brand); }
+    .sleep-input {
+      width: 72px; background: var(--card2); border: 1.5px solid var(--color-border);
+      border-radius: 8px; color: var(--color-text); font-size: 16px; font-weight: 700;
+      text-align: center; padding: 8px 4px; font-family: inherit;
+    }
+    .sleep-input:focus { outline: none; border-color: var(--color-brand); }
+
+    /* ═══ STEPS — compact manual entry + unit toggle ═══ */
+    .steps-unit-row { display: flex; gap: 6px; margin-bottom: 10px; }
+    .steps-unit-btn {
+      flex: 1; padding: 6px 8px; border-radius: 8px; border: 1.5px solid var(--color-border);
+      background: var(--color-surface); color: var(--color-text-muted);
+      font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit;
+    }
+    .steps-unit-btn.active { border-color: var(--color-brand); background: var(--color-brand); color: var(--white); }
+    .steps-manual-row .steps-manual-input { font-size: 14px; padding: 8px 12px; }
+    .steps-set-btn { font-size: 13px; padding: 8px 16px; }
+    .steps-dist { font-size: 12px; color: var(--color-text-muted); font-weight: 600; margin-top: 3px; }
   </style>
 </head>
 <body>
@@ -1519,17 +1590,77 @@
           </div>
         </div>
         <div class="steps-pct" id="steps-pct">0% of daily goal</div>
+        <div class="steps-dist" id="steps-dist" style="text-align:center;margin-bottom:12px"></div>
         <div class="steps-quick-row">
+          <button class="steps-quick-btn" onclick="addSteps(100)">+ 100</button>
           <button class="steps-quick-btn" onclick="addSteps(500)">+ 500</button>
           <button class="steps-quick-btn" onclick="addSteps(1000)">+ 1,000</button>
           <button class="steps-quick-btn" onclick="addSteps(2500)">+ 2,500</button>
         </div>
+        <div class="steps-unit-row">
+          <button class="steps-unit-btn active" id="su-steps"  onclick="setStepsUnit('steps')">Steps</button>
+          <button class="steps-unit-btn"        id="su-miles"  onclick="setStepsUnit('miles')">Miles</button>
+          <button class="steps-unit-btn"        id="su-meters" onclick="setStepsUnit('meters')">Meters</button>
+        </div>
         <div class="steps-manual-row">
           <input id="steps-input" class="steps-manual-input" type="number"
-            inputmode="numeric" placeholder="Enter total steps"/>
+            inputmode="decimal" placeholder="Total steps"/>
           <button class="steps-set-btn" onclick="setStepsManual()">Set</button>
         </div>
         <button class="steps-tips-btn" onclick="openStepsTips()">Quick Tips to Get Your Steps</button>
+      </div>
+
+      <!-- Supplements & Recovery -->
+      <div class="log-card">
+        <div class="log-card-title">Supplements &amp; Recovery</div>
+
+        <div class="supp-row">
+          <div>
+            <div class="supp-label">Creatine</div>
+            <div class="supp-sub">5–10 g daily</div>
+          </div>
+          <div class="supp-right">
+            <input id="supp-creatine-amt" class="creatine-amt" type="number" inputmode="decimal"
+              min="0" max="20" step="0.5" placeholder="5" oninput="setCreatineAmt(this.value)"/>
+            <span style="font-size:13px;color:var(--color-text-muted);font-weight:600">g</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="supp-creatine" onchange="toggleSupp('creatine',this.checked)"/>
+              <span class="toggle-knob"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="supp-row">
+          <div><div class="supp-label">Daily Vitamins</div></div>
+          <div class="supp-right">
+            <label class="toggle-switch">
+              <input type="checkbox" id="supp-vitamins" onchange="toggleSupp('vitamins',this.checked)"/>
+              <span class="toggle-knob"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="supp-row">
+          <div><div class="supp-label">Vitamin D</div></div>
+          <div class="supp-right">
+            <label class="toggle-switch">
+              <input type="checkbox" id="supp-vitd" onchange="toggleSupp('vitaminD',this.checked)"/>
+              <span class="toggle-knob"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="supp-row">
+          <div>
+            <div class="supp-label">Sleep</div>
+            <div class="supp-sub">Hours slept last night</div>
+          </div>
+          <div class="supp-right">
+            <input id="supp-sleep" class="sleep-input" type="number" inputmode="decimal"
+              min="0" max="24" step="0.5" placeholder="—" oninput="setSleep(this.value)"/>
+            <span style="font-size:13px;color:var(--color-text-muted);font-weight:600">hrs</span>
+          </div>
+        </div>
       </div>
 
       <!-- Macros -->
@@ -1816,6 +1947,8 @@
   <div class="sheet-small">
     <div class="sheet-drag"></div>
     <div class="sheet-title">Daily Macro Targets</div>
+    <button class="sheet-save-btn" style="background:var(--color-accent);margin:0 0 16px"
+      onclick="openMacroCalc()">Calculate My Macros</button>
     <div class="sheet-grid">
       <div class="sheet-field full">
         <label>Calories</label>
@@ -1836,6 +1969,115 @@
     </div>
     <button class="sheet-save-btn" onclick="saveTargets()">Save Targets</button>
     <button class="sheet-cancel-btn" onclick="closeTargetsSheet()">Cancel</button>
+  </div>
+</div>
+
+<!-- ══ MACRO CALCULATOR OVERLAY ════════════════════ -->
+<div id="macro-calc-overlay" class="overlay hidden">
+  <div class="calc-sheet">
+    <div class="picker-drag"></div>
+    <div class="picker-header">
+      <h2>Macro Calculator</h2>
+      <button class="picker-close" onclick="closeMacroCalc()">✕</button>
+    </div>
+    <div class="calc-scroll">
+      <p style="font-size:13px;color:var(--color-text-muted);margin:4px 0 18px;line-height:1.5">
+        Answer 10 quick questions and we'll build high-protein targets for your goal.
+      </p>
+
+      <div class="calc-q">
+        <div class="calc-q-label"><span class="calc-q-num">1.</span>Biological sex</div>
+        <div class="seg-row" id="cq-sex">
+          <button class="seg-btn" data-v="female" onclick="calcPick('sex','female',this)">Female</button>
+          <button class="seg-btn" data-v="male"   onclick="calcPick('sex','male',this)">Male</button>
+        </div>
+      </div>
+
+      <div class="calc-q">
+        <div class="calc-q-label"><span class="calc-q-num">2.</span>Units</div>
+        <div class="seg-row" id="cq-units">
+          <button class="seg-btn active" data-v="imperial" onclick="calcPick('units','imperial',this);renderCalcUnits()">Imperial (lb/ft)</button>
+          <button class="seg-btn"        data-v="metric"   onclick="calcPick('units','metric',this);renderCalcUnits()">Metric (kg/cm)</button>
+        </div>
+      </div>
+
+      <div class="calc-q">
+        <div class="calc-q-label"><span class="calc-q-num">3.</span>Age</div>
+        <input id="cq-age" class="calc-input" type="number" inputmode="numeric" placeholder="e.g. 35"/>
+      </div>
+
+      <div class="calc-q">
+        <div class="calc-q-label"><span class="calc-q-num">4.</span>Height</div>
+        <div id="cq-height-imperial" class="calc-input-row">
+          <input id="cq-ht-ft" class="calc-input" type="number" inputmode="numeric" placeholder="ft"/>
+          <input id="cq-ht-in" class="calc-input" type="number" inputmode="numeric" placeholder="in"/>
+        </div>
+        <input id="cq-ht-cm" class="calc-input" type="number" inputmode="numeric" placeholder="cm" style="display:none"/>
+      </div>
+
+      <div class="calc-q">
+        <div class="calc-q-label"><span class="calc-q-num">5.</span>Current weight</div>
+        <input id="cq-weight" class="calc-input" type="number" inputmode="decimal" placeholder="lb"/>
+      </div>
+
+      <div class="calc-q">
+        <div class="calc-q-label"><span class="calc-q-num">6.</span>Primary goal</div>
+        <div class="seg-row" id="cq-goal" style="flex-wrap:wrap">
+          <button class="seg-btn" data-v="lose"     onclick="calcPick('goal','lose',this)">Lose fat</button>
+          <button class="seg-btn" data-v="lean"     onclick="calcPick('goal','lean',this)">Get lean</button>
+          <button class="seg-btn" data-v="maintain" onclick="calcPick('goal','maintain',this)">Maintain</button>
+          <button class="seg-btn" data-v="build"    onclick="calcPick('goal','build',this)">Build muscle</button>
+          <button class="seg-btn" data-v="recomp"   onclick="calcPick('goal','recomp',this)">Recomp</button>
+        </div>
+      </div>
+
+      <div class="calc-q">
+        <div class="calc-q-label"><span class="calc-q-num">7.</span>Activity level (outside training)</div>
+        <div class="seg-row" id="cq-activity" style="flex-wrap:wrap">
+          <button class="seg-btn" data-v="sedentary" onclick="calcPick('activity','sedentary',this)">Sedentary</button>
+          <button class="seg-btn" data-v="light"     onclick="calcPick('activity','light',this)">Light</button>
+          <button class="seg-btn" data-v="moderate"  onclick="calcPick('activity','moderate',this)">Moderate</button>
+          <button class="seg-btn" data-v="very"      onclick="calcPick('activity','very',this)">Very active</button>
+        </div>
+      </div>
+
+      <div class="calc-q">
+        <div class="calc-q-label"><span class="calc-q-num">8.</span>Training days per week</div>
+        <div class="seg-row" id="cq-days" style="flex-wrap:wrap">
+          <button class="seg-btn" data-v="0" onclick="calcPick('trainingDays',0,this)">0</button>
+          <button class="seg-btn" data-v="1" onclick="calcPick('trainingDays',1,this)">1</button>
+          <button class="seg-btn" data-v="2" onclick="calcPick('trainingDays',2,this)">2</button>
+          <button class="seg-btn" data-v="3" onclick="calcPick('trainingDays',3,this)">3</button>
+          <button class="seg-btn" data-v="4" onclick="calcPick('trainingDays',4,this)">4</button>
+          <button class="seg-btn" data-v="5" onclick="calcPick('trainingDays',5,this)">5</button>
+          <button class="seg-btn" data-v="6" onclick="calcPick('trainingDays',6,this)">6</button>
+          <button class="seg-btn" data-v="7" onclick="calcPick('trainingDays',7,this)">7</button>
+        </div>
+      </div>
+
+      <div class="calc-q">
+        <div class="calc-q-label"><span class="calc-q-num">9.</span>How aggressive?</div>
+        <div class="seg-row" id="cq-pace">
+          <button class="seg-btn" data-v="gentle"     onclick="calcPick('pace','gentle',this)">Gentle</button>
+          <button class="seg-btn" data-v="moderate"   onclick="calcPick('pace','moderate',this)">Moderate</button>
+          <button class="seg-btn" data-v="aggressive" onclick="calcPick('pace','aggressive',this)">Aggressive</button>
+        </div>
+      </div>
+
+      <div class="calc-q">
+        <div class="calc-q-label"><span class="calc-q-num">10.</span>Diet style</div>
+        <div class="seg-row" id="cq-diet">
+          <button class="seg-btn" data-v="balanced" onclick="calcPick('diet','balanced',this)">Balanced</button>
+          <button class="seg-btn" data-v="lowcarb"  onclick="calcPick('diet','lowcarb',this)">Lower-carb</button>
+          <button class="seg-btn" data-v="highcarb" onclick="calcPick('diet','highcarb',this)">Higher-carb</button>
+        </div>
+      </div>
+
+      <div id="calc-result" style="display:none"></div>
+
+      <button class="sheet-save-btn" id="calc-go-btn" onclick="runMacroCalc()">Calculate</button>
+      <button class="sheet-cancel-btn" onclick="closeMacroCalc()">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -1907,6 +2149,7 @@ async function loadFromFirestore() {
         customExercises: d.customExercises || [],
         dailyLogs:       d.dailyLogs       || {},
         macroTargets:    d.macroTargets    || null,
+        macroProfile:    d.macroProfile    || null,
         activeProgram:    d.activeProgram    || null,
         userProfile:      d.userProfile      || null,
         benchmarkResults: d.benchmarkResults || {},
@@ -4238,11 +4481,42 @@ function renderLog() {
   renderWaterDrops(entry.water || 0);
   renderMacros(entry);
   renderFoodList(entry);
+
+  // Supplements & recovery
+  document.getElementById('supp-creatine').checked   = !!entry.creatine;
+  document.getElementById('supp-creatine-amt').value = entry.creatineGrams ?? '';
+  document.getElementById('supp-vitamins').checked   = !!entry.vitamins;
+  document.getElementById('supp-vitd').checked       = !!entry.vitaminD;
+  document.getElementById('supp-sleep').value        = entry.sleepHours ?? '';
+
+  // Steps unit toggle reflects current selection
+  ['steps','miles','meters'].forEach(u =>
+    document.getElementById('su-' + u).classList.toggle('active', stepsUnit === u));
 }
 
 // ── Steps ──────────────────────────────────────────
-const STEPS_GOAL  = 10000;
-const STEPS_CIRC  = 2 * Math.PI * 60; // ≈ 376.99
+const STEPS_GOAL    = 10000;
+const STEPS_CIRC    = 2 * Math.PI * 60; // ≈ 376.99
+const STEPS_PER_MI  = 2112;             // avg steps per mile
+const METERS_PER_ST = 0.762;            // avg stride length
+let stepsUnit = 'steps';
+
+function setStepsUnit(unit) {
+  stepsUnit = unit;
+  ['steps','miles','meters'].forEach(u =>
+    document.getElementById('su-' + u).classList.toggle('active', u === unit));
+  const input = document.getElementById('steps-input');
+  input.value = '';
+  input.placeholder = unit === 'steps' ? 'Total steps'
+                    : unit === 'miles' ? 'Distance (miles)'
+                    : 'Distance (meters)';
+}
+
+function distanceLabel(steps) {
+  const miles  = steps / STEPS_PER_MI;
+  const meters = steps * METERS_PER_ST;
+  return `≈ ${miles.toFixed(2)} mi · ${Math.round(meters).toLocaleString()} m`;
+}
 
 function renderSteps(steps) {
   steps = steps || 0;
@@ -4259,6 +4533,7 @@ function renderSteps(steps) {
   document.getElementById('steps-pct').innerHTML = pct >= 1
     ? '<b style="color:var(--color-brand)">Goal reached!</b>'
     : `<b>${Math.round(pct * 100)}%</b> of daily goal · ${remaining.toLocaleString()} to go`;
+  document.getElementById('steps-dist').textContent = steps > 0 ? distanceLabel(steps) : '';
 }
 
 function addSteps(n) {
@@ -4268,16 +4543,53 @@ function addSteps(n) {
   renderSteps(entry.steps);
 }
 
+// Convert whatever unit the user typed into a step count
+function toSteps(val, unit) {
+  if (unit === 'miles')  return Math.round(val * STEPS_PER_MI);
+  if (unit === 'meters') return Math.round(val / METERS_PER_ST);
+  return Math.round(val);
+}
+
 function setStepsManual() {
-  const val = parseInt(document.getElementById('steps-input').value);
-  if (!val || val < 0) { toast('Enter a valid step count'); return; }
+  const val = parseFloat(document.getElementById('steps-input').value);
+  if (!val || val < 0) { toast('Enter a valid amount'); return; }
+  const steps = toSteps(val, stepsUnit);
   const entry = getLogEntry(logDate);
-  entry.steps = val;
+  entry.steps = steps;
   saveLogEntry(logDate, entry);
   document.getElementById('steps-input').value = '';
   document.getElementById('steps-input').blur();
   renderSteps(entry.steps);
-  toast(`Steps updated to ${val.toLocaleString()}`);
+  toast(`Steps updated to ${steps.toLocaleString()}`);
+}
+
+// ── Supplements & sleep ─────────────────────────────
+function toggleSupp(key, val) {
+  const entry = getLogEntry(logDate);
+  entry[key] = val;
+  if (key === 'creatine' && val && (entry.creatineGrams == null || entry.creatineGrams === '')) {
+    entry.creatineGrams = 5;
+    document.getElementById('supp-creatine-amt').value = 5;
+  }
+  saveLogEntry(logDate, entry);
+}
+
+function setCreatineAmt(v) {
+  const entry = getLogEntry(logDate);
+  const n = parseFloat(v);
+  entry.creatineGrams = isNaN(n) ? '' : n;
+  if (!isNaN(n) && n > 0 && !entry.creatine) {
+    entry.creatine = true;
+    document.getElementById('supp-creatine').checked = true;
+  }
+  saveLogEntry(logDate, entry);
+}
+
+function setSleep(v) {
+  const entry = getLogEntry(logDate);
+  const n = parseFloat(v);
+  entry.sleepHours = isNaN(n) ? '' : n;
+  saveLogEntry(logDate, entry);
 }
 
 // ── Water ──────────────────────────────────────────
@@ -4435,6 +4747,166 @@ function saveTargets() {
   closeTargetsSheet();
   renderLog();
   toast('Targets saved!');
+}
+
+// ── Macro calculator ───────────────────────────────
+let calcAnswers = {};
+
+function openMacroCalc() {
+  // Restore previous answers if we have them
+  calcAnswers = Object.assign(
+    { sex:'female', units:'imperial', goal:'maintain', activity:'light',
+      trainingDays:3, pace:'moderate', diet:'balanced' },
+    appData.macroProfile || {}
+  );
+  document.getElementById('calc-result').style.display = 'none';
+  document.getElementById('calc-go-btn').textContent = 'Calculate';
+
+  // Reflect answers on segmented controls
+  [['cq-sex','sex'],['cq-units','units'],['cq-goal','goal'],['cq-activity','activity'],
+   ['cq-days','trainingDays'],['cq-pace','pace'],['cq-diet','diet']].forEach(([id,key]) => {
+    document.querySelectorAll('#' + id + ' .seg-btn').forEach(b =>
+      b.classList.toggle('active', String(b.dataset.v) === String(calcAnswers[key])));
+  });
+  // Numeric fields
+  document.getElementById('cq-age').value    = calcAnswers.age    || '';
+  document.getElementById('cq-weight').value = calcAnswers.weight || '';
+  document.getElementById('cq-ht-ft').value  = calcAnswers.htFt   || '';
+  document.getElementById('cq-ht-in').value  = calcAnswers.htIn   || '';
+  document.getElementById('cq-ht-cm').value  = calcAnswers.htCm   || '';
+  renderCalcUnits();
+
+  document.getElementById('macro-calc-overlay').classList.remove('hidden');
+}
+
+function closeMacroCalc() {
+  document.getElementById('macro-calc-overlay').classList.add('hidden');
+}
+
+function calcPick(key, val, btn) {
+  calcAnswers[key] = val;
+  btn.parentElement.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function renderCalcUnits() {
+  const imperial = calcAnswers.units !== 'metric';
+  document.getElementById('cq-height-imperial').style.display = imperial ? 'flex' : 'none';
+  document.getElementById('cq-ht-cm').style.display          = imperial ? 'none' : 'block';
+  document.getElementById('cq-weight').placeholder           = imperial ? 'lb' : 'kg';
+}
+
+// Core macro math: Mifflin–St Jeor BMR → TDEE → goal adjust → high-protein split
+function calcMacros(a) {
+  const bmr = a.sex === 'male'
+    ? 10*a.weightKg + 6.25*a.heightCm - 5*a.age + 5
+    : 10*a.weightKg + 6.25*a.heightCm - 5*a.age - 161;
+
+  const actMult = { sedentary:1.2, light:1.375, moderate:1.55, very:1.725 }[a.activity] || 1.375;
+  const mult    = actMult + Math.min(a.trainingDays, 7) * 0.01;
+  const tdee    = bmr * mult;
+
+  const paceIdx = { gentle:0, moderate:1, aggressive:2 }[a.pace] ?? 1;
+  let adj = 0;
+  if (a.goal === 'lose')     adj = -[0.10,0.18,0.25][paceIdx];
+  if (a.goal === 'lean')     adj = -[0.12,0.20,0.27][paceIdx];
+  if (a.goal === 'maintain') adj = 0;
+  if (a.goal === 'build')    adj =  [0.06,0.12,0.18][paceIdx];
+  if (a.goal === 'recomp')   adj = -0.05;
+
+  let calories = tdee * (1 + adj);
+  const floor = a.sex === 'male' ? 1500 : 1200;
+  calories = Math.max(calories, floor);
+
+  const weightLb = a.weightKg * 2.20462;
+  // High-protein, modern guidance (g per lb of bodyweight)
+  let pPerLb = (a.goal === 'build') ? 0.9 : (a.goal === 'maintain') ? 0.8 : 1.0;
+  let protein = Math.round(weightLb * pPerLb);
+
+  // Fat by diet style, with a hormonal floor of 0.3 g/lb
+  const fatPct = { balanced:0.25, lowcarb:0.35, highcarb:0.20 }[a.diet] ?? 0.25;
+  const minFat = Math.round(weightLb * 0.3);
+  let fat = Math.max(Math.round((calories * fatPct) / 9), minFat);
+
+  // Carbs fill the remainder; if negative, trim fat toward its floor
+  let carbsCal = calories - protein*4 - fat*9;
+  if (carbsCal < 0) {
+    const reducible = (fat - minFat) * 9;
+    const cut = Math.min(-carbsCal, Math.max(0, reducible));
+    fat -= Math.round(cut / 9);
+    carbsCal = calories - protein*4 - fat*9;
+  }
+  const carbs = Math.max(0, Math.round(carbsCal / 4));
+
+  return { calories: Math.round(calories), protein, carbs, fat, tdee: Math.round(tdee) };
+}
+
+function runMacroCalc() {
+  const a = calcAnswers;
+  const age = parseInt(document.getElementById('cq-age').value);
+  const weight = parseFloat(document.getElementById('cq-weight').value);
+  if (!a.sex)   { toast('Select your biological sex'); return; }
+  if (!age || age < 13 || age > 100) { toast('Enter a valid age'); return; }
+  if (!weight || weight <= 0) { toast('Enter your weight'); return; }
+  if (!a.goal) { toast('Choose your primary goal'); return; }
+
+  // Resolve units
+  let heightCm, weightKg;
+  if (a.units === 'metric') {
+    heightCm = parseFloat(document.getElementById('cq-ht-cm').value);
+    weightKg = weight;
+  } else {
+    const ft = parseFloat(document.getElementById('cq-ht-ft').value) || 0;
+    const inch = parseFloat(document.getElementById('cq-ht-in').value) || 0;
+    heightCm = (ft*12 + inch) * 2.54;
+    weightKg = weight / 2.20462;
+  }
+  if (!heightCm || heightCm < 120 || heightCm > 230) { toast('Enter a valid height'); return; }
+
+  // Persist the answers for next time
+  a.age = age; a.weight = weight; a.weightKg = weightKg; a.heightCm = heightCm;
+  if (a.units === 'metric') a.htCm = document.getElementById('cq-ht-cm').value;
+  else { a.htFt = document.getElementById('cq-ht-ft').value; a.htIn = document.getElementById('cq-ht-in').value; }
+
+  const r = calcMacros(a);
+  calcAnswers._result = r;
+
+  document.getElementById('calc-result').style.display = 'block';
+  document.getElementById('calc-result').innerHTML = `
+    <div class="calc-result">
+      <div class="calc-result-cal">${r.calories.toLocaleString()}</div>
+      <div class="calc-result-cal-lbl">calories / day &nbsp;·&nbsp; maintenance ≈ ${r.tdee.toLocaleString()}</div>
+      <div class="calc-result-macros">
+        <div class="calc-macro"><div class="calc-macro-val">${r.protein}g</div><div class="calc-macro-lbl">PROTEIN</div></div>
+        <div class="calc-macro"><div class="calc-macro-val">${r.carbs}g</div><div class="calc-macro-lbl">CARBS</div></div>
+        <div class="calc-macro"><div class="calc-macro-val">${r.fat}g</div><div class="calc-macro-lbl">FAT</div></div>
+      </div>
+    </div>`;
+  document.getElementById('calc-go-btn').textContent = 'Use These Targets';
+  document.getElementById('calc-go-btn').onclick = applyCalcMacros;
+  document.getElementById('calc-result').scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+function applyCalcMacros() {
+  const r = calcAnswers._result;
+  if (!r) { runMacroCalc(); return; }
+  const d = loadData();
+  d.macroTargets = { calories: r.calories, protein: r.protein, carbs: r.carbs, fat: r.fat };
+  // Save the questionnaire answers (minus transient result) so it's remembered
+  const { _result, ...profile } = calcAnswers;
+  d.macroProfile = profile;
+  saveData(d);
+  closeMacroCalc();
+  // Reflect in the targets sheet fields, then close it too
+  document.getElementById('target-cal').value     = r.calories;
+  document.getElementById('target-protein').value = r.protein;
+  document.getElementById('target-carbs').value   = r.carbs;
+  document.getElementById('target-fat').value     = r.fat;
+  closeTargetsSheet();
+  renderLog();
+  toast('Macros calculated & saved!');
+  // restore default handler for next open
+  document.getElementById('calc-go-btn').onclick = runMacroCalc;
 }
 
 // Service worker (keep for offline PWA support)
