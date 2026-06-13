@@ -771,85 +771,6 @@
       margin-bottom: 16px;
     }
 
-    /* ── PROGRAMS — MUSHROOM THEME ──────────────── */
-    #view-programs,
-    #view-program-detail { background: #BA9E88; color: #1a0f08; }
-
-    #view-programs .header,
-    #view-program-detail .header {
-      background: #BA9E88;
-      border-bottom-color: rgba(0,0,0,0.12);
-    }
-    #view-programs .header h1,
-    #view-program-detail .header h1 { color: #1a0f08; }
-    #view-programs .back-btn,
-    #view-program-detail .back-btn {
-      background: rgba(0,0,0,0.1); color: #1a0f08; border: none;
-    }
-
-    /* Program cards */
-    #view-programs .pcard {
-      background: rgba(255,255,255,0.28);
-      border-color: rgba(255,255,255,0.35);
-    }
-    #view-programs .pcard:active { background: rgba(255,255,255,0.38); }
-    #view-programs .pcard-name   { color: #1a0f08; }
-    #view-programs .pcard-tagline { color: rgba(26,15,8,0.65); }
-    #view-programs .pcard-stat b  { color: #1a0f08; }
-    #view-programs .pcard-stat span { color: rgba(26,15,8,0.55); }
-    #view-programs .pcard-level   { filter: brightness(0.85); }
-
-    /* Active program banner */
-    #view-programs .active-prog-banner {
-      background: rgba(255,255,255,0.22);
-      border-color: rgba(255,255,255,0.35);
-    }
-    #view-programs .active-prog-name { color: #1a0f08; }
-    #view-programs .active-prog-sub  { color: rgba(26,15,8,0.6); }
-    #view-programs .active-prog-chevron { color: rgba(26,15,8,0.45); }
-
-    /* Program detail */
-    #view-program-detail .pdetail-hero {
-      background: transparent; border-bottom-color: rgba(0,0,0,0.1);
-    }
-    #view-program-detail .pdetail-name    { color: #1a0f08; }
-    #view-program-detail .pdetail-tagline { color: rgba(26,15,8,0.6); }
-    #view-program-detail .pdetail-stat {
-      background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.3);
-    }
-    #view-program-detail .pdetail-stat-val { color: #1a0f08; }
-    #view-program-detail .pdetail-stat-lbl { color: rgba(26,15,8,0.55); }
-
-    #view-program-detail .ds-title  { color: rgba(26,15,8,0.5); }
-    #view-program-detail .ds-text   { color: #1a0f08; }
-
-    #view-program-detail .day-block,
-    #view-program-detail .phase-block,
-    #view-program-detail .ex-row {
-      background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.3);
-    }
-    #view-program-detail .day-block-title { color: rgba(26,15,8,0.5); }
-    #view-program-detail .ex-row-name    { color: #1a0f08; }
-    #view-program-detail .ex-row-meta    { color: rgba(26,15,8,0.6); }
-    #view-program-detail .phase-row .phase-lbl  { color: rgba(26,15,8,0.5); background: rgba(0,0,0,0.06); }
-    #view-program-detail .phase-title  { color: #1a0f08; }
-    #view-program-detail .phase-days   { color: rgba(26,15,8,0.5); }
-    #view-program-detail .phase-sets   { color: #1a0f08; }
-    #view-program-detail .phase-focus  { color: rgba(26,15,8,0.65); }
-    #view-program-detail .phase-note   { color: rgba(26,15,8,0.5); }
-
-    #view-program-detail .info-box.blue {
-      background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.3); color: #2a1a0e;
-    }
-    #view-program-detail .info-box.gold {
-      background: rgba(160,100,20,0.12); border-color: rgba(160,100,20,0.25); color: #6b4010;
-    }
-    #view-program-detail .follow-btn.on  { background: var(--color-cta); color: var(--color-brand); }
-    #view-program-detail .follow-btn.off {
-      background: rgba(255,255,255,0.18); color: rgba(26,15,8,0.5);
-      border-color: rgba(0,0,0,0.12);
-    }
-
     /* ── AUTO-FILL BANNER ────────────────────────── */
     .autofill-banner {
       margin: 10px 16px 0; padding: 12px 14px;
@@ -1054,6 +975,7 @@
     .pcard-level {
       font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 50px;
       letter-spacing: 0.3px; flex-shrink: 0;
+      background: var(--color-accent); color: var(--color-brand);
     }
     .pcard-tagline { font-size: 13px; color: var(--muted); line-height: 1.45; margin-bottom: 12px; }
     .pcard-stats { display: flex; gap: 18px; }
@@ -1136,8 +1058,8 @@
       border-radius: 10px; padding: 12px 14px; font-size: 13px;
       line-height: 1.55; margin-bottom: 10px;
     }
-    .info-box.gold { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); color: var(--gold); }
-    .info-box.blue { background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.25); color: #93c5fd; }
+    .info-box.gold { background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.3); color: var(--gold); }
+    .info-box.blue { background: rgba(0,31,91,0.06); border: 1px solid rgba(0,31,91,0.15); color: var(--color-brand); }
 
     .follow-btn {
       margin: 16px 16px 32px; padding: 16px;
@@ -1145,7 +1067,8 @@
       font-size: 16px; font-weight: 800; width: calc(100% - 32px);
       transition: opacity 0.15s;
     }
-    .follow-btn.on  { background: var(--accent); color: #000; }
+    .follow-btn.on  { background: var(--color-cta); color: var(--color-brand); }
+    .follow-btn.on:active { background: var(--color-cta-hover); }
     .follow-btn.off { background: var(--card2); color: var(--muted); border: 1.5px solid var(--border); }
 
     /* ── STEPS ───────────────────────────────────── */
@@ -3740,7 +3663,7 @@ function renderPrograms() {
         <div class="pcard-top">
           <div class="pcard-icon" style="width:10px;height:10px;border-radius:50%;background:${plan.color};flex-shrink:0"></div>
           <div class="pcard-name">${plan.name}</div>
-          <div class="pcard-level" style="background:${plan.levelBg};color:${plan.color}">${plan.level}</div>
+          <div class="pcard-level">${plan.level}</div>
         </div>
         <div class="pcard-tagline">${plan.tagline}${isActive ? ' <span style="color:var(--accent);font-weight:700">· Active ✓</span>' : ''}</div>
         <div class="pcard-stats">
