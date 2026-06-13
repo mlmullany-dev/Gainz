@@ -1673,12 +1673,14 @@
               stroke-dasharray="376.99" stroke-dashoffset="376.99"/>
           </svg>
           <div class="steps-ring-center">
-            <div class="steps-count" id="steps-count">0</div>
+            <div class="steps-count" id="steps-count" onclick="editStepsTotal()"
+              style="cursor:pointer;border-bottom:1px dashed var(--color-border)" title="Tap to correct total">0</div>
             <div class="steps-goal">/ 10,000</div>
           </div>
         </div>
         <div class="steps-pct" id="steps-pct">0% of daily goal</div>
-        <div class="steps-dist" id="steps-dist" style="text-align:center;margin-bottom:12px"></div>
+        <div class="steps-dist" id="steps-dist" style="text-align:center"></div>
+        <div class="steps-edit-hint" style="text-align:center;font-size:11px;color:var(--color-text-muted);margin-bottom:12px">Tap the number to correct it</div>
         <div class="steps-unit-row">
           <button class="steps-unit-btn active" id="su-steps"  onclick="setStepsUnit('steps')">Steps</button>
           <button class="steps-unit-btn"        id="su-miles"  onclick="setStepsUnit('miles')">Miles</button>
@@ -1983,7 +1985,7 @@
 <div id="add-food-overlay" class="overlay hidden">
   <div class="sheet-small">
     <div class="sheet-drag"></div>
-    <div class="sheet-title">Add Food</div>
+    <div class="sheet-title" id="add-food-title">Add Food</div>
 
     <!-- Search -->
     <input id="food-search-bar" class="food-search-bar" type="search"
@@ -2035,7 +2037,7 @@
         <input id="food-fat" type="number" inputmode="decimal" placeholder="0"/>
       </div>
     </div>
-    <button class="sheet-save-btn" onclick="saveFood()">Add to Log</button>
+    <button class="sheet-save-btn" id="food-save-btn" onclick="saveFood()">Add to Log</button>
     <button class="sheet-cancel-btn" onclick="closeAddFoodSheet()">Cancel</button>
   </div>
 </div>
@@ -4772,6 +4774,31 @@ function addStepsUnit(amount) {
   renderSteps(entry.steps);
 }
 
+// Tap the count to correct the exact total (e.g. a mis-entry)
+function editStepsTotal() {
+  const cur = getLogEntry(logDate).steps || 0;
+  const el = document.getElementById('steps-count');
+  el.innerHTML = `<input id="steps-edit" type="number" inputmode="numeric" value="${cur}"
+    style="width:120px;font:inherit;text-align:center;border:none;border-bottom:2px solid var(--color-cta);background:transparent;color:var(--color-text);outline:none"/>`;
+  const input = document.getElementById('steps-edit');
+  input.focus(); input.select();
+  let done = false;
+  input.onblur = () => { if (!done) { done = true; commitStepsEdit(input.value); } };
+  input.onkeydown = (e) => {
+    if (e.key === 'Enter') input.blur();
+    if (e.key === 'Escape') { done = true; renderSteps(cur); }
+  };
+}
+
+function commitStepsEdit(val) {
+  const n = parseInt(val, 10);
+  const entry = getLogEntry(logDate);
+  entry.steps = (!isNaN(n) && n >= 0) ? n : (entry.steps || 0);
+  saveLogEntry(logDate, entry);
+  renderSteps(entry.steps);
+  toast(`Steps set to ${entry.steps.toLocaleString()}`);
+}
+
 // Add the typed amount (in the selected unit) to today's total
 function addStepsManual() {
   const val = parseFloat(document.getElementById('steps-input').value);
@@ -4898,51 +4925,85 @@ function renderFoodList(entry) {
       f.fat     ? `${f.fat}g fat`         : null,
     ].filter(Boolean).join(' · ');
     return `<div class="food-item">
-      <div class="food-info">
+      <div class="food-info" onclick="editFood(${i})" style="cursor:pointer">
         <div class="food-name">${f.name}</div>
         ${parts ? `<div class="food-macs">${parts}</div>` : ''}
       </div>
       <div class="food-cal-badge">${f.calories || 0} cal</div>
-      <button class="icon-btn" onclick="deleteFood(${i})">✕</button>
+      <button class="icon-btn" onclick="editFood(${i})" title="Edit">✎</button>
+      <button class="icon-btn" onclick="deleteFood(${i})" title="Delete">✕</button>
     </div>`;
   }).join('');
 }
+
+let editingFoodIndex = null;
 
 function openAddFoodSheet() {
   foodPer100g = null;
   fsServings  = null;
   foodMode    = 'usda';
+  editingFoodIndex = null;
   ['food-search-bar','food-name','food-serving','food-cal','food-protein','food-carbs','food-fat'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
+  document.getElementById('add-food-title').textContent = 'Add Food';
+  document.getElementById('food-save-btn').textContent = 'Add to Log';
   document.getElementById('food-search-results').innerHTML = '';
   document.getElementById('food-source-line').style.display = 'none';
   document.getElementById('fs-serving-wrap').style.display = 'none';
   document.getElementById('food-serving-field').style.display = '';
   document.getElementById('add-food-overlay').classList.remove('hidden');
 }
+
+// Re-open the sheet to correct an already-logged food
+function editFood(i) {
+  const entry = getLogEntry(logDate);
+  const f = entry.foods?.[i];
+  if (!f) return;
+  openAddFoodSheet();
+  editingFoodIndex = i;
+  foodMode = 'edit'; // absolute macros — no serving scaling
+  document.getElementById('add-food-title').textContent = 'Edit Food';
+  document.getElementById('food-save-btn').textContent = 'Save Changes';
+  document.getElementById('food-serving-field').style.display = 'none';
+  document.getElementById('food-name').value    = f.name;
+  document.getElementById('food-cal').value     = f.calories;
+  document.getElementById('food-protein').value = f.protein;
+  document.getElementById('food-carbs').value   = f.carbs;
+  document.getElementById('food-fat').value     = f.fat;
+}
+
 function closeAddFoodSheet() {
   document.getElementById('add-food-overlay').classList.add('hidden');
 }
+
 function saveFood() {
   const name = document.getElementById('food-name').value.trim();
   if (!name) { toast('Enter a food name'); return; }
+  const entry = getLogEntry(logDate);
+  if (!entry.foods) entry.foods = [];
+
+  const isEdit = editingFoodIndex != null && entry.foods[editingFoodIndex];
   const food = {
-    id:       'f_' + Date.now(),
+    id:       isEdit ? (entry.foods[editingFoodIndex].id || 'f_' + Date.now()) : 'f_' + Date.now(),
     name,
     calories: parseFloat(document.getElementById('food-cal').value)     || 0,
     protein:  parseFloat(document.getElementById('food-protein').value) || 0,
     carbs:    parseFloat(document.getElementById('food-carbs').value)   || 0,
     fat:      parseFloat(document.getElementById('food-fat').value)     || 0,
   };
-  const entry = getLogEntry(logDate);
-  if (!entry.foods) entry.foods = [];
-  entry.foods.push(food);
+
+  if (isEdit) entry.foods[editingFoodIndex] = food;
+  else        entry.foods.push(food);
+
   saveLogEntry(logDate, entry);
+  const wasEdit = isEdit;
+  editingFoodIndex = null;
   closeAddFoodSheet();
   renderLog();
-  toast(`${name} added`);
+  toast(wasEdit ? `${name} updated` : `${name} added`);
 }
+
 function deleteFood(i) {
   const entry = getLogEntry(logDate);
   entry.foods.splice(i, 1);
