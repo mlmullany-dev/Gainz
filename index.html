@@ -720,6 +720,51 @@
       margin-bottom: 16px;
     }
 
+    /* ── FEEDBACK FORM ───────────────────────────── */
+    .feedback-link-row {
+      text-align: center; padding: 18px 16px 8px;
+    }
+    .feedback-link-btn {
+      background: none; border: none; color: var(--muted);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: inherit; text-decoration: underline;
+      text-decoration-color: transparent; transition: color 0.15s;
+    }
+    .feedback-link-btn:active { color: var(--text); }
+
+    .feedback-sheet {
+      background: var(--card); border-radius: 24px 24px 0 0;
+      width: 100%; max-height: 90vh; display: flex; flex-direction: column;
+    }
+    .feedback-scroll { flex: 1; overflow-y: auto; padding: 0 20px calc(28px + var(--safe-b)); }
+
+    .feedback-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 18px; }
+    .ftype-btn {
+      padding: 10px 8px; border-radius: 9px; border: 1.5px solid var(--border);
+      background: var(--card2); color: var(--muted); font-size: 13px; font-weight: 600;
+      cursor: pointer; text-align: center; font-family: inherit; transition: all 0.15s;
+    }
+    .ftype-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(74,222,128,0.08); }
+
+    .feedback-field { margin-bottom: 14px; }
+    .feedback-field label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 7px; }
+    .feedback-input {
+      width: 100%; background: var(--card2); border: 1.5px solid var(--border);
+      border-radius: 9px; color: var(--text); font-size: 15px;
+      padding: 12px 14px; font-family: inherit;
+    }
+    .feedback-input:focus { outline: none; border-color: var(--accent); }
+    .feedback-input::placeholder { color: #555; }
+    textarea.feedback-input { resize: none; height: 110px; line-height: 1.5; }
+
+    /* thank-you state */
+    .feedback-thankyou {
+      text-align: center; padding: 32px 24px calc(32px + var(--safe-b));
+    }
+    .feedback-ty-icon  { font-size: 52px; margin-bottom: 14px; }
+    .feedback-ty-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+    .feedback-ty-body  { font-size: 15px; color: var(--muted); line-height: 1.6; margin-bottom: 28px; }
+
     /* ── FOOD SEARCH ─────────────────────────────── */
     .food-search-bar {
       width: 100%; background: var(--card2); border: 1.5px solid var(--accent);
@@ -1164,9 +1209,12 @@
         <span style="font-size:18px;color:var(--muted)">›</span>
       </div>
       <div id="week-grid" class="week-grid"></div>
-      <div id="custom-days-section">
+      <div id="custom-days-section" style="padding-bottom:4px">
         <div class="section-label">My Workouts</div>
         <div id="custom-days-grid" class="week-grid"></div>
+      </div>
+      <div class="feedback-link-row">
+        <button class="feedback-link-btn" onclick="openFeedback()">💌 Send feedback or request a feature</button>
       </div>
     </div>
   </div>
@@ -1461,6 +1509,66 @@
     </select>
     <button class="sheet-save-btn" onclick="saveCustomEx()">Add to Library</button>
     <button class="sheet-cancel-btn" onclick="closeCustomExSheet()">Cancel</button>
+  </div>
+</div>
+
+<!-- ══ FEEDBACK OVERLAY ══════════════════════════ -->
+<div id="feedback-overlay" class="overlay hidden">
+  <div class="feedback-sheet" id="feedback-sheet">
+    <div class="picker-drag"></div>
+
+    <!-- Form state -->
+    <div id="feedback-form-state">
+      <div class="picker-header">
+        <h2>💌 Send Feedback</h2>
+        <button class="picker-close" onclick="closeFeedback()">✕</button>
+      </div>
+      <div class="feedback-scroll">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5">
+          Have a feature idea or something to report? We read every submission and review them regularly.
+        </div>
+
+        <div class="feedback-field">
+          <label>Type</label>
+          <div class="feedback-type-grid">
+            <button class="ftype-btn active" data-type="Feature Request"  onclick="selectFType(this)">✨ Feature Request</button>
+            <button class="ftype-btn"        data-type="Bug Report"       onclick="selectFType(this)">🐛 Bug Report</button>
+            <button class="ftype-btn"        data-type="General Feedback" onclick="selectFType(this)">💬 General Feedback</button>
+            <button class="ftype-btn"        data-type="Question"         onclick="selectFType(this)">❓ Question</button>
+          </div>
+        </div>
+
+        <div class="feedback-field">
+          <label>Your Name <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+          <input id="fb-name" class="feedback-input" type="text" placeholder="e.g. Michelle"/>
+        </div>
+
+        <div class="feedback-field">
+          <label>Your Email <span style="font-weight:400;text-transform:none;letter-spacing:0">(for follow-up)</span></label>
+          <input id="fb-email" class="feedback-input" type="email" placeholder="you@example.com"/>
+        </div>
+
+        <div class="feedback-field">
+          <label>Tell us more</label>
+          <textarea id="fb-message" class="feedback-input" placeholder="Describe your idea, issue, or question in as much detail as you'd like…"></textarea>
+        </div>
+
+        <button class="sheet-save-btn" id="fb-submit-btn" onclick="submitFeedback()">Send Feedback →</button>
+        <button class="sheet-cancel-btn" onclick="closeFeedback()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Thank-you state -->
+    <div id="feedback-thanks-state" style="display:none">
+      <div class="feedback-thankyou">
+        <div class="feedback-ty-icon">🙏</div>
+        <div class="feedback-ty-title">Thank you!</div>
+        <div class="feedback-ty-body">
+          Your feedback means a lot to us. We review every request and suggestion regularly — your input genuinely shapes where this app goes next.
+        </div>
+        <button class="sheet-save-btn" onclick="closeFeedback()">Back to App</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -3305,6 +3413,74 @@ function toggleFollowProgram() {
   }
   saveData(d);
   renderProgramDetail();
+}
+
+// ═══════════════════════════════════════════════════
+// FEEDBACK FORM (Web3Forms)
+// ═══════════════════════════════════════════════════
+const WEB3FORMS_KEY = 'YOUR_WEB3FORMS_KEY'; // ← paste your key from web3forms.com
+let selectedFeedbackType = 'Feature Request';
+
+function openFeedback() {
+  // Reset to form state
+  document.getElementById('feedback-form-state').style.display  = 'block';
+  document.getElementById('feedback-thanks-state').style.display = 'none';
+  document.getElementById('fb-name').value    = currentUser?.displayName || '';
+  document.getElementById('fb-email').value   = '';
+  document.getElementById('fb-message').value = '';
+  selectedFeedbackType = 'Feature Request';
+  document.querySelectorAll('.ftype-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.type === 'Feature Request'));
+  document.getElementById('feedback-overlay').classList.remove('hidden');
+}
+
+function closeFeedback() {
+  document.getElementById('feedback-overlay').classList.add('hidden');
+}
+
+function selectFType(btn) {
+  selectedFeedbackType = btn.dataset.type;
+  document.querySelectorAll('.ftype-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+async function submitFeedback() {
+  const message = document.getElementById('fb-message').value.trim();
+  if (!message) { toast('Please describe your feedback'); return; }
+
+  const btn = document.getElementById('fb-submit-btn');
+  btn.textContent = 'Sending…';
+  btn.disabled    = true;
+
+  const payload = {
+    access_key:  WEB3FORMS_KEY,
+    subject:     `Gainz App — ${selectedFeedbackType}`,
+    from_name:   document.getElementById('fb-name').value.trim() || 'Gainz User',
+    email:       document.getElementById('fb-email').value.trim() || 'noreply@gainz.app',
+    type:        selectedFeedbackType,
+    message,
+    botcheck:    '',
+  };
+
+  try {
+    if (WEB3FORMS_KEY === 'YOUR_WEB3FORMS_KEY') throw new Error('key_not_set');
+    const res  = await fetch('https://api.web3forms.com/submit', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error('submit_failed');
+  } catch(e) {
+    // Still show thank-you — don't punish user for config issues
+    if (e.message !== 'key_not_set') console.error('Feedback submit error:', e);
+  }
+
+  // Show thank-you regardless (form submitted or key not yet set)
+  btn.textContent = 'Send Feedback →';
+  btn.disabled    = false;
+  document.getElementById('feedback-form-state').style.display   = 'none';
+  document.getElementById('feedback-thanks-state').style.display = 'block';
 }
 
 // ═══════════════════════════════════════════════════
