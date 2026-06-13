@@ -755,6 +755,34 @@
     .steps-pct { font-size: 13px; color: var(--muted); font-weight: 600; text-align: center; margin-bottom: 14px; }
     .steps-pct b { color: var(--text); }
 
+    .steps-tips-btn {
+      display: block; width: 100%; margin-top: 14px; padding: 12px;
+      border-radius: 9px; border: 1px solid var(--border);
+      background: var(--card2); color: var(--muted);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: inherit; text-align: center;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .steps-tips-btn:active { color: var(--text); border-color: var(--accent); }
+
+    /* Tips sheet */
+    .tips-sheet {
+      background: var(--card); border-radius: 24px 24px 0 0;
+      width: 100%; max-height: 85vh; display: flex; flex-direction: column;
+    }
+    .tips-list { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px calc(20px + var(--safe-b)); }
+    .tip-card {
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .tip-card:last-child { border-bottom: none; }
+    .tip-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .tip-title { font-size: 15px; font-weight: 700; }
+    .tip-steps {
+      font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 50px;
+      background: rgba(96,165,250,0.15); color: #60a5fa; flex-shrink: 0;
+    }
+    .tip-body { font-size: 14px; color: var(--muted); line-height: 1.55; }
+
     /* ── DAILY LOG ───────────────────────────────── */
     .log-date-bar {
       display: flex; align-items: center; justify-content: space-between;
@@ -1062,6 +1090,7 @@
             inputmode="numeric" placeholder="Enter total steps"/>
           <button class="steps-set-btn" onclick="setStepsManual()">Set</button>
         </div>
+        <button class="steps-tips-btn" onclick="openStepsTips()">👟 Quick Tips to Get Your Steps</button>
       </div>
 
       <!-- Macros -->
@@ -1082,6 +1111,7 @@
 
     </div>
   </div>
+
 
 </div><!-- #app -->
 
@@ -1167,6 +1197,19 @@
     </select>
     <button class="sheet-save-btn" onclick="saveCustomEx()">Add to Library</button>
     <button class="sheet-cancel-btn" onclick="closeCustomExSheet()">Cancel</button>
+  </div>
+</div>
+
+<!-- ══ STEPS TIPS OVERLAY ════════════════════════ -->
+<div id="steps-tips-overlay" class="overlay hidden">
+  <div class="tips-sheet">
+    <div class="picker-drag"></div>
+    <div class="picker-header">
+      <h2>👟 Sneaky Steps</h2>
+      <button class="picker-close" onclick="document.getElementById('steps-tips-overlay').classList.add('hidden')">✕</button>
+    </div>
+    <p style="font-size:13px;color:var(--muted);padding:8px 20px 4px;flex-shrink:0">Short, creative ways to hit your daily goal without it feeling like exercise.</p>
+    <div class="tips-list" id="tips-list"></div>
   </div>
 </div>
 
@@ -2702,6 +2745,34 @@ function toggleFollowProgram() {
   }
   saveData(d);
   renderProgramDetail();
+}
+
+// ═══════════════════════════════════════════════════
+// STEPS TIPS
+// ═══════════════════════════════════════════════════
+const STEPS_TIPS = [
+  { title:'Walking Calls',          body:'Any phone call that doesn\'t need a screen happens on your feet. A 20-minute catch-up is easily 2,000 steps.',                                                  steps:2000 },
+  { title:'Park in the Far Corner', body:'Farthest spot in every lot, every time. Bonus: you\'ll always remember where your car is.',                                                                     steps:400  },
+  { title:'Commercial Break Laps',  body:'Every ad break or episode credit roll is a lap around the house or one trip up the stairs.',                                                                    steps:300  },
+  { title:'The Kettle Rule',        body:'While coffee brews, the kettle boils, or the microwave runs, you walk. Those little 2-minute pockets add up fast.',                                            steps:250  },
+  { title:'One Stop Early',         body:'Get off the bus or train one stop before yours, or park a few blocks from where you\'re headed.',                                                               steps:1000 },
+  { title:'Walk the Perimeter',     body:'Do a full lap of the grocery store before you start shopping, or walk the field edge at the game instead of sitting the whole time.',                          steps:600  },
+  { title:'Errand It on Foot',      body:'Anything under a mile gets walked, not driven. Mailbox, pharmacy, coffee run.',                                                                                 steps:2200 },
+  { title:'The 10-Before Rule',     body:'Ten minutes of walking before you sit down with your phone, lunch, or evening show. It becomes a toll you stop noticing.',                                     steps:1100 },
+  { title:'Pace While You Wait',    body:'Waiting rooms, pickup lines, airport gates. Everyone else sits. You stroll.',                                                                                   steps:500  },
+  { title:'Step Scavenger Hunt',    body:'Pick a daily "find" for your walk: a red door, a dog in a sweater, an out-of-state plate. Turns a chore into a game.',                                        steps:1500 },
+];
+
+function openStepsTips() {
+  document.getElementById('tips-list').innerHTML = STEPS_TIPS.map(t => `
+    <div class="tip-card">
+      <div class="tip-top">
+        <div class="tip-title">${t.title}</div>
+        <div class="tip-steps">~${t.steps.toLocaleString()} steps</div>
+      </div>
+      <div class="tip-body">${t.body}</div>
+    </div>`).join('');
+  document.getElementById('steps-tips-overlay').classList.remove('hidden');
 }
 
 // ═══════════════════════════════════════════════════
