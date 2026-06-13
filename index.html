@@ -720,6 +720,117 @@
       margin-bottom: 16px;
     }
 
+    /* ── FOOD SEARCH ─────────────────────────────── */
+    .food-search-bar {
+      width: 100%; background: var(--card2); border: 1.5px solid var(--accent);
+      border-radius: 10px; color: var(--text); font-size: 15px;
+      padding: 12px 14px; font-family: inherit; margin-bottom: 6px;
+    }
+    .food-search-bar:focus { outline: none; }
+    .food-search-bar::placeholder { color: #555; }
+    .food-results-list {
+      border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+      max-height: 190px; overflow-y: auto; background: var(--card2); margin-bottom: 12px;
+    }
+    .food-result-row {
+      padding: 11px 14px; border-bottom: 1px solid var(--border); cursor: pointer;
+      transition: background 0.12s;
+    }
+    .food-result-row:last-child { border-bottom: none; }
+    .food-result-row:active { background: var(--border); }
+    .food-result-name   { font-size: 14px; font-weight: 600; }
+    .food-result-macros { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .food-search-status { padding: 12px 14px; font-size: 13px; color: var(--muted); text-align: center; }
+    .serving-row { display: flex; gap: 8px; align-items: flex-end; margin-bottom: 4px; }
+    .serving-row .sheet-field { flex: 1; margin: 0; }
+    .serving-source { font-size: 11px; color: var(--accent); font-weight: 600; margin-bottom: 12px; }
+
+    /* ── WEEKLY PLAN ──────────────────────────────── */
+    .week-header {
+      display: flex; gap: 8px; padding: 12px 16px;
+      background: var(--card); border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .week-nav-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--card2); border: 1px solid var(--border);
+      color: var(--text); font-size: 20px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .week-range { flex: 1; text-align: center; }
+    .week-range-main { font-size: 15px; font-weight: 700; }
+    .week-range-sub  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .plan-day-card {
+      background: var(--card); border-radius: var(--r);
+      border: 1px solid var(--border); padding: 14px 16px; margin: 10px 16px 0;
+    }
+    .plan-day-header {
+      display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px;
+    }
+    .plan-day-name { font-size: 15px; font-weight: 800; }
+    .plan-day-date { font-size: 12px; color: var(--muted); }
+    .plan-day-today { font-size: 10px; font-weight: 800; color: var(--accent); padding: 2px 7px; border-radius: 50px; background: rgba(74,222,128,0.15); }
+
+    .plan-workout-sel {
+      width: 100%; background: var(--card2); border: 1.5px solid var(--border);
+      border-radius: 9px; color: var(--text); font-size: 14px; padding: 11px 34px 11px 14px;
+      appearance: none; -webkit-appearance: none; margin-bottom: 10px;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23888' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center; font-family: inherit;
+    }
+    .plan-workout-sel:focus { outline: none; border-color: var(--accent); }
+
+    .eat-out-row { display: flex; align-items: center; justify-content: space-between; }
+    .eat-out-label { font-size: 14px; font-weight: 600; color: var(--muted); }
+
+    /* toggle switch */
+    .toggle-switch { position: relative; width: 46px; height: 26px; flex-shrink: 0; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-knob {
+      position: absolute; inset: 0; background: var(--border); border-radius: 26px;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .toggle-knob::before {
+      content: ''; position: absolute; width: 20px; height: 20px; border-radius: 50%;
+      left: 3px; top: 3px; background: #fff; transition: transform 0.2s;
+    }
+    .toggle-switch input:checked + .toggle-knob { background: var(--accent); }
+    .toggle-switch input:checked + .toggle-knob::before { transform: translateX(20px); }
+
+    .eat-out-details-input {
+      width: 100%; background: var(--card2); border: 1.5px solid var(--border);
+      border-radius: 9px; color: var(--text); font-size: 14px;
+      padding: 10px 14px; margin-top: 10px; font-family: inherit;
+    }
+    .eat-out-details-input:focus { outline: none; border-color: var(--accent); }
+    .eat-out-details-input::placeholder { color: #555; }
+
+    .plan-week-summary {
+      margin: 12px 16px 0; padding: 14px 16px;
+      background: var(--card); border-radius: var(--r); border: 1px solid var(--border);
+    }
+    .plan-summary-title { font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 12px; }
+    .plan-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .plan-summary-item { text-align: center; }
+    .plan-summary-val { font-size: 20px; font-weight: 800; color: var(--accent); }
+    .plan-summary-lbl { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+    .plan-save-btn {
+      margin: 14px 16px 24px; padding: 15px;
+      border-radius: var(--r); border: none; background: var(--accent); color: #000;
+      font-size: 16px; font-weight: 800; cursor: pointer; width: calc(100% - 32px);
+      display: block; font-family: inherit;
+    }
+
+    /* home plan-week card */
+    .plan-week-card {
+      background: var(--card); border-radius: var(--r); padding: 14px 18px;
+      border: 1px solid var(--border); cursor: pointer;
+      display: flex; align-items: center; gap: 14px;
+      transition: background 0.12s; margin: 0 16px;
+    }
+    .plan-week-card:active { background: var(--card2); }
+
     /* ── PROGRAMS LIST ───────────────────────────── */
 
     .prog-list { padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px; }
@@ -1044,6 +1155,14 @@
         <div class="welcome-stats" id="welcome-stats"></div>
       </div>
       <div class="section-label">This Week</div>
+      <div class="plan-week-card" onclick="openWeeklyPlan()" style="margin-bottom:12px">
+        <span style="font-size:22px">📅</span>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700">Plan Your Week</div>
+          <div id="plan-week-status" style="font-size:12px;color:var(--muted);margin-top:2px">Schedule workouts &amp; meals for the week ahead</div>
+        </div>
+        <span style="font-size:18px;color:var(--muted)">›</span>
+      </div>
       <div id="week-grid" class="week-grid"></div>
       <div id="custom-days-section">
         <div class="section-label">My Workouts</div>
@@ -1130,6 +1249,27 @@
         </div>
 
       </div>
+    </div>
+  </div>
+
+  <!-- ══ WEEKLY PLAN ═══════════════════════════════ -->
+  <div id="view-weekly-plan" class="view">
+    <div class="header">
+      <button class="back-btn" onclick="nav('home')" aria-label="Back">&#8592;</button>
+      <h1>📅 Weekly Plan</h1>
+    </div>
+    <div class="week-header">
+      <button class="week-nav-btn" id="wp-prev-btn" onclick="shiftPlanWeek(-1)">‹</button>
+      <div class="week-range">
+        <div class="week-range-main" id="wp-range-main"></div>
+        <div class="week-range-sub"  id="wp-range-sub"></div>
+      </div>
+      <button class="week-nav-btn" id="wp-next-btn" onclick="shiftPlanWeek(1)">›</button>
+    </div>
+    <div class="scroll">
+      <div id="plan-days-list"></div>
+      <div id="plan-summary" class="plan-week-summary"></div>
+      <button class="plan-save-btn" onclick="saveWeeklyPlan()">Save Plan 💾</button>
     </div>
   </div>
 
@@ -1395,12 +1535,26 @@
   <div class="sheet-small">
     <div class="sheet-drag"></div>
     <div class="sheet-title">Add Food</div>
+
+    <!-- Search -->
+    <input id="food-search-bar" class="food-search-bar" type="search"
+      placeholder="🔍  Search food database…" oninput="foodSearchDebounce(this.value)"
+      autocomplete="off"/>
+    <div id="food-search-results"></div>
+    <div id="food-source-line" class="serving-source" style="display:none"></div>
+
+    <!-- Fields -->
     <div class="sheet-grid">
       <div class="sheet-field full">
         <label>Food Name</label>
         <input id="food-name" type="text" placeholder="e.g. Chicken breast" maxlength="60"/>
       </div>
-      <div class="sheet-field full">
+      <div class="sheet-field">
+        <label>Serving (g)</label>
+        <input id="food-serving" type="number" inputmode="decimal" placeholder="100"
+          oninput="recalcFoodMacros()"/>
+      </div>
+      <div class="sheet-field">
         <label>Calories</label>
         <input id="food-cal" type="number" inputmode="decimal" placeholder="0"/>
       </div>
@@ -1521,6 +1675,7 @@ async function loadFromFirestore() {
         activeProgram:    d.activeProgram    || null,
         userProfile:      d.userProfile      || null,
         benchmarkResults: d.benchmarkResults || {},
+        weeklyPlans:      d.weeklyPlans      || {},
       };
     } else {
       // Migrate any existing localStorage data on first login
@@ -1931,6 +2086,7 @@ function nav(view, dayId) {
   if (view === 'programs')       { document.getElementById('nav-programs').classList.add('active');   renderPrograms(); }
   if (view === 'program-detail') { document.getElementById('nav-programs').classList.add('active');   renderProgramDetail(); }
   if (view === 'benchmarks')     { document.getElementById('nav-benchmarks').classList.add('active'); renderBenchmarks(); }
+  if (view === 'weekly-plan')    { renderWeeklyPlan(); }
   if (view === 'log')            { document.getElementById('nav-log').classList.add('active');      if (!logDate) logDate = today(); renderLog(); }
   if (view === 'progress')       { document.getElementById('nav-progress').classList.add('active'); renderProgress(); }
   if (view === 'day')            { activeDayId = dayId; renderDay(dayId); }
@@ -3152,6 +3308,251 @@ function toggleFollowProgram() {
 }
 
 // ═══════════════════════════════════════════════════
+// FOOD SEARCH (USDA FoodData Central)
+// ═══════════════════════════════════════════════════
+const USDA_KEY      = 'DEMO_KEY'; // free key — get unlimited at fdc.nal.usda.gov/api-key-signup
+let foodSearchTimer = null;
+let foodPer100g     = null; // { cal, pro, car, fat } for the selected food
+let foodSearchCache = [];   // last batch of results
+
+function foodSearchDebounce(val) {
+  if (foodSearchTimer) clearTimeout(foodSearchTimer);
+  foodPer100g = null;
+  document.getElementById('food-source-line').style.display = 'none';
+  const el = document.getElementById('food-search-results');
+  if (!val.trim() || val.trim().length < 2) { el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="food-search-status">Searching…</div>';
+  foodSearchTimer = setTimeout(() => runFoodSearch(val.trim()), 420);
+}
+
+async function runFoodSearch(query) {
+  const el  = document.getElementById('food-search-results');
+  const url = `https://api.nal.usda.gov/fdc/v1/foods/search?query=${encodeURIComponent(query)}&api_key=${USDA_KEY}&dataType=Foundation,SR%20Legacy,Survey%20(FNDDS)&pageSize=10`;
+  try {
+    const res  = await fetch(url);
+    const data = await res.json();
+    const foods = (data.foods || []).slice(0, 8);
+    if (!foods.length) {
+      el.innerHTML = '<div class="food-search-status">No results — fill in macros below manually</div>';
+      return;
+    }
+    foodSearchCache = foods.map(f => {
+      const getNutrient = id => f.foodNutrients?.find(n => n.nutrientId === id)?.value ?? 0;
+      return {
+        name: toTitleCase(f.description),
+        cal:  Math.round(getNutrient(1008)),
+        pro:  round1(getNutrient(1003)),
+        car:  round1(getNutrient(1005)),
+        fat:  round1(getNutrient(1004)),
+      };
+    });
+    el.innerHTML = `<div class="food-results-list">${foodSearchCache.map((f,i) => `
+      <div class="food-result-row" onclick="selectFood(${i})">
+        <div class="food-result-name">${f.name}</div>
+        <div class="food-result-macros">${f.cal} cal · ${f.pro}g protein · ${f.car}g carbs · ${f.fat}g fat <em style="opacity:.6">/ 100g</em></div>
+      </div>`).join('')}</div>`;
+  } catch(e) {
+    el.innerHTML = '<div class="food-search-status">Search unavailable — enter macros manually</div>';
+  }
+}
+
+function selectFood(i) {
+  const f = foodSearchCache[i];
+  if (!f) return;
+  foodPer100g = f;
+  document.getElementById('food-name').value    = f.name;
+  document.getElementById('food-serving').value = 100;
+  document.getElementById('food-cal').value     = f.cal;
+  document.getElementById('food-protein').value = f.pro;
+  document.getElementById('food-carbs').value   = f.car;
+  document.getElementById('food-fat').value     = f.fat;
+  document.getElementById('food-search-results').innerHTML = '';
+  document.getElementById('food-search-bar').value = '';
+  const src = document.getElementById('food-source-line');
+  src.textContent = `✓ From USDA database · values per 100g — adjust serving size to scale`;
+  src.style.display = 'block';
+}
+
+function recalcFoodMacros() {
+  if (!foodPer100g) return;
+  const g = parseFloat(document.getElementById('food-serving').value) || 100;
+  const s = g / 100;
+  document.getElementById('food-cal').value     = Math.round(foodPer100g.cal * s);
+  document.getElementById('food-protein').value = round1(foodPer100g.pro * s);
+  document.getElementById('food-carbs').value   = round1(foodPer100g.car * s);
+  document.getElementById('food-fat').value     = round1(foodPer100g.fat * s);
+}
+
+function toTitleCase(str) {
+  return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()).replace(/, ([a-z])/g, (_, c) => `, ${c.toUpperCase()}`);
+}
+function round1(n) { return Math.round(n * 10) / 10; }
+
+// ═══════════════════════════════════════════════════
+// WEEKLY PLAN
+// ═══════════════════════════════════════════════════
+let planWeekStart = null; // Monday ISO date
+
+const WEEK_DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+function getMondayOf(dateStr) {
+  const d   = new Date((dateStr || today()) + 'T12:00:00');
+  const dow = d.getDay(); // 0=Sun
+  const diff = dow === 0 ? -6 : 1 - dow;
+  d.setDate(d.getDate() + diff);
+  return d.toISOString().slice(0, 10);
+}
+
+function openWeeklyPlan() {
+  planWeekStart = getMondayOf(today());
+  nav('weekly-plan');
+}
+
+function shiftPlanWeek(delta) {
+  const d = new Date(planWeekStart + 'T12:00:00');
+  d.setDate(d.getDate() + delta * 7);
+  planWeekStart = d.toISOString().slice(0, 10);
+  renderWeeklyPlan();
+}
+
+function getWeekDates(mondayStr) {
+  return Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(mondayStr + 'T12:00:00');
+    d.setDate(d.getDate() + i);
+    return d.toISOString().slice(0, 10);
+  });
+}
+
+function getPlanForWeek(mondayStr) {
+  const existing = appData.weeklyPlans?.[mondayStr];
+  const dates    = getWeekDates(mondayStr);
+  const days     = dates.map((date, i) => ({
+    date,
+    label:       WEEK_DAYS[i],
+    workoutId:   '',
+    eatOut:      false,
+    eatOutNotes: '',
+    ...(existing?.days?.[date] || {}),
+  }));
+  return days;
+}
+
+// In-memory edits while on the plan page
+let planDraft = [];
+
+function renderWeeklyPlan() {
+  const dates = getWeekDates(planWeekStart);
+  const end   = dates[6];
+  const t     = today();
+
+  // Header range
+  const fmt = s => { const d = new Date(s + 'T12:00:00'); return `${MONTHS[d.getMonth()]} ${d.getDate()}`; };
+  const endD = new Date(end + 'T12:00:00');
+  document.getElementById('wp-range-main').textContent = `${fmt(planWeekStart)} — ${fmt(end)}`;
+  document.getElementById('wp-range-sub').textContent  = `${endD.getFullYear()}`;
+  document.getElementById('wp-next-btn').disabled = getMondayOf(today()) === planWeekStart && t < dates[6];
+
+  // Load draft
+  planDraft = getPlanForWeek(planWeekStart);
+
+  // Build workout options
+  const workoutOptions = [
+    '<option value="">— Rest Day —</option>',
+    ...PROGRAM.map(d => `<option value="${d.id}">${d.label}: ${d.name}</option>`),
+    ...((appData.customDays || []).map(d => `<option value="${d.id}">⚡ ${d.name}</option>`)),
+    '<option value="cardio">🏃 Cardio / Active Recovery</option>',
+  ].join('');
+
+  document.getElementById('plan-days-list').innerHTML = planDraft.map((day, i) => {
+    const isToday = day.date === t;
+    const dpDate  = new Date(day.date + 'T12:00:00');
+    return `<div class="plan-day-card" id="plan-day-${i}">
+      <div class="plan-day-header">
+        <div class="plan-day-name">${day.label}</div>
+        <div class="plan-day-date">${MONTHS[dpDate.getMonth()]} ${dpDate.getDate()}</div>
+        ${isToday ? '<div class="plan-day-today">TODAY</div>' : ''}
+      </div>
+      <select class="plan-workout-sel" id="pw-workout-${i}" onchange="planDraft[${i}].workoutId=this.value;updatePlanSummary()">
+        ${workoutOptions.replace(`value="${day.workoutId}"`, `value="${day.workoutId}" selected`)}
+      </select>
+      <div class="eat-out-row">
+        <div class="eat-out-label">🍽️ Eating out?</div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="pw-eatout-${i}" ${day.eatOut ? 'checked' : ''}
+            onchange="planDraft[${i}].eatOut=this.checked;toggleEatOutDetails(${i})"/>
+          <span class="toggle-knob"></span>
+        </label>
+      </div>
+      <input id="pw-details-${i}" class="eat-out-details-input"
+        placeholder="e.g. Dinner — Italian restaurant…"
+        value="${day.eatOutNotes}"
+        oninput="planDraft[${i}].eatOutNotes=this.value"
+        style="display:${day.eatOut ? 'block' : 'none'}"/>
+    </div>`;
+  }).join('');
+
+  updatePlanSummary();
+}
+
+function toggleEatOutDetails(i) {
+  const el = document.getElementById(`pw-details-${i}`);
+  if (el) el.style.display = planDraft[i].eatOut ? 'block' : 'none';
+}
+
+function updatePlanSummary() {
+  const trainingDays = planDraft.filter(d => d.workoutId && d.workoutId !== '').length;
+  const eatOutDays   = planDraft.filter(d => d.eatOut).length;
+  const targets      = appData.macroTargets;
+
+  let macroHtml = '';
+  if (targets?.calories) {
+    macroHtml = `
+      <div class="plan-summary-item">
+        <div class="plan-summary-val">${(targets.calories * 7).toLocaleString()}</div>
+        <div class="plan-summary-lbl">Weekly Calories</div>
+      </div>
+      <div class="plan-summary-item">
+        <div class="plan-summary-val">${targets.protein * 7}g</div>
+        <div class="plan-summary-lbl">Weekly Protein</div>
+      </div>`;
+  } else {
+    macroHtml = `<div style="grid-column:1/-1;text-align:center;color:var(--muted);font-size:13px">
+      Set daily macro targets in the Log tab to see weekly totals</div>`;
+  }
+
+  document.getElementById('plan-summary').innerHTML = `
+    <div class="plan-summary-title">📊 Week Summary</div>
+    <div class="plan-summary-grid">
+      <div class="plan-summary-item">
+        <div class="plan-summary-val">${trainingDays}</div>
+        <div class="plan-summary-lbl">Training Days</div>
+      </div>
+      <div class="plan-summary-item">
+        <div class="plan-summary-val">${eatOutDays}</div>
+        <div class="plan-summary-lbl">Meals Out</div>
+      </div>
+      ${macroHtml}
+    </div>`;
+}
+
+function saveWeeklyPlan() {
+  const d = loadData();
+  if (!d.weeklyPlans) d.weeklyPlans = {};
+  const daysMap = {};
+  planDraft.forEach(day => { daysMap[day.date] = { workoutId: day.workoutId, eatOut: day.eatOut, eatOutNotes: day.eatOutNotes }; });
+  d.weeklyPlans[planWeekStart] = { days: daysMap, savedAt: new Date().toISOString() };
+  saveData(d);
+  toast('Week plan saved! 📅');
+
+  // Update home badge
+  const trainingDays = planDraft.filter(x => x.workoutId && x.workoutId !== '').length;
+  const statusEl = document.getElementById('plan-week-status');
+  if (statusEl) statusEl.textContent = `${trainingDays} training days planned this week`;
+
+  nav('home');
+}
+
+// ═══════════════════════════════════════════════════
 // STEPS TIPS
 // ═══════════════════════════════════════════════════
 const STEPS_TIPS = [
@@ -3359,8 +3760,12 @@ function renderFoodList(entry) {
 }
 
 function openAddFoodSheet() {
-  ['food-name','food-cal','food-protein','food-carbs','food-fat'].forEach(id =>
-    document.getElementById(id).value = '');
+  foodPer100g = null;
+  ['food-search-bar','food-name','food-serving','food-cal','food-protein','food-carbs','food-fat'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('food-search-results').innerHTML = '';
+  document.getElementById('food-source-line').style.display = 'none';
   document.getElementById('add-food-overlay').classList.remove('hidden');
 }
 function closeAddFoodSheet() {
