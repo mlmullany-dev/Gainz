@@ -1984,6 +1984,77 @@ const WORKOUT_PLANS = [
     ],
   },
   {
+    id: 'build',
+    name: 'Build Program',
+    tagline: 'The original 5-day split',
+    icon: '🔨',
+    color: '#34d399',
+    level: 'Intermediate',
+    levelBg: 'rgba(52,211,153,0.15)',
+    weeks: 6,
+    freq: '5×/wk',
+    time: '45–60 min',
+    goal: 'A balanced 5-day push/pull/legs split built for consistent muscle development. Each day targets a specific pattern — lower quad, push, pull, lower glute, and arms/shoulders — so every muscle group gets hit twice a week with adequate recovery between sessions.',
+    note: 'Follow the days in order Mon–Fri. Each workout is already loaded in the app with full tracking, the PREV weight column, and Beat This targets.',
+    schedule: [
+      {
+        day: 'Day 1 — Lower (Quad Focus)',
+        exercises: [
+          { name:'Back Squat',           meta:'4 sets · 6–8 reps · Alt: Goblet Squat' },
+          { name:'Leg Press',            meta:'3 sets · 10–12 reps · feet low + narrow' },
+          { name:'Reverse Lunges',       meta:'3 sets · 8–10 reps/leg · Alt: Single-Leg Leg Press' },
+          { name:'Leg Extensions',       meta:'3 sets · 12–15 reps · slow negatives' },
+          { name:'Standing Calf Raises', meta:'3 sets · 12–15 reps' },
+        ],
+      },
+      {
+        day: 'Day 2 — Push + Triceps',
+        exercises: [
+          { name:'DB Bench Press',             meta:'4 sets · 6–8 reps' },
+          { name:'Seated DB Shoulder Press',   meta:'3 sets · 8–10 reps' },
+          { name:'Incline DB Press',           meta:'3 sets · 10–12 reps' },
+          { name:'Overhead Triceps Extension', meta:'3 sets · 10–12 reps' },
+          { name:'Triceps Pushdowns',          meta:'3 sets · 12–15 reps' },
+        ],
+      },
+      {
+        day: 'Day 3 — Pull + Biceps',
+        exercises: [
+          { name:'Lat Pulldown',      meta:'4 sets · 8–10 reps · Alt: Assisted Pull-Up' },
+          { name:'Single-Arm DB Row', meta:'3 sets · 10 reps/side' },
+          { name:'Face Pulls',        meta:'3 sets · 12–15 reps · Alt: Rear Delt Flyes' },
+          { name:'DB Curls',          meta:'3 sets · 10–12 reps' },
+          { name:'Hammer Curls',      meta:'3 sets · 12 reps' },
+        ],
+      },
+      {
+        day: 'Day 4 — Lower (Quad + Glute)',
+        exercises: [
+          { name:'Front Squat',       meta:'4 sets · 8 reps · Alt: Heel-Elevated Goblet Squat' },
+          { name:'DB Step-Ups',       meta:'3 sets · 8–10 reps/leg · Alt: Walking Lunges' },
+          { name:'Romanian Deadlift', meta:'3 sets · 8–10 reps' },
+          { name:'Leg Extensions',    meta:'3 sets · 15 reps · hard squeeze' },
+          { name:'Hip Thrusts',       meta:'3 sets · 10–12 reps' },
+        ],
+      },
+      {
+        day: 'Day 5 — Arms + Shoulders',
+        exercises: [
+          { name:'Close-Grip Bench',  meta:'4 sets · 8–10 reps · Alt: Push-Ups' },
+          { name:'Lateral Raises',    meta:'4 sets · 12–15 reps' },
+          { name:'Skull Crushers',    meta:'3 sets · 10–12 reps' },
+          { name:'Incline DB Curls',  meta:'3 sets · 10–12 reps' },
+          { name:'Burnout Superset',  meta:'2 sets · 15 reps each · Pushdowns + Curls' },
+        ],
+      },
+    ],
+    phases: [
+      { label:'Weeks 1–2', title:'Establish', freq:'5×/wk', sets:'Work sets as written',                     focus:'Learn the five days and find your working weights. Use the PREV column and Beat This targets from week 2 onward.' },
+      { label:'Weeks 3–4', title:'Overload',  freq:'5×/wk', sets:'Add 2.5–5 lbs where possible',            focus:'Progressive overload is the goal. If you hit the top of the rep range on all sets, add weight next session.' },
+      { label:'Weeks 5–6', title:'Push',      freq:'5×/wk', sets:'Add a drop set or extra set on key lifts', focus:'Push intensity on your main lift each day. Optional: add one drop set to squats, bench, and rows.' },
+    ],
+  },
+  {
     id: 'latebloomer',
     name: 'Late Bloomer',
     tagline: 'Strength After 60 — beginner friendly',
@@ -3687,6 +3758,7 @@ const PLAN_AUTOFILL = {
   fullbody:    [ [0,'monday'], [2,'wednesday'], [4,'friday'] ],            // Mon/Wed/Fri
   oly:         [ [0,'monday'], [2,'tuesday'], [4,'wednesday'] ],           // Mon/Wed/Fri
   latebloomer: [ [0,'monday'], [3,'thursday'] ],                           // Mon/Thu
+  build:        [ [0,'monday'], [1,'tuesday'], [2,'wednesday'], [3,'thursday'], [4,'friday'] ], // Mon–Fri
 };
 
 function openWeeklyPlan() {
