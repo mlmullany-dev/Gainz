@@ -84,7 +84,8 @@
       width: 100%; max-width: 340px; text-align: center;
       border: 1px solid var(--border);
     }
-    .login-logo { font-size: 56px; margin-bottom: 16px; }
+    .login-logo { margin-bottom: 16px; }
+    .login-logo img { width: 120px; height: 120px; object-fit: cover; border-radius: 16px; display: block; margin: 0 auto; }
     .login-title { font-size: 30px; font-weight: 800; margin-bottom: 8px; }
     .login-sub { font-size: 15px; color: var(--muted); line-height: 1.5; margin-bottom: 36px; }
     .google-btn {
@@ -1197,7 +1198,7 @@
 <!-- ══ LOGIN SCREEN ════════════════════════════════ -->
 <div id="login-screen" class="hidden">
   <div class="login-card">
-    <div class="login-logo">💪</div>
+    <div class="login-logo"><img src="statue.png" alt="Gainz"/></div>
     <div class="login-title">Gainz</div>
     <div class="login-sub">Track your workouts and strength progress over time.</div>
     <button class="google-btn" onclick="signInWithGoogle()">
