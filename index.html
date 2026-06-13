@@ -1347,6 +1347,60 @@
     .steps-manual-row .steps-manual-input { font-size: 14px; padding: 8px 12px; }
     .steps-set-btn { font-size: 13px; padding: 8px 16px; }
     .steps-dist { font-size: 12px; color: var(--color-text-muted); font-weight: 600; margin-top: 3px; }
+
+    /* ═══ WEEKLY SUMMARY ═══ */
+    .summary-banner {
+      margin: 0 16px 12px; padding: 0; border-radius: var(--r); overflow: hidden;
+      cursor: pointer; box-shadow: var(--card-shadow);
+      background: linear-gradient(135deg, var(--navy) 0%, var(--coral) 60%, var(--amber) 100%);
+    }
+    .summary-banner-inner { padding: 16px 18px; display: flex; align-items: center; gap: 14px; }
+    .summary-banner-text { flex: 1; }
+    .summary-banner-title { font-size: 15px; font-weight: 700; color: var(--white); }
+    .summary-banner-sub { font-size: 12px; color: rgba(255,255,255,0.85); margin-top: 2px; }
+    .summary-banner-x {
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(255,255,255,0.2); border: none; color: var(--white);
+      font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+
+    .sum-hero {
+      margin: 12px 16px 0; border-radius: var(--r); padding: 22px 18px; text-align: center;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--coral) 70%, var(--amber) 130%);
+      box-shadow: var(--card-shadow);
+    }
+    .sum-hero-val { font-size: 42px; font-weight: 700; color: var(--white); line-height: 1; letter-spacing: -1px; }
+    .sum-hero-lbl { font-size: 13px; color: rgba(255,255,255,0.9); font-weight: 600; margin-top: 6px; }
+    .sum-hero-sub { font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 10px; }
+
+    .sum-card { background: var(--color-surface); border-radius: var(--r); border: 1px solid var(--color-border); box-shadow: var(--card-shadow); padding: 16px; margin: 12px 16px 0; }
+    .sum-card-title {
+      font-size: 11px; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase;
+      letter-spacing: 0.7px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .sum-badge {
+      font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 50px; letter-spacing: 0.3px;
+    }
+    .sum-badge.on  { background: var(--color-accent); color: var(--color-brand); }
+    .sum-badge.off { background: rgba(100,116,139,0.16); color: var(--slate-muted); }
+
+    .sum-macro-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+    .sum-macro { text-align: center; background: var(--card2); border-radius: 10px; padding: 10px 4px; }
+    .sum-macro-val { font-size: 17px; font-weight: 700; color: var(--color-text); }
+    .sum-macro-lbl { font-size: 10px; color: var(--color-text-muted); font-weight: 600; margin-top: 2px; letter-spacing: 0.3px; }
+    .sum-macro-avg { font-size: 10px; color: var(--color-text-muted); margin-top: 3px; }
+
+    .insight {
+      display: flex; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--color-border);
+      font-size: 13px; line-height: 1.5; color: var(--color-text);
+    }
+    .insight:last-child { border-bottom: none; }
+    .insight-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .insight.good .insight-dot { background: #1B9E5A; }
+    .insight.warn .insight-dot { background: var(--color-cta); }
+    .insight.info .insight-dot { background: var(--color-brand); }
+
+    .sum-empty { text-align: center; color: var(--color-text-muted); font-size: 14px; padding: 40px 24px; line-height: 1.6; }
   </style>
 </head>
 <body>
@@ -1385,6 +1439,7 @@
       </button>
     </div>
     <div class="scroll">
+      <div id="summary-banner-home" style="display:none"></div>
       <div id="active-prog-home" style="display:none"></div>
       <div class="welcome-section">
         <div class="welcome-greeting" id="welcome-greeting">Welcome back</div>
@@ -1462,6 +1517,15 @@
     <div class="scroll">
       <div class="prog-content">
 
+        <div class="plan-week-card" onclick="openWeeklySummary()" style="margin:0">
+          <div style="width:36px;height:36px;border-radius:8px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:700;color:var(--color-text)">Week in Review</div>
+            <div style="font-size:12px;color:var(--color-text-muted);margin-top:2px">Lifting volume, macros &amp; weekly insights</div>
+          </div>
+          <span style="font-size:18px;color:var(--color-text-muted)">›</span>
+        </div>
+
         <div class="prog-card">
           <h3>Bodyweight</h3>
           <div class="bw-row">
@@ -1516,6 +1580,25 @@
       <div id="plan-days-list"></div>
       <div id="plan-summary" class="plan-week-summary"></div>
       <button class="plan-save-btn" onclick="saveWeeklyPlan()">Save Plan</button>
+    </div>
+  </div>
+
+  <!-- ══ WEEKLY SUMMARY ════════════════════════════ -->
+  <div id="view-weekly-summary" class="view">
+    <div class="header">
+      <button class="back-btn" onclick="nav('home')" aria-label="Back">&#8592;</button>
+      <h1>Week in Review</h1>
+    </div>
+    <div class="week-header">
+      <button class="week-nav-btn" id="sum-prev-btn" onclick="shiftSummaryWeek(-1)">‹</button>
+      <div class="week-range">
+        <div class="week-range-main" id="sum-range-main"></div>
+        <div class="week-range-sub"  id="sum-range-sub"></div>
+      </div>
+      <button class="week-nav-btn" id="sum-next-btn" onclick="shiftSummaryWeek(1)">›</button>
+    </div>
+    <div class="scroll">
+      <div id="summary-content"></div>
     </div>
   </div>
 
@@ -2154,6 +2237,7 @@ async function loadFromFirestore() {
         userProfile:      d.userProfile      || null,
         benchmarkResults: d.benchmarkResults || {},
         weeklyPlans:      d.weeklyPlans      || {},
+        summarySeenWeek:  d.summarySeenWeek  || null,
       };
     } else {
       // Migrate any existing localStorage data on first login
@@ -2751,6 +2835,7 @@ function nav(view, dayId) {
   if (view === 'program-detail') { document.getElementById('nav-programs').classList.add('active');   renderProgramDetail(); }
   if (view === 'benchmarks')     { document.getElementById('nav-benchmarks').classList.add('active'); renderBenchmarks(); }
   if (view === 'weekly-plan')    { renderWeeklyPlan(); }
+  if (view === 'weekly-summary') { renderWeeklySummary(); }
   if (view === 'log')            { document.getElementById('nav-log').classList.add('active');      if (!logDate) logDate = today(); renderLog(); }
   if (view === 'progress')       { document.getElementById('nav-progress').classList.add('active'); renderProgress(); }
   if (view === 'day')            { activeDayId = dayId; renderDay(dayId); }
@@ -2889,6 +2974,8 @@ function renderHome() {
 
   customGrid.innerHTML = customHtml;
   customSection.style.display = 'block';
+
+  renderSummaryBanner();
 }
 
 function openDay(dayId) {
@@ -4907,6 +4994,211 @@ function applyCalcMacros() {
   toast('Macros calculated & saved!');
   // restore default handler for next open
   document.getElementById('calc-go-btn').onclick = runMacroCalc;
+}
+
+// ═══════════════════════════════════════════════════
+// WEEKLY SUMMARY ("Week in Review")
+// ═══════════════════════════════════════════════════
+let summaryWeekStart = null;
+
+function lastCompletedWeekMonday() {
+  const d = new Date(getMondayOf(today()) + 'T12:00:00');
+  d.setDate(d.getDate() - 7);
+  return d.toISOString().slice(0, 10);
+}
+
+function sessionVolume(s) {
+  if (typeof s.totalVolume === 'number') return s.totalVolume;
+  let v = 0;
+  Object.values(s.exercises || {}).forEach(sets =>
+    (sets || []).forEach(set => { if (set.done && set.weight > 0 && set.reps > 0) v += set.weight * set.reps; }));
+  return Math.round(v);
+}
+
+function buildWeeklySummary(monday) {
+  const dates  = getWeekDates(monday);
+  const inWeek = d => dates.includes(d);
+
+  const weekSessions = (appData.sessions || []).filter(s => inWeek(s.date));
+  const totalVolume  = weekSessions.reduce((sum, s) => sum + sessionVolume(s), 0);
+  const workoutCount = weekSessions.length;
+
+  const totals = { calories:0, protein:0, carbs:0, fat:0 };
+  let daysLogged = 0, stepsSum = 0, stepsDays = 0, sleepSum = 0, sleepDays = 0;
+  const foodTally = {};
+  dates.forEach(date => {
+    const e = appData.dailyLogs?.[date];
+    if (!e) return;
+    if (typeof e.steps === 'number' && e.steps > 0) { stepsSum += e.steps; stepsDays++; }
+    if (typeof e.sleepHours === 'number' && e.sleepHours > 0) { sleepSum += e.sleepHours; sleepDays++; }
+    let dayHasFood = false;
+    (e.foods || []).forEach(f => {
+      totals.calories += f.calories || 0; totals.protein += f.protein || 0;
+      totals.carbs    += f.carbs    || 0; totals.fat     += f.fat     || 0;
+      dayHasFood = true;
+      const k = f.name || 'Unnamed';
+      if (!foodTally[k]) foodTally[k] = { count:0, calories:0 };
+      foodTally[k].count++; foodTally[k].calories += f.calories || 0;
+    });
+    if (dayHasFood) daysLogged++;
+  });
+
+  const avg = key => daysLogged ? totals[key] / daysLogged : 0;
+  const t = appData.macroTargets;
+
+  let onTarget = null;
+  if (t && t.calories && daysLogged > 0) {
+    const calOk = Math.abs(avg('calories') - t.calories) <= t.calories * 0.10;
+    const proOk = !t.protein || avg('protein') >= t.protein * 0.9;
+    onTarget = calOk && proOk;
+  }
+
+  // ── Insights ──
+  const insights = [];
+  if (t && t.calories && daysLogged > 0) {
+    const ac = avg('calories'), ap = avg('protein'), acarb = avg('carbs'), af = avg('fat');
+    if (t.protein && ap < t.protein * 0.9)
+      insights.push({ type:'warn', text:`Protein ran low — averaged ${Math.round(ap)}g/day vs your ${t.protein}g goal. Add a protein source to a couple of meals.` });
+    else if (t.protein && ap >= t.protein)
+      insights.push({ type:'good', text:`Strong protein week — averaged ${Math.round(ap)}g/day, right at your ${t.protein}g goal.` });
+    if (ac > t.calories * 1.1)
+      insights.push({ type:'warn', text:`Calories ran high — about ${Math.round(ac - t.calories)} over target on the days you logged.` });
+    else if (ac < t.calories * 0.85)
+      insights.push({ type:'info', text:`You averaged ${Math.round(t.calories - ac)} cal under target — fine for fat loss, but fuel enough to recover.` });
+    if (t.fat && af > t.fat * 1.2)
+      insights.push({ type:'warn', text:`Fat intake was high — averaged ${Math.round(af)}g/day vs your ${t.fat}g goal.` });
+    if (t.carbs && acarb > t.carbs * 1.2)
+      insights.push({ type:'warn', text:`Carbs ran high — averaged ${Math.round(acarb)}g/day vs your ${t.carbs}g goal.` });
+  }
+  const foods = Object.entries(foodTally).sort((a, b) => b[1].calories - a[1].calories);
+  if (foods.length && totals.calories > 0) {
+    const [name, info] = foods[0];
+    const share = info.calories / totals.calories;
+    if (share >= 0.25)
+      insights.push({ type:'warn', text:`${name} made up ${Math.round(share * 100)}% of your calories this week (${Math.round(info.calories).toLocaleString()} cal). Try mixing in more variety.` });
+    else
+      insights.push({ type:'info', text:`${name} was your top calorie source — ${Math.round(info.calories).toLocaleString()} cal across the week.` });
+  }
+  if (stepsDays) {
+    const as = Math.round(stepsSum / stepsDays);
+    if (as < 10000) insights.push({ type:'info', text:`Averaged ${as.toLocaleString()} steps/day — ${(10000 - as).toLocaleString()} short of the 10k goal.` });
+    else insights.push({ type:'good', text:`Crushed your step goal — averaged ${as.toLocaleString()} steps/day.` });
+  }
+  if (sleepDays) {
+    const asl = sleepSum / sleepDays;
+    if (asl < 7) insights.push({ type:'warn', text:`Sleep averaged ${asl.toFixed(1)} hrs — aim for 7–9 to support recovery and appetite.` });
+    else insights.push({ type:'good', text:`Good recovery — sleep averaged ${asl.toFixed(1)} hrs/night.` });
+  }
+  if (daysLogged > 0 && daysLogged < 4)
+    insights.push({ type:'info', text:`You logged food on ${daysLogged} day${daysLogged !== 1 ? 's' : ''} — logging more often sharpens these insights.` });
+  if (workoutCount === 0)
+    insights.push({ type:'warn', text:`No workouts logged this week — even one session keeps your momentum going.` });
+
+  return {
+    dates, monday, totalVolume, workoutCount, totals, daysLogged, onTarget, insights,
+    avg: { calories:Math.round(avg('calories')), protein:Math.round(avg('protein')), carbs:Math.round(avg('carbs')), fat:Math.round(avg('fat')) },
+    hasData: workoutCount > 0 || daysLogged > 0,
+  };
+}
+
+function openWeeklySummary(monday) {
+  summaryWeekStart = monday || lastCompletedWeekMonday();
+  const d = loadData(); d.summarySeenWeek = lastCompletedWeekMonday(); saveData(d);
+  nav('weekly-summary');
+}
+
+function shiftSummaryWeek(delta) {
+  const d = new Date(summaryWeekStart + 'T12:00:00');
+  d.setDate(d.getDate() + delta * 7);
+  const nd = d.toISOString().slice(0, 10);
+  if (nd > getMondayOf(today())) return;
+  summaryWeekStart = nd;
+  renderWeeklySummary();
+}
+
+function macroSumCell(lbl, total, avgStr, goal) {
+  const totalStr = typeof total === 'number' ? total.toLocaleString() : total;
+  return `<div class="sum-macro">
+    <div class="sum-macro-val">${totalStr}</div>
+    <div class="sum-macro-lbl">${lbl}</div>
+    <div class="sum-macro-avg">${avgStr}${goal ? ` / ${goal}` : ''}</div>
+  </div>`;
+}
+
+function renderWeeklySummary() {
+  if (!summaryWeekStart) summaryWeekStart = lastCompletedWeekMonday();
+  const dates = getWeekDates(summaryWeekStart);
+  const fmt = s => { const d = new Date(s + 'T12:00:00'); return `${MONTHS[d.getMonth()]} ${d.getDate()}`; };
+  const isCurrent = summaryWeekStart === getMondayOf(today());
+
+  document.getElementById('sum-range-main').textContent = `${fmt(dates[0])} – ${fmt(dates[6])}`;
+  document.getElementById('sum-range-sub').textContent  = isCurrent ? 'This week (in progress)' : String(new Date(dates[0] + 'T12:00:00').getFullYear());
+  document.getElementById('sum-next-btn').disabled = isCurrent;
+
+  const s  = buildWeeklySummary(summaryWeekStart);
+  const el = document.getElementById('summary-content');
+  if (!s.hasData) {
+    el.innerHTML = `<div class="sum-empty">No workouts or meals logged this week.<br>Your summary appears once you start logging.</div>`;
+    return;
+  }
+
+  const t = appData.macroTargets;
+  let badge = '';
+  if (s.onTarget === true)  badge = '<span class="sum-badge on">On Target ✓</span>';
+  else if (s.onTarget === false) badge = '<span class="sum-badge off">Off Target</span>';
+
+  let html = `
+    <div class="sum-hero">
+      <div class="sum-hero-val">${s.totalVolume.toLocaleString()}</div>
+      <div class="sum-hero-lbl">total lbs lifted</div>
+      <div class="sum-hero-sub">${s.workoutCount} workout${s.workoutCount !== 1 ? 's' : ''} · ${s.daysLogged} day${s.daysLogged !== 1 ? 's' : ''} of meals logged</div>
+    </div>
+
+    <div class="sum-card">
+      <div class="sum-card-title">Total Macros ${badge}</div>
+      <div class="sum-macro-grid">
+        ${macroSumCell('CALORIES', Math.round(s.totals.calories), String(s.avg.calories), t?.calories ? String(t.calories) : null)}
+        ${macroSumCell('PROTEIN', Math.round(s.totals.protein) + 'g', s.avg.protein + 'g', t?.protein ? t.protein + 'g' : null)}
+        ${macroSumCell('CARBS', Math.round(s.totals.carbs) + 'g', s.avg.carbs + 'g', t?.carbs ? t.carbs + 'g' : null)}
+        ${macroSumCell('FAT', Math.round(s.totals.fat) + 'g', s.avg.fat + 'g', t?.fat ? t.fat + 'g' : null)}
+      </div>
+      <div style="font-size:11px;color:var(--color-text-muted);margin-top:10px;text-align:center">week total · ${t ? 'avg per logged day / daily goal' : 'avg per logged day'}</div>
+    </div>`;
+
+  if (s.insights.length) {
+    html += `<div class="sum-card"><div class="sum-card-title">Insights</div>` +
+      s.insights.slice(0, 6).map(i => `<div class="insight ${i.type}"><div class="insight-dot"></div><div>${i.text}</div></div>`).join('') +
+      `</div>`;
+  }
+  html += `<div style="height:24px"></div>`;
+  el.innerHTML = html;
+}
+
+function renderSummaryBanner() {
+  const el = document.getElementById('summary-banner-home');
+  if (!el) return;
+  const lastMon = lastCompletedWeekMonday();
+  const s = buildWeeklySummary(lastMon);
+  if (s.hasData && appData.summarySeenWeek !== lastMon) {
+    el.innerHTML = `<div class="summary-banner" onclick="openWeeklySummary('${lastMon}')">
+      <div class="summary-banner-inner">
+        <div class="summary-banner-text">
+          <div class="summary-banner-title">Your Week in Review is ready</div>
+          <div class="summary-banner-sub">${s.totalVolume.toLocaleString()} lbs lifted · ${s.workoutCount} workout${s.workoutCount !== 1 ? 's' : ''} · tap for insights</div>
+        </div>
+        <button class="summary-banner-x" onclick="dismissSummaryBanner(event)">✕</button>
+      </div>
+    </div>`;
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+function dismissSummaryBanner(e) {
+  e.stopPropagation();
+  const d = loadData(); d.summarySeenWeek = lastCompletedWeekMonday(); saveData(d);
+  document.getElementById('summary-banner-home').style.display = 'none';
 }
 
 // Service worker (keep for offline PWA support)
