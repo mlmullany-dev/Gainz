@@ -25,7 +25,18 @@
       "Bash(git commit -m 'Switch to Barlow/Barlow Condensed font + purge all emojis from UI *)",
       "Bash(git commit -m 'Switch to Poppins — wellness-focused rounded font with full weight hierarchy *)",
       "Bash(git commit -m 'Apply Mushroom #BA9E88 theme to Programs page with contrast-adjusted cards and text *)",
-      "Bash(git commit -m 'Make home workouts dynamic — follow any plan to replace the tracked program *)"
+      "Bash(git commit -m 'Make home workouts dynamic — follow any plan to replace the tracked program *)",
+      "Bash(grep -n 'cat-tag cat-\\\\${bm.category}\\\\|bm-log-btn\\\\|bm-info-btn' index.html)",
+      "Bash(git commit -m 'Apply light design system: Poppins + navy/coral/amber tokens *)",
+      "Bash(git commit -m 'Unify Programs page with the app'\\\\''s light theme *)",
+      "Bash(git commit -m 'Add macro calculator, supplements/sleep logging, and steps enhancements *)",
+      "Bash(git commit -m 'Add end-of-week '\\\\''Week in Review'\\\\'' summary *)",
+      "Bash(git commit -m 'Macro calc: add High Protein diet style + pace-driven calories with rate readout *)",
+      "Bash(git commit -m 'Add contextual goal hints in macro calculator \\(esp. recomp guidance\\) *)",
+      "Bash(grep -iE \"package|server|\\\\.js$|\\\\.json|procfile|requirements|Dockerfile|vercel|netlify\")",
+      "Read(//usr/local/bin/**)",
+      "Bash(command -v deno bun)",
+      "Bash(git rm *)"
     ]
   }
 }
