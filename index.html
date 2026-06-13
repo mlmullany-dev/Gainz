@@ -14,7 +14,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -40,25 +40,28 @@
       --safe-b:      env(safe-area-inset-bottom, 0px);
     }
 
-    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Barlow', sans-serif; font-size: 16px; overflow: hidden; }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Poppins', sans-serif; font-size: 15px; overflow: hidden; }
 
-    /* Barlow Condensed for all display / heading / large-number contexts */
-    h1, .header h1,
-    .welcome-name, .welcome-stat-num,
-    .login-title,
+    /* Poppins weight hierarchy */
+    h1, .header h1               { font-weight: 600; letter-spacing: -0.3px; }
+    .welcome-name                { font-weight: 700; letter-spacing: -0.5px; }
+    .welcome-stat-num,
     .steps-count,
     .ring-time,
-    .vol-num, .volume-stat-num,
-    .completion-stat-num, .completion-title,
-    .pcard-name, .pdetail-name,
-    .bm-result-val, .log-date-main,
-    .week-range-main, .plan-day-name,
-    .day-name, .phase-title,
-    .feedback-ty-title,
-    .sheet-title, .picker-header h2,
-    .section-label,
-    .tier-cell-val,
-    .prog-detail-name { font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.3px; }
+    .volume-stat-num,
+    .completion-stat-num         { font-weight: 700; letter-spacing: -0.5px; }
+    .completion-title            { font-weight: 600; }
+    .section-label               { font-weight: 600; font-size: 11px; letter-spacing: 0.8px; }
+    .day-badge                   { font-weight: 600; font-size: 10px; letter-spacing: 0.5px; }
+    .pcard-name, .pdetail-name   { font-weight: 700; }
+    .bm-result-val               { font-weight: 700; letter-spacing: -0.5px; }
+    .log-date-main, .week-range-main { font-weight: 600; }
+    .tier-cell-val               { font-weight: 700; }
+    .sheet-title                 { font-weight: 600; }
+    .picker-header h2            { font-weight: 600; }
+    .login-title                 { font-weight: 700; letter-spacing: -0.5px; }
+    .set-input, .cfg-input,
+    .log-test-input              { font-family: 'Poppins', sans-serif; }
 
     /* ── LAYOUT ──────────────────────────────────── */
     #app { height: 100dvh; display: flex; flex-direction: column; }

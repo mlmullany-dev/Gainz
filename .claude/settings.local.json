@@ -14,7 +14,15 @@
       "Bash(git commit -m 'Add Benchmarks \\(Test\\) tab — 8 longevity metrics with tier scoring, profile setup, result logging, and info sheets *)",
       "Bash(git commit -m 'Add searchable food log \\(USDA API\\) + weekly planning page with workout scheduling and eat-out tracking *)",
       "Bash(git commit -m 'Add feedback form with type selector, thank-you state, and Web3Forms email integration *)",
-      "Bash(git commit -m 'Connect feedback form to Web3Forms email delivery *)"
+      "Bash(git commit -m 'Connect feedback form to Web3Forms email delivery *)",
+      "Bash(git commit -m 'Auto-fill weekly plan from active program + benchmark progress report card on Stats tab *)",
+      "Bash(git commit -m 'Add Build Program \\(original 5-day split\\) to Plans list with full schedule and auto-fill support *)",
+      "Bash(xargs ls -lt)",
+      "Bash(find ~/Downloads ~/Desktop /tmp -newer /Users/michellefitzgerald/Gainz/index.html \\\\\\( -name \"*.jpg\" -o -name \"*.png\" -o -name \"*.jpeg\" -o -name \"*.webp\" \\\\\\) 2>/dev/null | head -20)",
+      "Bash(cp \"/Users/michellefitzgerald/Downloads/image \\(2\\).png\" /Users/michellefitzgerald/Gainz/statue.png)",
+      "Bash(git commit -m 'Replace login emoji with Discobolus statue image *)",
+      "Bash(grep -n \"⚖️\\\\|📊\\\\|goal met\\\\|🎉\\\\|Active ✓\\\\|⚡ \\\\${d\\\\.\" /Users/michellefitzgerald/Gainz/index.html)",
+      "Bash(git commit -m 'Switch to Barlow/Barlow Condensed font + purge all emojis from UI *)"
     ]
   }
 }
