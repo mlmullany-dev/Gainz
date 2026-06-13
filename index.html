@@ -1335,7 +1335,7 @@
         <div class="welcome-name" id="welcome-name">Loading…</div>
         <div class="welcome-stats" id="welcome-stats"></div>
       </div>
-      <div class="section-label">This Week</div>
+      <div class="section-label" id="home-program-label">This Week</div>
       <div class="plan-week-card" onclick="openWeeklyPlan()" style="margin-bottom:12px">
         <div style="width:36px;height:36px;border-radius:8px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
         <div style="flex:1">
@@ -2269,6 +2269,121 @@ const PROGRAM = [
 ];
 
 // ═══════════════════════════════════════════════════
+// PLAN-SPECIFIC TRACKABLE WORKOUTS
+// ═══════════════════════════════════════════════════
+const PLAN_WORKOUTS = {
+
+  build: PROGRAM, // existing 5-day split
+
+  kickstart: [
+    {
+      id:'ks_str', label:'SESSION', dayIndex:null, name:'Kick Start — Strength',
+      exercises:[
+        { id:'ks_bench', sets:3, primary:{ key:'p', name:'Barbell Bench Press', reps:'8–10' } },
+        { id:'ks_dead',  sets:3, primary:{ key:'p', name:'Deadlift',            reps:'5–8'  } },
+        { id:'ks_fsq',   sets:3, primary:{ key:'p', name:'Front Squats',        reps:'8–10' } },
+      ]
+    }
+  ],
+
+  fullbody: [
+    {
+      id:'fb_a', label:'DAY A', dayIndex:null, name:'Full Body — Lower + Pull',
+      exercises:[
+        { id:'fba_sq',   sets:3, primary:{ key:'p', name:'Back Squat',       reps:'8–10'   }, swap:{ key:'s', name:'Front Squat', reps:'8–10' } },
+        { id:'fba_lp',   sets:3, primary:{ key:'p', name:'Single Leg Press', reps:'10/leg' }, swap:{ key:'s', name:'Lunges',      reps:'10/leg'} },
+        { id:'fba_fp',   sets:3, primary:{ key:'p', name:'Face Pulls',       reps:'12–15'  } },
+        { id:'fba_curl', sets:3, primary:{ key:'p', name:'Bicep Curls',      reps:'10–12'  } },
+      ]
+    },
+    {
+      id:'fb_b', label:'DAY B', dayIndex:null, name:'Full Body — Hinge + Push',
+      exercises:[
+        { id:'fbb_dl',    sets:3, primary:{ key:'p', name:'Deadlift',               reps:'6–8'   } },
+        { id:'fbb_inc',   sets:3, primary:{ key:'p', name:'DB Incline Chest Press', reps:'10–12' } },
+        { id:'fbb_shp',   sets:3, primary:{ key:'p', name:'DB Shoulder Press',      reps:'10–12' } },
+        { id:'fbb_lpd',   sets:3, primary:{ key:'p', name:'Lat Pulldowns',          reps:'10–12' } },
+        { id:'fbb_lat',   sets:3, primary:{ key:'p', name:'Lateral Raises',         reps:'12–15' } },
+        { id:'fbb_skull', sets:3, primary:{ key:'p', name:'Skull Crushers',         reps:'10–12' } },
+      ]
+    }
+  ],
+
+  oly: [
+    {
+      id:'oly_1', label:'DAY 1', dayIndex:null, name:'Olympic — Snatch Focus',
+      exercises:[
+        { id:'oly1_ssq', sets:1, primary:{ key:'p', name:'Snatch Squat', reps:'3', note:'light, perfect depth' } },
+        { id:'oly1_bsq', sets:1, primary:{ key:'p', name:'Back Squat',   reps:'5' } },
+        { id:'oly1_gm',  sets:3, primary:{ key:'p', name:'Good Morning', reps:'8' } },
+      ]
+    },
+    {
+      id:'oly_2', label:'DAY 2', dayIndex:null, name:'Olympic — Clean & Jerk',
+      exercises:[
+        { id:'oly2_cj',    sets:1, primary:{ key:'p', name:'Clean & Jerk',         reps:'3' } },
+        { id:'oly2_bench', sets:1, primary:{ key:'p', name:'Barbell Bench Press',  reps:'5' } },
+        { id:'oly2_press', sets:1, primary:{ key:'p', name:'Barbell Strict Press', reps:'3' } },
+      ]
+    },
+    {
+      id:'oly_3', label:'DAY 3', dayIndex:null, name:'Olympic — Power + Deadlift',
+      exercises:[
+        { id:'oly3_hps', sets:1, primary:{ key:'p', name:'Hang Power Snatch', reps:'5' } },
+        { id:'oly3_dl',  sets:1, primary:{ key:'p', name:'Barbell Deadlift',  reps:'5' } },
+        { id:'oly3_fsq', sets:1, primary:{ key:'p', name:'Front Squat',       reps:'3' } },
+      ]
+    }
+  ],
+
+  latebloomer: [
+    {
+      id:'lb_a', label:'SESSION', dayIndex:null, name:'Strength After 60',
+      exercises:[
+        { id:'lb_legpress', sets:2, primary:{ key:'p', name:'Leg Press (machine)',    reps:'10–12'  } },
+        { id:'lb_row',      sets:2, primary:{ key:'p', name:'Seated Row (machine)',   reps:'10–12'  } },
+        { id:'lb_chest',    sets:2, primary:{ key:'p', name:'Chest Press (machine)',  reps:'10–12'  } },
+        { id:'lb_goblet',   sets:2, primary:{ key:'p', name:'Goblet Squat to Bench', reps:'10'     } },
+        { id:'lb_carry',    sets:2, primary:{ key:'p', name:"Farmer's Carry",         reps:'30 steps'} },
+        { id:'lb_stepup',   sets:2, primary:{ key:'p', name:'Step-Up (low box)',      reps:'10/leg' } },
+      ]
+    }
+  ],
+};
+
+function getActiveProgram() {
+  const ap = appData.activeProgram;
+  if (ap && PLAN_WORKOUTS[ap.id]) return PLAN_WORKOUTS[ap.id];
+  return PLAN_WORKOUTS.build;
+}
+
+// Search every plan's days — used for history lookups so charting still
+// works for workouts logged under a program the user has since switched away from.
+function findWorkoutDay(dayId) {
+  for (const planId in PLAN_WORKOUTS) {
+    const found = PLAN_WORKOUTS[planId].find(d => d.id === dayId);
+    if (found) return found;
+  }
+  return null;
+}
+
+// All program days the user has either active now or has logged sessions for.
+function getProgressDays() {
+  const seen = new Set();
+  const days = [];
+  // Active program first
+  getActiveProgram().forEach(d => { if (!seen.has(d.id)) { seen.add(d.id); days.push(d); } });
+  // Then any other plan days that have logged history
+  const loggedDayIds = new Set((appData.sessions || []).map(s => s.dayId));
+  for (const planId in PLAN_WORKOUTS) {
+    PLAN_WORKOUTS[planId].forEach(d => {
+      if (loggedDayIds.has(d.id) && !seen.has(d.id)) { seen.add(d.id); days.push(d); }
+    });
+  }
+  return days;
+}
+
+// ═══════════════════════════════════════════════════
 // EXERCISE LIBRARY
 // ═══════════════════════════════════════════════════
 const EXERCISE_LIB = [
@@ -2463,6 +2578,11 @@ function renderHome() {
   const firstName = currentUser?.displayName?.split(' ')[0] || 'there';
   document.getElementById('welcome-greeting').textContent = getGreeting();
   document.getElementById('welcome-name').textContent = firstName + '!';
+
+  // Home section label reflects the active program
+  const activePlan = appData.activeProgram ? WORKOUT_PLANS.find(p => p.id === appData.activeProgram.id) : null;
+  const labelEl = document.getElementById('home-program-label');
+  if (labelEl) labelEl.textContent = activePlan ? activePlan.name : 'Build Program';
   const weekCount  = appData.sessions.filter(s => s.date >= ws && s.date <= t).length;
   const totalCount = appData.sessions.length;
   document.getElementById('welcome-stats').innerHTML = `
@@ -2475,13 +2595,13 @@ function renderHome() {
       <div class="welcome-stat-lbl">All Time</div>
     </div>
     <div class="welcome-stat">
-      <div class="welcome-stat-num">${PROGRAM.length}</div>
+      <div class="welcome-stat-num">${getActiveProgram().length}</div>
       <div class="welcome-stat-lbl">Day Program</div>
     </div>
   `;
 
   let html = '';
-  PROGRAM.forEach(day => {
+  getActiveProgram().forEach(day => {
     const isToday   = day.dayIndex === todayDow;
     const completed = appData.sessions.some(s => s.dayId === day.id && s.date >= ws && s.date <= t);
     const inProg    = !!loadWIP(day.id);
@@ -2544,7 +2664,7 @@ function renderHome() {
 }
 
 function openDay(dayId) {
-  const day = PROGRAM.find(d => d.id === dayId);
+  const day = getActiveProgram().find(d => d.id === dayId);
 
   wip = loadWIP(dayId);
   if (!wip || wip.date !== today()) {
@@ -2599,7 +2719,7 @@ function deleteCustomDay(dayId, e) {
 function renderDay(dayId) {
   if (wip && wip.isCustom) { renderCustomDay(dayId); return; }
 
-  const day = PROGRAM.find(d => d.id === dayId);
+  const day = getActiveProgram().find(d => d.id === dayId);
   document.getElementById('day-title').textContent = day.name;
 
   let html = '';
@@ -3138,7 +3258,7 @@ function renderProgress() {
 
   const daySel = document.getElementById('day-sel');
   daySel.innerHTML = '<option value="">— Select a day —</option>';
-  PROGRAM.forEach(d => {
+  getProgressDays().forEach(d => {
     daySel.innerHTML += `<option value="${d.id}">${d.label}: ${d.name}</option>`;
   });
   const customDays = appData.customDays || [];
@@ -3169,7 +3289,7 @@ function updateExSel() {
     });
     return;
   }
-  const day = PROGRAM.find(d => d.id === dayId);
+  const day = findWorkoutDay(dayId);
   if (!day) return;
   day.exercises.forEach(ex => {
     exSel.innerHTML += `<option value="${ex.id}|p">${ex.primary.name}</option>`;
@@ -3682,16 +3802,22 @@ function toggleFollowProgram() {
   const plan = WORKOUT_PLANS.find(p => p.id === currentPlanId);
   if (!plan) return;
   const d = loadData();
+
   if (d.activeProgram?.id === plan.id) {
-    if (!confirm(`Stop following "${plan.name}"?`)) return;
+    // Unfollow → home reverts to the default Build Program
+    if (!confirm(`Stop following "${plan.name}"? Your home screen will return to the Build Program.`)) return;
     d.activeProgram = null;
     toast('Program unfollowed');
   } else {
+    // Switching from another program (or starting fresh)
+    const prev = d.activeProgram ? WORKOUT_PLANS.find(p => p.id === d.activeProgram.id) : null;
+    if (prev && !confirm(`Switch from "${prev.name}" to "${plan.name}"? Your home workouts will be replaced — past history is kept.`)) return;
     d.activeProgram = { id: plan.id, startDate: today() };
     toast(`Now following ${plan.name}!`);
   }
   saveData(d);
   renderProgramDetail();
+  renderHome(); // refresh home grid so the new program's workouts show immediately
 }
 
 // ═══════════════════════════════════════════════════
@@ -3860,11 +3986,11 @@ function getMondayOf(dateStr) {
 
 // Plan → which PROGRAM day slots to use, and on which calendar days (0=Mon…6=Sun)
 const PLAN_AUTOFILL = {
-  kickstart:   [ [0,'monday'], [2,'tuesday'], [4,'wednesday'] ],           // Mon/Wed/Fri
-  fullbody:    [ [0,'monday'], [2,'wednesday'], [4,'friday'] ],            // Mon/Wed/Fri
-  oly:         [ [0,'monday'], [2,'tuesday'], [4,'wednesday'] ],           // Mon/Wed/Fri
-  latebloomer: [ [0,'monday'], [3,'thursday'] ],                           // Mon/Thu
-  build:        [ [0,'monday'], [1,'tuesday'], [2,'wednesday'], [3,'thursday'], [4,'friday'] ], // Mon–Fri
+  build:       [ [0,'monday'], [1,'tuesday'], [2,'wednesday'], [3,'thursday'], [4,'friday'] ],
+  kickstart:   [ [0,'ks_str'], [2,'ks_str'],  [4,'ks_str']  ],
+  fullbody:    [ [0,'fb_a'],   [2,'fb_b'],    [4,'fb_a']    ],
+  oly:         [ [0,'oly_1'],  [2,'oly_2'],   [4,'oly_3']   ],
+  latebloomer: [ [0,'lb_a'],   [3,'lb_a']    ],
 };
 
 function openWeeklyPlan() {
@@ -3944,9 +4070,9 @@ function renderPlanDays() {
   // Build workout options
   const workoutOptions = [
     '<option value="">— Rest Day —</option>',
-    ...PROGRAM.map(d => `<option value="${d.id}">${d.label}: ${d.name}</option>`),
-    ...((appData.customDays || []).map(d => `<option value="${d.id}">⚡ ${d.name}</option>`)),
-    '<option value="cardio">🏃 Cardio / Active Recovery</option>',
+    ...getActiveProgram().map(d => `<option value="${d.id}">${d.label}: ${d.name}</option>`),
+    ...((appData.customDays || []).map(d => `<option value="${d.id}">${d.name}</option>`)),
+    '<option value="cardio">Cardio / Active Recovery</option>',
   ].join('');
 
   document.getElementById('plan-days-list').innerHTML = planDraft.map((day, i) => {
