@@ -9,7 +9,12 @@
       "Bash(git commit -m 'Add Daily Log tab — water intake, macro targets, and food tracking *)",
       "Bash(git commit -m 'Add steps tracker to Daily Log with 10k goal ring and quick-add buttons *)",
       "Bash(git commit -m 'Add Programs tab with 4 curated workout plans, phase breakdowns, and Follow button *)",
-      "Bash(git commit -m 'Add live volume counter and workout completion summary sheet *)"
+      "Bash(git commit -m 'Add live volume counter and workout completion summary sheet *)",
+      "Bash(git commit -m 'Add Sneaky Steps tips sheet under step counter with all 10 tips from JSON *)",
+      "Bash(git commit -m 'Add Benchmarks \\(Test\\) tab — 8 longevity metrics with tier scoring, profile setup, result logging, and info sheets *)",
+      "Bash(git commit -m 'Add searchable food log \\(USDA API\\) + weekly planning page with workout scheduling and eat-out tracking *)",
+      "Bash(git commit -m 'Add feedback form with type selector, thank-you state, and Web3Forms email integration *)",
+      "Bash(git commit -m 'Connect feedback form to Web3Forms email delivery *)"
     ]
   }
 }

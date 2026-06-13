@@ -720,6 +720,36 @@
       margin-bottom: 16px;
     }
 
+    /* ── AUTO-FILL BANNER ────────────────────────── */
+    .autofill-banner {
+      margin: 10px 16px 0; padding: 12px 14px;
+      background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.25);
+      border-radius: 10px; display: flex; align-items: center; gap: 10px;
+    }
+    .autofill-banner-text { flex: 1; }
+    .autofill-banner-title { font-size: 13px; font-weight: 700; color: var(--accent); }
+    .autofill-banner-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .autofill-btn {
+      padding: 8px 14px; border-radius: 8px; border: none;
+      background: var(--accent); color: #000; font-size: 12px; font-weight: 800;
+      cursor: pointer; flex-shrink: 0; font-family: inherit;
+    }
+
+    /* ── BENCHMARK PROGRESS (Stats) ──────────────── */
+    .bm-report-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;
+    }
+    .bm-report-cell {
+      background: var(--card2); border-radius: 9px; padding: 9px 10px;
+      display: flex; align-items: center; justify-content: space-between; gap: 6px;
+    }
+    .bm-report-name { font-size: 12px; font-weight: 600; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bm-report-badge {
+      font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 50px;
+      flex-shrink: 0; letter-spacing: 0.3px;
+    }
+    .bm-report-untested { color: var(--muted); font-size: 10px; font-weight: 600; flex-shrink: 0; }
+
     /* ── FEEDBACK FORM ───────────────────────────── */
     .feedback-link-row {
       text-align: center; padding: 18px 16px 8px;
@@ -1283,6 +1313,11 @@
         </div>
 
         <div class="prog-card">
+          <h3>Benchmark Progress</h3>
+          <div id="bm-progress-content"></div>
+        </div>
+
+        <div class="prog-card">
           <h3>Strength History</h3>
           <select id="day-sel" class="sel" onchange="updateExSel()">
             <option value="">— Select a day —</option>
@@ -1315,6 +1350,7 @@
       <button class="week-nav-btn" id="wp-next-btn" onclick="shiftPlanWeek(1)">›</button>
     </div>
     <div class="scroll">
+      <div id="autofill-banner"></div>
       <div id="plan-days-list"></div>
       <div id="plan-summary" class="plan-week-summary"></div>
       <button class="plan-save-btn" onclick="saveWeeklyPlan()">Save Plan 💾</button>
@@ -2851,11 +2887,77 @@ function weekFilteredPts(pts, selId) {
 }
 
 // ═══════════════════════════════════════════════════
+// BENCHMARK PROGRESS (Stats page)
+// ═══════════════════════════════════════════════════
+function renderBenchmarkProgress() {
+  const el      = document.getElementById('bm-progress-content');
+  const profile = appData.userProfile;
+  const results = appData.benchmarkResults || {};
+
+  if (!profile) {
+    el.innerHTML = `<div class="no-data" style="padding:12px 0">
+      Set up your profile in the <b>Test</b> tab to see benchmark progress.
+    </div>`;
+    return;
+  }
+
+  // ── Report card: all 8 benchmarks with current tier ──
+  const reportGrid = BENCHMARKS.map(bm => {
+    const latest = getLatestResult(bm.id);
+    const tier   = latest ? scoreTier(bm, profile.sex, profile.ageBracket, latest.value) : null;
+    if (tier) {
+      const cfg = TIER_CONFIG[tier];
+      return `<div class="bm-report-cell">
+        <div class="bm-report-name">${bm.icon} ${bm.name}</div>
+        <div class="bm-report-badge" style="background:${cfg.bg};color:${cfg.color}">${cfg.label}</div>
+      </div>`;
+    }
+    return `<div class="bm-report-cell">
+      <div class="bm-report-name">${bm.icon} ${bm.name}</div>
+      <div class="bm-report-untested">Not tested</div>
+    </div>`;
+  }).join('');
+
+  // ── Build metric selector for chart ──
+  const hasTested = BENCHMARKS.filter(bm => (results[bm.id]?.length ?? 0) > 1);
+  const selOptions = hasTested.length
+    ? hasTested.map(bm => `<option value="${bm.id}">${bm.icon} ${bm.name}</option>`).join('')
+    : '<option value="">— No history yet —</option>';
+
+  el.innerHTML = `
+    <div class="bm-report-grid">${reportGrid}</div>
+    <select class="sel" id="bm-chart-sel" onchange="renderBmHistoryChart(this.value)">
+      <option value="">— View history chart —</option>
+      ${selOptions}
+    </select>
+    <div id="bm-history-chart" class="chart-box"></div>
+  `;
+}
+
+function renderBmHistoryChart(metricId) {
+  const chartEl = document.getElementById('bm-history-chart');
+  if (!metricId) { chartEl.innerHTML = ''; return; }
+
+  const bm      = BENCHMARKS.find(b => b.id === metricId);
+  const results = (appData.benchmarkResults?.[metricId] || [])
+    .sort((a,b) => a.date.localeCompare(b.date));
+
+  if (results.length < 2) {
+    chartEl.innerHTML = '<div class="no-data">Need at least 2 tests to show a trend.</div>';
+    return;
+  }
+
+  const pts = results.map(r => ({ date: r.date, value: r.value }));
+  chartEl.innerHTML = svgChart(pts, bm.unit);
+}
+
+// ═══════════════════════════════════════════════════
 // PROGRESS VIEW
 // ═══════════════════════════════════════════════════
 function renderProgress() {
   buildWeekSel('bw-week-sel', appData.sessions);
   renderBWChart();
+  renderBenchmarkProgress();
 
   const daySel = document.getElementById('day-sel');
   daySel.innerHTML = '<option value="">— Select a day —</option>';
@@ -3579,6 +3681,14 @@ function getMondayOf(dateStr) {
   return d.toISOString().slice(0, 10);
 }
 
+// Plan → which PROGRAM day slots to use, and on which calendar days (0=Mon…6=Sun)
+const PLAN_AUTOFILL = {
+  kickstart:   [ [0,'monday'], [2,'tuesday'], [4,'wednesday'] ],           // Mon/Wed/Fri
+  fullbody:    [ [0,'monday'], [2,'wednesday'], [4,'friday'] ],            // Mon/Wed/Fri
+  oly:         [ [0,'monday'], [2,'tuesday'], [4,'wednesday'] ],           // Mon/Wed/Fri
+  latebloomer: [ [0,'monday'], [3,'thursday'] ],                           // Mon/Thu
+};
+
 function openWeeklyPlan() {
   planWeekStart = getMondayOf(today());
   nav('weekly-plan');
@@ -3628,9 +3738,31 @@ function renderWeeklyPlan() {
   document.getElementById('wp-range-sub').textContent  = `${endD.getFullYear()}`;
   document.getElementById('wp-next-btn').disabled = getMondayOf(today()) === planWeekStart && t < dates[6];
 
-  // Load draft
-  planDraft = getPlanForWeek(planWeekStart);
+  // Auto-fill banner
+  const ap         = appData.activeProgram;
+  const planInfo   = ap ? WORKOUT_PLANS.find(p => p.id === ap.id) : null;
+  const bannerEl   = document.getElementById('autofill-banner');
+  if (planInfo && PLAN_AUTOFILL[planInfo.id]) {
+    bannerEl.innerHTML = `<div class="autofill-banner">
+      <div class="autofill-banner-text">
+        <div class="autofill-banner-title">${planInfo.icon} Following: ${planInfo.name}</div>
+        <div class="autofill-banner-sub">Auto-schedule ${planInfo.freq} based on your program</div>
+      </div>
+      <button class="autofill-btn" onclick="autoFillWeek()">Auto-fill</button>
+    </div>`;
+  } else {
+    bannerEl.innerHTML = ap
+      ? `<div style="padding:8px 16px 0;font-size:12px;color:var(--muted)">Tip: follow a program in the Plans tab to enable auto-fill</div>`
+      : '';
+  }
 
+  // Load draft (only on fresh open, not after autoFill)
+  planDraft = getPlanForWeek(planWeekStart);
+  renderPlanDays();
+}
+
+function renderPlanDays() {
+  const t = today();
   // Build workout options
   const workoutOptions = [
     '<option value="">— Rest Day —</option>',
@@ -3726,6 +3858,24 @@ function saveWeeklyPlan() {
   if (statusEl) statusEl.textContent = `${trainingDays} training days planned this week`;
 
   nav('home');
+}
+
+function autoFillWeek() {
+  const ap       = appData.activeProgram;
+  const planInfo = ap ? WORKOUT_PLANS.find(p => p.id === ap.id) : null;
+  if (!planInfo) return;
+  const template = PLAN_AUTOFILL[planInfo.id];
+  if (!template) return;
+
+  // Reset all days to rest, then apply template
+  planDraft.forEach(d => { d.workoutId = ''; });
+  template.forEach(([dayIdx, workoutId]) => {
+    if (planDraft[dayIdx]) planDraft[dayIdx].workoutId = workoutId;
+  });
+
+  // Re-render just the day cards (don't reload planDraft from storage)
+  renderPlanDays();
+  toast(`Week auto-filled for ${planInfo.name} 📅`);
 }
 
 // ═══════════════════════════════════════════════════
