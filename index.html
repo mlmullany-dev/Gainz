@@ -2139,17 +2139,18 @@
       </div>
 
       <div class="calc-q">
-        <div class="calc-q-label"><span class="calc-q-num">9.</span>How aggressive?</div>
+        <div class="calc-q-label"><span class="calc-q-num">9.</span>How quickly do you want results?</div>
         <div class="seg-row" id="cq-pace">
-          <button class="seg-btn" data-v="gentle"     onclick="calcPick('pace','gentle',this)">Gentle</button>
-          <button class="seg-btn" data-v="moderate"   onclick="calcPick('pace','moderate',this)">Moderate</button>
-          <button class="seg-btn" data-v="aggressive" onclick="calcPick('pace','aggressive',this)">Aggressive</button>
+          <button class="seg-btn" data-v="gradual" onclick="calcPick('pace','gradual',this)">Gradual</button>
+          <button class="seg-btn" data-v="steady"  onclick="calcPick('pace','steady',this)">Steady</button>
+          <button class="seg-btn" data-v="fast"    onclick="calcPick('pace','fast',this)">Fast</button>
         </div>
       </div>
 
       <div class="calc-q">
         <div class="calc-q-label"><span class="calc-q-num">10.</span>Diet style</div>
         <div class="seg-row" id="cq-diet">
+          <button class="seg-btn" data-v="highprotein" onclick="calcPick('diet','highprotein',this)">High protein</button>
           <button class="seg-btn" data-v="balanced" onclick="calcPick('diet','balanced',this)">Balanced</button>
           <button class="seg-btn" data-v="lowcarb"  onclick="calcPick('diet','lowcarb',this)">Lower-carb</button>
           <button class="seg-btn" data-v="highcarb" onclick="calcPick('diet','highcarb',this)">Higher-carb</button>
@@ -4843,7 +4844,7 @@ function openMacroCalc() {
   // Restore previous answers if we have them
   calcAnswers = Object.assign(
     { sex:'female', units:'imperial', goal:'maintain', activity:'light',
-      trainingDays:3, pace:'moderate', diet:'balanced' },
+      trainingDays:3, pace:'steady', diet:'highprotein' },
     appData.macroProfile || {}
   );
   document.getElementById('calc-result').style.display = 'none';
@@ -4893,13 +4894,14 @@ function calcMacros(a) {
   const mult    = actMult + Math.min(a.trainingDays, 7) * 0.01;
   const tdee    = bmr * mult;
 
-  const paceIdx = { gentle:0, moderate:1, aggressive:2 }[a.pace] ?? 1;
+  // "How quickly do you want results?" drives the size of the calorie change
+  const paceIdx = { gradual:0, steady:1, fast:2 }[a.pace] ?? 1;
   let adj = 0;
-  if (a.goal === 'lose')     adj = -[0.10,0.18,0.25][paceIdx];
-  if (a.goal === 'lean')     adj = -[0.12,0.20,0.27][paceIdx];
+  if (a.goal === 'lose')     adj = -[0.12,0.20,0.28][paceIdx];
+  if (a.goal === 'lean')     adj = -[0.15,0.22,0.30][paceIdx];
   if (a.goal === 'maintain') adj = 0;
-  if (a.goal === 'build')    adj =  [0.06,0.12,0.18][paceIdx];
-  if (a.goal === 'recomp')   adj = -0.05;
+  if (a.goal === 'build')    adj =  [0.08,0.12,0.18][paceIdx];
+  if (a.goal === 'recomp')   adj = -[0.03,0.08,0.12][paceIdx]; // pace now scales recomp too
 
   let calories = tdee * (1 + adj);
   const floor = a.sex === 'male' ? 1500 : 1200;
@@ -4908,10 +4910,12 @@ function calcMacros(a) {
   const weightLb = a.weightKg * 2.20462;
   // High-protein, modern guidance (g per lb of bodyweight)
   let pPerLb = (a.goal === 'build') ? 0.9 : (a.goal === 'maintain') ? 0.8 : 1.0;
+  // "High protein" diet style pushes protein up (bodybuilder default)
+  if (a.diet === 'highprotein') pPerLb = Math.max(pPerLb, 1.0) + 0.2;
   let protein = Math.round(weightLb * pPerLb);
 
   // Fat by diet style, with a hormonal floor of 0.3 g/lb
-  const fatPct = { balanced:0.25, lowcarb:0.35, highcarb:0.20 }[a.diet] ?? 0.25;
+  const fatPct = { highprotein:0.25, balanced:0.27, lowcarb:0.35, highcarb:0.20 }[a.diet] ?? 0.27;
   const minFat = Math.round(weightLb * 0.3);
   let fat = Math.max(Math.round((calories * fatPct) / 9), minFat);
 
@@ -4958,11 +4962,23 @@ function runMacroCalc() {
   const r = calcMacros(a);
   calcAnswers._result = r;
 
+  // Expected rate of change from the calorie delta (~3500 cal ≈ 1 lb)
+  const delta = r.calories - r.tdee;
+  const weeklyLb = Math.abs(delta * 7 / 3500);
+  let rateLine;
+  if (Math.abs(delta) < 40) {
+    rateLine = `${delta >= 0 ? '+' : '−'}${Math.abs(delta)} cal/day · roughly maintenance`;
+  } else {
+    const dir = delta < 0 ? 'loss' : 'gain';
+    rateLine = `${delta < 0 ? '−' : '+'}${Math.abs(delta).toLocaleString()} cal/day · ≈ ${weeklyLb.toFixed(1)} lb/week ${dir}`;
+  }
+
   document.getElementById('calc-result').style.display = 'block';
   document.getElementById('calc-result').innerHTML = `
     <div class="calc-result">
       <div class="calc-result-cal">${r.calories.toLocaleString()}</div>
       <div class="calc-result-cal-lbl">calories / day &nbsp;·&nbsp; maintenance ≈ ${r.tdee.toLocaleString()}</div>
+      <div style="font-size:12px;font-weight:600;color:var(--color-brand);margin-top:8px">${rateLine}</div>
       <div class="calc-result-macros">
         <div class="calc-macro"><div class="calc-macro-val">${r.protein}g</div><div class="calc-macro-lbl">PROTEIN</div></div>
         <div class="calc-macro"><div class="calc-macro-val">${r.carbs}g</div><div class="calc-macro-lbl">CARBS</div></div>
