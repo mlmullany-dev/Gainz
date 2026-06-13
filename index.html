@@ -1789,7 +1789,7 @@
   </button>
   <button id="nav-benchmarks" onclick="nav('benchmarks')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M8 14l-2 7 6-3 6 3-2-7"/></svg>
-    Test
+    Profile
   </button>
   <button id="nav-progress" onclick="nav('progress')">
     <svg viewBox="0 0 24 24"><path d="M3.5 18.5l6-6 4 4L22 6.92"/><path d="M3.5 18.5l6-6 4 4L22 6.92" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M22 7v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -3822,7 +3822,7 @@ function renderBenchmarks() {
           ${AGE_BRACKETS.map(a => `<button class="age-btn" data-age="${a}" onclick="bmSelectAge('${a}')">${a}</button>`).join('')}
         </div>
       </div>
-      <button class="sheet-save-btn" onclick="saveBmProfile()">Save Profile</button>
+      <button class="sheet-save-btn" onclick="saveBmProfile()">Continue</button>
     </div>`;
     document.getElementById('bm-list').innerHTML = '';
     return;
