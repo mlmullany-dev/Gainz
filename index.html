@@ -1286,6 +1286,11 @@
     .calc-q { margin-bottom: 18px; }
     .calc-q-label { font-size: 14px; font-weight: 600; color: var(--color-text); margin-bottom: 8px; }
     .calc-q-num { color: var(--color-text-muted); font-weight: 600; margin-right: 6px; }
+    .calc-hint {
+      margin-top: 8px; padding: 9px 12px; border-radius: 9px;
+      background: rgba(0,31,91,0.06); border: 1px solid rgba(0,31,91,0.12);
+      font-size: 12px; line-height: 1.45; color: var(--color-brand);
+    }
     .seg-row { display: flex; gap: 6px; flex-wrap: wrap; }
     .seg-btn {
       flex: 1; min-width: fit-content; padding: 10px 12px; border-radius: 10px;
@@ -2112,6 +2117,7 @@
           <button class="seg-btn" data-v="build"    onclick="calcPick('goal','build',this)">Build muscle</button>
           <button class="seg-btn" data-v="recomp"   onclick="calcPick('goal','recomp',this)">Recomp</button>
         </div>
+        <div id="cq-goal-hint" class="calc-hint" style="display:none"></div>
       </div>
 
       <div class="calc-q">
@@ -4863,6 +4869,7 @@ function openMacroCalc() {
   document.getElementById('cq-ht-in').value  = calcAnswers.htIn   || '';
   document.getElementById('cq-ht-cm').value  = calcAnswers.htCm   || '';
   renderCalcUnits();
+  renderGoalHint(calcAnswers.goal);
 
   document.getElementById('macro-calc-overlay').classList.remove('hidden');
 }
@@ -4871,10 +4878,27 @@ function closeMacroCalc() {
   document.getElementById('macro-calc-overlay').classList.add('hidden');
 }
 
+const GOAL_HINTS = {
+  recomp: 'Recomp works best at or near maintenance with high protein, so even "Fast" keeps a modest deficit. Want a bigger cut? Choose Lose fat or Get lean instead.',
+  lose:   'Steady fat loss is ~0.5–1% of bodyweight per week. Faster than that risks muscle loss — keep protein high.',
+  lean:   'A slightly sharper cut to get lean. Pair with high protein and lifting to hold onto muscle.',
+  build:  'Lean gaining: a smaller surplus builds muscle with less fat. "Fast" adds size quicker but expect some fat gain.',
+  maintain: 'Eat at maintenance to hold your weight while you train and recover.',
+};
+
 function calcPick(key, val, btn) {
   calcAnswers[key] = val;
   btn.parentElement.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  if (key === 'goal') renderGoalHint(val);
+}
+
+function renderGoalHint(goal) {
+  const el = document.getElementById('cq-goal-hint');
+  if (!el) return;
+  const hint = GOAL_HINTS[goal];
+  if (hint) { el.textContent = hint; el.style.display = 'block'; }
+  else { el.style.display = 'none'; }
 }
 
 function renderCalcUnits() {
