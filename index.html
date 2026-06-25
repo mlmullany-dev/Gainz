@@ -2108,21 +2108,21 @@
 
       <div class="calc-q">
         <div class="calc-q-label"><span class="calc-q-num">3.</span>Age</div>
-        <input id="cq-age" class="calc-input" type="number" inputmode="numeric" placeholder="e.g. 35"/>
+        <input id="cq-age" class="calc-input" type="number" inputmode="numeric" placeholder="e.g. 35" oninput="liveRecalc()"/>
       </div>
 
       <div class="calc-q">
         <div class="calc-q-label"><span class="calc-q-num">4.</span>Height</div>
         <div id="cq-height-imperial" class="calc-input-row">
-          <input id="cq-ht-ft" class="calc-input" type="number" inputmode="numeric" placeholder="ft"/>
-          <input id="cq-ht-in" class="calc-input" type="number" inputmode="numeric" placeholder="in"/>
+          <input id="cq-ht-ft" class="calc-input" type="number" inputmode="numeric" placeholder="ft" oninput="liveRecalc()"/>
+          <input id="cq-ht-in" class="calc-input" type="number" inputmode="numeric" placeholder="in" oninput="liveRecalc()"/>
         </div>
-        <input id="cq-ht-cm" class="calc-input" type="number" inputmode="numeric" placeholder="cm" style="display:none"/>
+        <input id="cq-ht-cm" class="calc-input" type="number" inputmode="numeric" placeholder="cm" style="display:none" oninput="liveRecalc()"/>
       </div>
 
       <div class="calc-q">
         <div class="calc-q-label"><span class="calc-q-num">5.</span>Current weight</div>
-        <input id="cq-weight" class="calc-input" type="number" inputmode="decimal" placeholder="lb"/>
+        <input id="cq-weight" class="calc-input" type="number" inputmode="decimal" placeholder="lb" oninput="liveRecalc()"/>
       </div>
 
       <div class="calc-q">
@@ -5044,8 +5044,15 @@ function saveTargets() {
 
 // ── Macro calculator ───────────────────────────────
 let calcAnswers = {};
+let calcResultShown = false; // once true, any change live-recalculates
+
+// Re-run the calc silently when an answer changes after the first calculation
+function liveRecalc() {
+  if (calcResultShown) runMacroCalc(true);
+}
 
 function openMacroCalc() {
+  calcResultShown = false;
   // Restore previous answers if we have them
   calcAnswers = Object.assign(
     { sex:'female', units:'imperial', goal:'maintain', activity:'light',
@@ -5090,6 +5097,7 @@ function calcPick(key, val, btn) {
   btn.parentElement.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   if (key === 'goal') renderGoalHint(val);
+  liveRecalc();
 }
 
 function renderGoalHint(goal) {
@@ -5155,14 +5163,15 @@ function calcMacros(a) {
   return { calories: Math.round(calories), protein, carbs, fat, tdee: Math.round(tdee) };
 }
 
-function runMacroCalc() {
+function runMacroCalc(silent) {
+  const fail = (msg) => { if (!silent) toast(msg); };
   const a = calcAnswers;
   const age = parseInt(document.getElementById('cq-age').value);
   const weight = parseFloat(document.getElementById('cq-weight').value);
-  if (!a.sex)   { toast('Select your biological sex'); return; }
-  if (!age || age < 13 || age > 100) { toast('Enter a valid age'); return; }
-  if (!weight || weight <= 0) { toast('Enter your weight'); return; }
-  if (!a.goal) { toast('Choose your primary goal'); return; }
+  if (!a.sex)   { fail('Select your biological sex'); return; }
+  if (!age || age < 13 || age > 100) { fail('Enter a valid age'); return; }
+  if (!weight || weight <= 0) { fail('Enter your weight'); return; }
+  if (!a.goal) { fail('Choose your primary goal'); return; }
 
   // Resolve units
   let heightCm, weightKg;
@@ -5175,7 +5184,7 @@ function runMacroCalc() {
     heightCm = (ft*12 + inch) * 2.54;
     weightKg = weight / 2.20462;
   }
-  if (!heightCm || heightCm < 120 || heightCm > 230) { toast('Enter a valid height'); return; }
+  if (!heightCm || heightCm < 120 || heightCm > 230) { fail('Enter a valid height'); return; }
 
   // Persist the answers for next time
   a.age = age; a.weight = weight; a.weightKg = weightKg; a.heightCm = heightCm;
@@ -5210,7 +5219,8 @@ function runMacroCalc() {
     </div>`;
   document.getElementById('calc-go-btn').textContent = 'Use These Targets';
   document.getElementById('calc-go-btn').onclick = applyCalcMacros;
-  document.getElementById('calc-result').scrollIntoView({ behavior:'smooth', block:'center' });
+  calcResultShown = true; // subsequent answer changes now live-update the result
+  if (!silent) document.getElementById('calc-result').scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
 function applyCalcMacros() {
@@ -5232,6 +5242,7 @@ function applyCalcMacros() {
   renderLog();
   toast('Macros calculated & saved!');
   // restore default handler for next open
+  calcResultShown = false;
   document.getElementById('calc-go-btn').onclick = runMacroCalc;
 }
 
