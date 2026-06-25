@@ -203,6 +203,24 @@
     .welcome-stat-num { font-size: 24px; font-weight: 800; color: var(--accent); line-height: 1; }
     .welcome-stat-lbl { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 5px; letter-spacing: 0.3px; }
 
+    /* steps home card */
+    .steps-home { margin: 0 16px 4px; }
+    .steps-home-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--r);
+      box-shadow: var(--card-shadow); padding: 14px 16px; cursor: pointer;
+    }
+    .shc-head {
+      font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.7px; margin-bottom: 12px; display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .shc-head .shc-link { color: var(--color-brand); font-weight: 700; }
+    .shc-row { display: flex; gap: 10px; }
+    .shc-item { flex: 1; text-align: center; background: var(--card2); border-radius: 10px; padding: 11px 6px; }
+    .shc-val { font-size: 22px; font-weight: 700; color: var(--color-brand); line-height: 1; }
+    .shc-lbl { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 5px; }
+    .shc-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
     /* ── HOME ────────────────────────────────────── */
     .week-grid { padding: 0 16px 8px; display: flex; flex-direction: column; gap: 10px; }
 
@@ -1464,12 +1482,13 @@
     </div>
     <div class="scroll">
       <div id="summary-banner-home" style="display:none"></div>
-      <div id="active-prog-home" style="display:none"></div>
       <div class="welcome-section">
         <div class="welcome-greeting" id="welcome-greeting">Welcome back</div>
         <div class="welcome-name" id="welcome-name">Loading…</div>
         <div class="welcome-stats" id="welcome-stats"></div>
       </div>
+      <div id="active-prog-home" style="display:none"></div>
+      <div id="steps-home"></div>
       <div class="section-label" id="home-program-label">This Week</div>
       <div class="plan-week-card" onclick="openWeeklyPlan()" style="margin-bottom:12px">
         <div style="width:36px;height:36px;border-radius:8px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
@@ -3016,6 +3035,35 @@ function renderHome() {
   customSection.style.display = 'block';
 
   renderSummaryBanner();
+  renderStepsHome();
+}
+
+function renderStepsHome() {
+  const el = document.getElementById('steps-home');
+  if (!el) return;
+  const logs = appData.dailyLogs || {};
+  const todaySteps = logs[today()]?.steps || 0;
+  const y = new Date(today() + 'T12:00:00');
+  y.setDate(y.getDate() - 1);
+  const yesterdaySteps = logs[y.toISOString().slice(0, 10)]?.steps || 0;
+  const goal = (typeof STEPS_GOAL !== 'undefined') ? STEPS_GOAL : 10000;
+
+  el.innerHTML = `<div class="steps-home" >
+    <div class="steps-home-card" onclick="logDate=today();nav('log')">
+      <div class="shc-head"><span>Steps</span><span class="shc-link">Log ›</span></div>
+      <div class="shc-row">
+        <div class="shc-item">
+          <div class="shc-val">${yesterdaySteps.toLocaleString()}</div>
+          <div class="shc-lbl">Yesterday</div>
+        </div>
+        <div class="shc-item">
+          <div class="shc-val">${goal.toLocaleString()}</div>
+          <div class="shc-lbl">Today's Target</div>
+          <div class="shc-sub">${todaySteps.toLocaleString()} so far</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
 }
 
 function openDay(dayId) {
