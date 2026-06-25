@@ -1287,7 +1287,21 @@
       background: var(--color-surface); border-radius: 24px 24px 0 0;
       width: 100%; max-height: 92vh; display: flex; flex-direction: column;
     }
-    .calc-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 20px calc(20px + var(--safe-b)); }
+    .calc-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 4px 20px 16px; }
+    /* Pinned footer so the live result + actions are always visible while editing */
+    .calc-footer {
+      flex-shrink: 0; padding: 12px 20px calc(14px + var(--safe-b));
+      border-top: 1px solid var(--color-border); background: var(--color-surface);
+    }
+    .calc-result-compact {
+      background: var(--card2); border-radius: 12px; padding: 10px 14px;
+      margin-bottom: 10px; text-align: center; transition: background 0.25s;
+    }
+    .calc-result-compact.flash { background: var(--amber-soft); }
+    .crc-cal { font-size: 16px; font-weight: 600; color: var(--color-brand); line-height: 1.1; }
+    .crc-cal b { font-size: 24px; font-weight: 700; }
+    .crc-macros { font-size: 12px; color: var(--color-text); font-weight: 600; margin-top: 4px; }
+    .crc-sub { font-size: 11px; color: var(--color-text-muted); font-weight: 600; margin-top: 3px; }
     .calc-q { margin-bottom: 18px; }
     .calc-q-label { font-size: 14px; font-weight: 600; color: var(--color-text); margin-bottom: 8px; }
     .calc-q-num { color: var(--color-text-muted); font-weight: 600; margin-right: 6px; }
@@ -2180,10 +2194,12 @@
         </div>
       </div>
 
-      <div id="calc-result" style="display:none"></div>
+    </div>
 
+    <div class="calc-footer">
+      <div id="calc-result" style="display:none"></div>
       <button class="sheet-save-btn" id="calc-go-btn" onclick="runMacroCalc()">Calculate</button>
-      <button class="sheet-cancel-btn" onclick="closeMacroCalc()">Cancel</button>
+      <button class="sheet-cancel-btn" onclick="closeMacroCalc()" style="margin-top:8px">Cancel</button>
     </div>
   </div>
 </div>
@@ -5205,22 +5221,24 @@ function runMacroCalc(silent) {
     rateLine = `${delta < 0 ? '−' : '+'}${Math.abs(delta).toLocaleString()} cal/day · ≈ ${weeklyLb.toFixed(1)} lb/week ${dir}`;
   }
 
-  document.getElementById('calc-result').style.display = 'block';
-  document.getElementById('calc-result').innerHTML = `
-    <div class="calc-result">
-      <div class="calc-result-cal">${r.calories.toLocaleString()}</div>
-      <div class="calc-result-cal-lbl">calories / day &nbsp;·&nbsp; maintenance ≈ ${r.tdee.toLocaleString()}</div>
-      <div style="font-size:12px;font-weight:600;color:var(--color-brand);margin-top:8px">${rateLine}</div>
-      <div class="calc-result-macros">
-        <div class="calc-macro"><div class="calc-macro-val">${r.protein}g</div><div class="calc-macro-lbl">PROTEIN</div></div>
-        <div class="calc-macro"><div class="calc-macro-val">${r.carbs}g</div><div class="calc-macro-lbl">CARBS</div></div>
-        <div class="calc-macro"><div class="calc-macro-val">${r.fat}g</div><div class="calc-macro-lbl">FAT</div></div>
-      </div>
+  const resEl = document.getElementById('calc-result');
+  resEl.style.display = 'block';
+  resEl.innerHTML = `
+    <div class="calc-result-compact" id="calc-result-card">
+      <div class="crc-cal"><b>${r.calories.toLocaleString()}</b> cal / day</div>
+      <div class="crc-macros">${r.protein}g protein · ${r.carbs}g carbs · ${r.fat}g fat</div>
+      <div class="crc-sub">maintenance ≈ ${r.tdee.toLocaleString()} · ${rateLine}</div>
     </div>`;
   document.getElementById('calc-go-btn').textContent = 'Use These Targets';
   document.getElementById('calc-go-btn').onclick = applyCalcMacros;
+
+  // Briefly flash the result so live updates are obvious while editing answers above
+  if (calcResultShown) {
+    const card = document.getElementById('calc-result-card');
+    card.classList.add('flash');
+    setTimeout(() => card.classList.remove('flash'), 350);
+  }
   calcResultShown = true; // subsequent answer changes now live-update the result
-  if (!silent) document.getElementById('calc-result').scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
 function applyCalcMacros() {
